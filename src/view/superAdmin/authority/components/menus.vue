@@ -28,37 +28,9 @@
               {{ row.defaultRouter === data.name?"首页":"设为首页" }}
             </el-button>
           </span>
-          <span v-if="data.menuBtn.length">
-            <el-button
-              type="text"
-              size="small"
-              @click="() => OpenBtn(data)"
-            >
-              分配按钮
-            </el-button>
-          </span>
         </span>
       </template>
     </el-tree>
-
-    <el-dialog v-model="btnVisible" title="分配按钮" destroy-on-close>
-      <el-table
-        ref="btnTableRef"
-        :data="btnData"
-        row-key="ID"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="按钮名称" prop="name" />
-        <el-table-column label="按钮备注" prop="desc" />
-      </el-table>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button size="small" @click="closeDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="enterDialog">确 定</el-button>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
