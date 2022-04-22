@@ -133,16 +133,16 @@ const toolCards = ref([
     bg: 'rgba(179, 127, 235,.3)'
   },
   {
-    label: '代码生成器',
+    label: 'api管理',
     icon: 'cpu',
-    name: 'autoCode',
+    name: 'api',
     color: '#ffd666',
     bg: 'rgba(255, 214, 102,.3)'
   },
   {
-    label: '表单生成器',
+    label: '操作历史',
     icon: 'document-checked',
-    name: 'formCreate',
+    name: 'operation',
     color: '#ff85c0',
     bg: 'rgba(255, 133, 192,.3)'
   },
