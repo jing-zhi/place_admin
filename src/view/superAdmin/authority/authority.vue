@@ -3,17 +3,16 @@
     <warning-bar title="注：右上角头像下拉可切换角色" />
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button size="small" type="primary" icon="plus" @click="addAuthority('0')">新增角色</el-button>
+        <el-button size="small" type="primary" icon="plus" @click="addAuthority()">新增角色</el-button>
       </div>
       <el-table
         :data="tableData"
-        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
         row-key="authorityId"
         style="width: 100%"
       >
         <el-table-column label="角色ID" min-width="180" prop="authorityId" />
         <el-table-column align="left" label="角色名称" min-width="180" prop="authorityName" />
-        <el-table-column align="left" label="操作" width="460">
+        <el-table-column align="left" label="操作" width="300">
           <template #default="scope">
             <el-button
               icon="setting"
@@ -21,18 +20,6 @@
               type="text"
               @click="opdendrawer(scope.row)"
             >设置权限</el-button>
-            <el-button
-              icon="plus"
-              size="small"
-              type="text"
-              @click="addAuthority(scope.row.authorityId)"
-            >新增子角色</el-button>
-            <el-button
-              icon="copy-document"
-              size="small"
-              type="text"
-              @click="copyAuthorityFunc(scope.row)"
-            >拷贝</el-button>
             <el-button
               icon="edit"
               size="small"
@@ -52,17 +39,6 @@
     <!-- 新增角色弹窗 -->
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
       <el-form ref="authorityForm" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="父级角色" prop="parentId">
-          <el-cascader
-            v-model="form.parentId"
-            style="width:100%"
-            :disabled="dialogType=='add'"
-            :options="AuthorityOption"
-            :props="{ checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
-            :show-all-levels="false"
-            filterable
-          />
-        </el-form-item>
         <el-form-item label="角色ID" prop="authorityId">
           <el-input v-model="form.authorityId" :disabled="dialogType=='edit'" autocomplete="off" />
         </el-form-item>
@@ -86,9 +62,6 @@
         <el-tab-pane label="角色api">
           <Apis ref="apis" :row="activeRow" @changeRow="changeRow" />
         </el-tab-pane>
-        <el-tab-pane label="资源权限">
-          <Datas ref="datas" :authority="tableData" :row="activeRow" @changeRow="changeRow" />
-        </el-tab-pane>
       </el-tabs>
     </el-drawer>
   </div>
@@ -100,12 +73,10 @@ import {
   deleteAuthority,
   createAuthority,
   updateAuthority,
-  copyAuthority
 } from '@/api/authority'
 
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
 import Apis from '@/view/superAdmin/authority/components/apis.vue'
-import Datas from '@/view/superAdmin/authority/components/datas.vue'
 import warningBar from '@/components/warningBar/warningBar.vue'
 
 import { ref } from 'vue'
@@ -131,13 +102,12 @@ const activeRow = ref({})
 const dialogTitle = ref('新增角色')
 const dialogFormVisible = ref(false)
 const apiDialogFlag = ref(false)
-const copyForm = ref({})
 
 const form = ref({
   authorityId: '',
   authorityName: '',
-  parentId: '0'
 })
+
 const rules = ref({
   authorityId: [
     { required: true, message: '请输入角色ID', trigger: 'blur' },
@@ -146,9 +116,6 @@ const rules = ref({
   authorityName: [
     { required: true, message: '请输入角色名', trigger: 'blur' }
   ],
-  parentId: [
-    { required: true, message: '请选择请求方式', trigger: 'blur' }
-  ]
 })
 
 const page = ref(1)
@@ -185,17 +152,7 @@ const autoEnter = (activeName, oldActiveName) => {
     }
   }
 }
-// 拷贝角色
-const copyAuthorityFunc = (row) => {
-  setOptions()
-  dialogTitle.value = '拷贝角色'
-  dialogType.value = 'copy'
-  for (const k in form.value) {
-    form.value[k] = row[k]
-  }
-  copyForm.value = row
-  dialogFormVisible.value = true
-}
+
 const opdendrawer = (row) => {
   drawer.value = true
   activeRow.value = row
@@ -236,7 +193,6 @@ const initForm = () => {
   form.value = {
     authorityId: '',
     authorityName: '',
-    parentId: '0'
   }
 }
 // 关闭窗口
@@ -284,30 +240,6 @@ const enterDialog = () => {
             }
           }
           break
-        case 'copy': {
-          const data = {
-            authority: {
-              authorityId: 'string',
-              authorityName: 'string',
-              datauthorityId: [],
-              parentId: 'string'
-            },
-            oldAuthorityId: 0
-          }
-          data.authority.authorityId = form.value.authorityId
-          data.authority.authorityName = form.value.authorityName
-          data.authority.parentId = form.value.parentId
-          data.authority.dataAuthorityId = copyForm.value.dataAuthorityId
-          data.oldAuthorityId = copyForm.value.authorityId
-          const res = await copyAuthority(data)
-          if (res.code === 0) {
-            ElMessage({
-              type: 'success',
-              message: '复制成功！'
-            })
-            getTableData()
-          }
-        }
       }
 
       initForm()
@@ -333,7 +265,6 @@ const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
               authorityId: item.authorityId,
               authorityName: item.authorityName,
               disabled: disabled || item.authorityId === form.value.authorityId,
-              children: []
             }
             setAuthorityOptions(
               item.children,
@@ -352,11 +283,10 @@ const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
         })
 }
 // 增加角色
-const addAuthority = (parentId) => {
+const addAuthority = () => {
   initForm()
   dialogTitle.value = '新增角色'
   dialogType.value = 'add'
-  form.value.parentId = parentId
   setOptions()
   dialogFormVisible.value = true
 }
