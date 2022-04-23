@@ -52,21 +52,21 @@
                 <el-tooltip
                   class="item"
                   effect="light"
-                  content="北京反转极光科技有限公司-技术部-前端事业群"
+                  content="GOLANG"
                   placement="top"
                 >
                   <li>
                     <el-icon>
                       <data-analysis />
                     </el-icon>
-                    北京反转极光科技有限公司-技术部-前端事业群
+                    GOLANG
                   </li>
                 </el-tooltip>
                 <li>
                   <el-icon>
                     <video-camera />
                   </el-icon>
-                  中国·北京市·朝阳区
+                  河南科技学院
                 </li>
                 <el-tooltip
                   class="item"
@@ -92,14 +92,14 @@
             <el-tab-pane label="账号绑定" name="second">
               <ul>
                 <li>
-                  <p class="title">密保手机</p>
+                  <p class="title">手机号</p>
                   <p class="desc">
                     已绑定手机:{{ userStore.userInfo.phone }}
                     <a href="javascript:void(0)" @click="changePhoneFlag = true">立即修改</a>
                   </p>
                 </li>
                 <li>
-                  <p class="title">密保邮箱</p>
+                  <p class="title">邮箱</p>
                   <p class="desc">
                     已绑定邮箱：{{ userStore.userInfo.email }}
                     <a href="javascript:void(0)" @click="changeEmailFlag = true">立即修改</a>
@@ -168,17 +168,17 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="changePhoneFlag" title="绑定手机" width="600px">
+    <el-dialog v-model="changePhoneFlag" title="修改手机号" width="600px">
       <el-form :model="phoneForm">
         <el-form-item label="手机号" label-width="120px">
           <el-input v-model="phoneForm.phone" placeholder="请输入手机号" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="验证码" label-width="120px">
+        <!-- <el-form-item label="验证码" label-width="120px">
           <div class="code-box">
             <el-input v-model="phoneForm.code" autocomplete="off" placeholder="请自行设计短信服务，此处为模拟随便写" style="width:300px" />
             <el-button size="small" type="primary" :disabled="time>0" @click="getCode">{{ time>0?`(${time}s)后重新获取`:'获取验证码' }}</el-button>
           </div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -190,22 +190,22 @@
             type="primary"
             size="small"
             @click="changePhone"
-          >更改</el-button>
+          >修改</el-button>
         </span>
       </template>
     </el-dialog>
 
-    <el-dialog v-model="changeEmailFlag" title="绑定邮箱" width="600px">
+    <el-dialog v-model="changeEmailFlag" title="修改邮箱" width="600px">
       <el-form :model="emailForm">
         <el-form-item label="邮箱" label-width="120px">
           <el-input v-model="emailForm.email" placeholder="请输入邮箱" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="验证码" label-width="120px">
+        <!-- <el-form-item label="验证码" label-width="120px">
           <div class="code-box">
             <el-input v-model="emailForm.code" placeholder="请自行设计邮件服务，此处为模拟随便写" autocomplete="off" style="width:300px" />
             <el-button size="small" type="primary" :disabled="emailTime>0" @click="getEmailCode">{{ emailTime>0?`(${emailTime}s)后重新获取`:'获取验证码' }}</el-button>
           </div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -217,7 +217,7 @@
             type="primary"
             size="small"
             @click="changeEmail"
-          >更改</el-button>
+          >修改</el-button>
         </span>
       </template>
     </el-dialog>
@@ -338,6 +338,7 @@ const enterEdit = async() => {
   nickName.value = ''
   editFlag.value = false
 }
+
 
 const handleClick = (tab, event) => {
   console.log(tab, event)
