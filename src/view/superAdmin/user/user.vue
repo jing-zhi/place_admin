@@ -1,6 +1,5 @@
 <template>
   <div>
-    <warning-bar title="注：右上角头像下拉可切换角色" />
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
@@ -33,7 +32,20 @@
             />
           </template>
         </el-table-column>
-
+        <el-table-column align="left" label="用户部门" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.deptId"
+              :options="deptOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDept(scope.row,flag)}"
+              @remove-tag="()=>{changeDept(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="操作" min-width="250" fixed="right">
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
@@ -89,6 +101,16 @@
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="userInfo.email" />
           </el-form-item>
+          <el-form-item label="用户部门" prop="deptId">
+            <el-cascader
+              v-model="userInfo.deptId"
+              style="width:100%"
+              :options="deptOptions"
+              :show-all-levels="false"
+              :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+            />
+          </el-form-item>
           <el-form-item label="用户角色" prop="authorityId">
             <el-cascader
               v-model="userInfo.authorityIds"
@@ -133,13 +155,13 @@ import {
   getUserList,
   setUserAuthorities,
   register,
-  deleteUser
+  deleteUser,
 } from '@/api/user'
 
 import { getAuthorityList } from '@/api/authority'
+import { getDeptList } from '@/api/dept'
 import CustomPic from '@/components/customPic/index.vue'
 import ChooseImg from '@/components/chooseImg/index.vue'
-import warningBar from '@/components/warningBar/warningBar.vue'
 import { setUserInfo, resetPassword } from '@/api/user.js'
 
 import { nextTick, ref, watch } from 'vue'
@@ -165,6 +187,27 @@ const setAuthorityOptions = (AuthorityData, optionsData) => {
             optionsData.push(option)
           }
         })
+}
+
+const setDepartmentOptions = (DeptData, optionsData) => {
+  DeptData &&
+  DeptData.forEach(item => {
+    if (item.children && item.children.length) {
+      const option = {
+        deptId: item.ID,
+        deptName: item.deptName,
+        children: []
+      }
+      setDepartmentOptions(item.children, option.children)
+      optionsData.push(option)
+    } else {
+      const option = {
+        deptId: item.ID,
+        deptName: item.deptName
+      }
+      optionsData.push(option)
+    }
+  })
 }
 
 const page = ref(1)
@@ -199,8 +242,10 @@ watch(tableData, () => {
 
 const initPage = async() => {
   getTableData()
-  const res = await getAuthorityList({ page: 1, pageSize: 999 })
-  setOptions(res.data.list)
+  const authorities = await getAuthorityList({ page: 1, pageSize: 999 })
+  setAuthOptions(authorities.data.list)
+  const depTs = await getDeptList({ page: 1, pageSize: 999 })
+  setDeptOptions(depTs.data.list)
 }
 
 initPage()
@@ -246,9 +291,15 @@ const openHeaderChange = () => {
 }
 
 const authOptions = ref([])
-const setOptions = (authData) => {
+const setAuthOptions = (authData) => {
   authOptions.value = []
   setAuthorityOptions(authData, authOptions.value)
+}
+
+const deptOptions = ref([])
+const setDeptOptions = (deptData) => {
+  deptOptions.value = []
+  setDepartmentOptions(deptData, deptOptions.value)
 }
 
 const deleteUserFunc = async(row) => {
@@ -268,6 +319,7 @@ const userInfo = ref({
   headerImg: '',
   authorityId: '',
   authorityIds: [],
+  deptId: '',
 })
 
 const rules = ref({
@@ -283,6 +335,9 @@ const rules = ref({
     { required: true, message: '请输入用户昵称', trigger: 'blur' }
   ],
   authorityId: [
+    { required: true, message: '请选择用户角色', trigger: 'blur' }
+  ],
+  deptId: [
     { required: true, message: '请选择用户角色', trigger: 'blur' }
   ]
 })
@@ -319,6 +374,7 @@ const closeAddUserDialog = () => {
   userForm.value.resetFields()
   userInfo.value.headerImg = ''
   userInfo.value.authorityIds = []
+  userInfo.value.deptId = ''
   addUserDialog.value = false
 }
 
@@ -340,6 +396,21 @@ const changeAuthority = async(row, flag) => {
   })
   if (res.code === 0) {
     ElMessage({ type: 'success', message: '角色设置成功' })
+  }
+}
+
+const changeDept = async(row, flag) => {
+  if (flag) {
+    return
+  }
+
+  await nextTick()
+  const res = await setUserInfo({
+    ID: row.ID,
+    deptId: row.deptId
+  })
+  if (res.code === 0) {
+    ElMessage({ type: 'success', message: '部门设置成功' })
   }
 }
 
