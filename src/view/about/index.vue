@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="10">
       <el-col :span="12">
-        <el-card>
+        <!-- <el-card>
           <template #header>
             <el-divider>gin-vue-admin</el-divider>
           </template>
@@ -48,10 +48,10 @@
               </el-col>
             </el-row>
           </div>
-        </el-card>
-        <el-card style="margin-top: 20px">
+        </el-card> -->
+        <el-card >
           <template #header>
-            <div>flipped-aurora团队</div>
+            <div>GoSword</div>
           </template>
           <div>
             <el-row>
