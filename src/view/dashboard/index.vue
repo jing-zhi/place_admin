@@ -34,7 +34,7 @@
             </el-row>
           </div>
           <div>
-            <div class="gva-top-card-left-item">
+            <!-- <div class="gva-top-card-left-item">
               使用教学：
               <a
                 style="color:#409EFF"
@@ -49,7 +49,7 @@
                 target="view_window"
                 href="https://github.com/flipped-aurora/gva-plugins"
               >https://github.com/flipped-aurora/gva-plugins</a>
-            </div>
+            </div> -->
           </div>
         </div>
         <img src="@/assets/dashboard.png" class="gva-top-card-right" alt>
@@ -84,7 +84,7 @@
       </el-card>
     <!-- <div class="quick-entrance-title"></div> -->
     </div>
-    <div class="gva-card-box">
+    <!-- <div class="gva-card-box">
       <div class="gva-card">
         <div class="card-header">
           <span>数据统计</span>
@@ -100,7 +100,7 @@
           </el-row>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -162,9 +162,10 @@ const toTarget = (name) => {
 }
 
 </script>
+
 <script>
 export default {
-  name: 'Dashboard'
+  name: 'Dashboard',
 }
 </script>
 

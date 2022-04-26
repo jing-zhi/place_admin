@@ -9,9 +9,10 @@ export function Commits(page) {
   })
 }
 
-export function Members() {
+export function Members(data) {
   return service({
-    url: 'https://api.github.com/orgs/FLIPPED-AURORA/members',
-    method: 'get'
+    url: 'https://gosword.cppwnn.top/open-api',
+    method: 'post',
+    data
   })
 }

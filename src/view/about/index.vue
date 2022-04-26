@@ -56,20 +56,20 @@
           <div>
             <el-row>
               <el-col :span="8" :offset="8">
-                <a href="https://github.com/flipped-aurora">
+                <!-- <a href="https://github.com/flipped-aurora">
                   <img
                     class="org-img dom-center"
                     src="@/assets/flipped-aurora.png"
                     alt="flipped-aurora"
                   >
-                </a>
+                </a> -->
               </el-col>
             </el-row>
             <el-row style="margin-left: 40px" :gutter="20">
               <el-col v-for="(item, index) in members" :key="index" :span="8">
                 <a :href="item.html_url">
                   <img class="avatar-img" :src="item.avatar_url">
-                  <a class="author-name" style="">{{ item.login }}</a>
+                  <a class="author-name" style="">chenguanglan</a>
                 </a>
               </el-col>
             </el-row>
@@ -96,11 +96,11 @@
               </el-timeline-item>
             </el-timeline>
           </div>
-          <el-button
+          <!-- <el-button
             class="load-more"
             type="text"
             @click="loadMore"
-          >Load more</el-button>
+          >Load more</el-button> -->
         </el-card>
       </el-col>
     </el-row>
@@ -118,31 +118,31 @@ import { ref } from 'vue'
 import { Commits, Members } from '@/api/github'
 const page = ref(0)
 
-const loadMore = () => {
-  page.value++
-  loadCommits()
-}
+// const loadMore = () => {
+//   page.value++
+//   loadCommits()
+// }
 
 const dataTimeline = ref([])
 const loadCommits = () => {
-  Commits(page.value).then(({ data }) => {
-    data.forEach((element) => {
-      if (element.commit.message) {
-        dataTimeline.value.push({
-          from: new Date(element.commit.author.date),
-          title: element.commit.author.name,
-          showDayAndMonth: true,
-          message: element.commit.message,
-        })
-      }
-    })
-  })
+  // Commits(page.value).then(({ data }) => {
+  //   data.forEach((element) => {
+  //     if (element.commit.message) {
+  //       dataTimeline.value.push({
+  //         from: new Date(element.commit.author.date),
+  //         title: element.commit.author.name,
+  //         showDayAndMonth: true,
+  //         message: element.commit.message,
+  //       })
+  //     }
+  //   })
+  // })
 }
 
 const members = ref([])
 const loadMembers = () => {
-  Members().then(({ data }) => {
-    members.value = data
+  Members({Action: "DescribeProjectMembers",PageNumber: 1,PageSize: 10,ProjectId: 1}).then(({ data }) => {
+    // members.value = data
     members.value.sort()
   })
 }
