@@ -82,7 +82,7 @@
         </el-form>
       </div>
       <div class="login_panle_right" />
-      <div class="login_panle_foot">
+      <!-- <div class="login_panle_foot">
         <div class="links">
           <a href="http://doc.henrongyi.top/" target="_blank">
             <img src="@/assets/docs.png" class="link-icon">
@@ -103,7 +103,7 @@
         <div class="copyright">
           <bootomInfo />
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
