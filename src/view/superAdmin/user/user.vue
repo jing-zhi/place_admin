@@ -136,7 +136,7 @@
               <img
                 v-if="userInfo.headerImg"
                 class="header-img-box"
-                :src="(userInfo.headerImg && userInfo.headerImg.slice(0, 4) !== 'http')?path+userInfo.headerImg:userInfo.headerImg"
+                :src="(userInfo.headerImg && userInfo.headerImg.slice(0, 4) !== 'http')?path + '/' +userInfo.headerImg:userInfo.headerImg"
               >
               <div v-else class="header-img-box">上传头像</div>
             </el-upload>
@@ -212,7 +212,7 @@ const handleImageSuccess = (res) => {
   const { data } = res
   if (data.file) {
     ElMessage.success('文件上传成功!')
-    userInfo.value.headerImg = (data.file.url && data.file.url.slice(0, 4) !== 'http') ? path.value + '/' + data.file.url : data.file.url
+    userInfo.value.headerImg = data.file.url
   } else {
     ElMessage.error('文件上传失败!')
   }
@@ -359,7 +359,7 @@ const deleteUserFunc = async(row) => {
 
 // 弹窗相关
 const userInfo = ref({
-  username: '',
+  userName: '',
   password: '',
   nickName: '',
   headerImg: '',
@@ -380,7 +380,7 @@ const rules = ref({
   nickName: [
     { required: true, message: '请输入用户昵称', trigger: 'blur' },
   ],
-  authorityId: [
+  authorityIds: [
     { required: true, message: '请选择用户角色', trigger: 'blur' },
   ],
   deptId: [
@@ -418,6 +418,8 @@ const addUserDialog = ref(false)
 const closeAddUserDialog = () => {
   userForm.value.resetFields()
   userInfo.value.headerImg = ''
+  userInfo.value.userName = ''
+  userInfo.value.nickName = ''
   userInfo.value.authorityIds = []
   userInfo.value.deptId = ''
   addUserDialog.value = false

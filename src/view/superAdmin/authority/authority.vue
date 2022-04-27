@@ -70,11 +70,11 @@
     <!-- 新增角色弹窗 -->
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
       <el-form ref="authorityForm" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="角色姓名" prop="authorityName">
-          <el-input v-model="form.authorityName" autocomplete="off" />
+        <el-form-item label="角色名" prop="authorityName">
+          <el-input v-model="form.authorityName" placeholder="请输入角色名" autocomplete="off" />
         </el-form-item>
         <el-form-item label="角色级别" prop="level">
-          <el-input v-model="form.level" autocomplete="off" />
+          <el-input v-model="form.level" type="number" placeholder="请输入一个正整数作为角色级别,0为最高级" autocomplete="off" />
         </el-form-item>
         <el-form-item label="数据范围" prop="dataScope">
           <el-cascader
@@ -169,7 +169,7 @@ const form = ref({
 
 const rules = ref({
   level: [
-    { required: true, message: '请输入角色ID', trigger: 'blur' },
+    { required: true, message: '请输入角色级别', trigger: 'blur' },
     { validator: mustUint, trigger: 'blur' },
   ],
   authorityName: [
@@ -309,6 +309,7 @@ const enterDialog = () => {
     if (valid) {
       switch (dialogType.value) {
         case 'add': {
+          form.value.level = Number(form.value.level)
           const res = await createAuthority(form.value)
           if (res.code === 0) {
             ElMessage({

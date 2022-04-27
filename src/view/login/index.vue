@@ -5,7 +5,7 @@
         <div class="login_panle_form_title">
           <img
             class="login_panle_form_title_logo"
-            :src="$GIN_VUE_ADMIN.appLogo"
+            src="@/assets/logo.jpg"
             alt
           >
           <p class="login_panle_form_title_p">{{ $GIN_VUE_ADMIN.appName }}</p>
@@ -66,23 +66,24 @@
             </div>
           </el-form-item>
           <el-form-item>
+<!--            <el-button-->
+<!--              type="primary"-->
+<!--              style="width: 46%"-->
+<!--              size="large"-->
+<!--              @click="checkInit"-->
+<!--            >前往初始化</el-button>-->
             <el-button
               type="primary"
-              style="width: 46%"
               size="large"
-              @click="checkInit"
-            >前往初始化</el-button>
-            <el-button
-              type="primary"
-              size="large"
-              style="width: 46%; margin-left: 8%"
+              style="width: 100%;"
               @click="submitForm"
             >登 录</el-button>
           </el-form-item>
         </el-form>
       </div>
       <div class="login_panle_right" />
-      <div class="login_panle_foot">
+<<<<<<< Updated upstream
+      <!-- <div class="login_panle_foot">
         <div class="links">
           <a href="http://doc.henrongyi.top/" target="_blank">
             <img src="@/assets/docs.png" class="link-icon">
@@ -103,7 +104,9 @@
         <div class="copyright">
           <bootomInfo />
         </div>
-      </div>
+      </div> -->
+=======
+>>>>>>> Stashed changes
     </div>
   </div>
 </template>
@@ -117,7 +120,6 @@ export default {
 <script setup>
 import { captcha } from '@/api/user'
 import { checkDB } from '@/api/initdb'
-import bootomInfo from '@/view/layout/bottomInfo/bottomInfo.vue'
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
@@ -160,7 +162,7 @@ const loginForm = ref(null)
 const picPath = ref('')
 const loginFormData = reactive({
   username: 'admin',
-  password: '123456',
+  password: '',
   captcha: '',
   captchaId: '',
 })

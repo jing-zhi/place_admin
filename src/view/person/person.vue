@@ -62,12 +62,12 @@
                     GOLANG
                   </li>
                 </el-tooltip>
-                <li>
+                <!-- <li>
                   <el-icon>
                     <video-camera />
                   </el-icon>
                   河南科技学院
-                </li>
+                </li> -->
                 <el-tooltip
                   class="item"
                   effect="light"
@@ -105,13 +105,13 @@
                     <a href="javascript:void(0)" @click="changeEmailFlag = true">立即修改</a>
                   </p>
                 </li>
-                <li>
+                <!-- <li>
                   <p class="title">密保问题</p>
                   <p class="desc">
                     未设置密保问题
                     <a href="javascript:void(0)">去设置</a>
                   </p>
-                </li>
+                </li> -->
                 <li>
                   <p class="title">修改密码</p>
                   <p class="desc">
