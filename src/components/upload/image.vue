@@ -9,7 +9,7 @@
       :before-upload="beforeImageUpload"
       :multiple="false"
     >
-      <el-button size="small" type="primary">压缩上传</el-button>
+      <div class="header-img-box">上传头像</div>
     </el-upload>
   </div>
 </template>

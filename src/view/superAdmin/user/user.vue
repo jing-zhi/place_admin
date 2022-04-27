@@ -59,7 +59,8 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
-            <el-button type="text" icon="magic-stick" size="small" @click="resetPasswordFunc(scope.row)">重置密码</el-button>
+            <el-button type="text" icon="magic-stick" size="small" @click="resetPasswordFunc(scope.row)">重置密码
+            </el-button>
           </template>
         </el-table-column>
 
@@ -122,12 +123,24 @@
             />
           </el-form-item>
           <el-form-item label="头像" label-width="80px">
-            <div style="display:inline-block" @click="openHeaderChange">
-              <img v-if="userInfo.headerImg" class="header-img-box" :src="(userInfo.headerImg && userInfo.headerImg.slice(0, 4) !== 'http')?path+userInfo.headerImg:userInfo.headerImg">
-              <div v-else class="header-img-box">从媒体库选择</div>
-            </div>
+            <el-upload
+              :action="`${path}/file/upload`"
+              :headers="{ 'x-token': userStore.token }"
+              :show-file-list="false"
+              :on-progress="onImageProgress"
+              :on-success="handleImageSuccess"
+              :on-error="handleImageSuccess"
+              :before-upload="beforeImageUpload"
+              :multiple="false"
+            >
+              <img
+                v-if="userInfo.headerImg"
+                class="header-img-box"
+                :src="(userInfo.headerImg && userInfo.headerImg.slice(0, 4) !== 'http')?path + '/' +userInfo.headerImg:userInfo.headerImg"
+              >
+              <div v-else class="header-img-box">上传头像</div>
+            </el-upload>
           </el-form-item>
-
         </el-form>
 
       </div>
@@ -139,7 +152,6 @@
         </div>
       </template>
     </el-dialog>
-    <ChooseImg ref="chooseImg" :target="userInfo" :target-key="`headerImg`" />
   </div>
 </template>
 
@@ -158,35 +170,74 @@ import {
   deleteUser,
 } from '@/api/user'
 
-import { getAuthorityList } from '@/api/authority'
-import { getDeptList } from '@/api/dept'
 import CustomPic from '@/components/customPic/index.vue'
-import ChooseImg from '@/components/chooseImg/index.vue'
-import { setUserInfo, resetPassword } from '@/api/user.js'
-
 import { nextTick, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+
+import { getAuthorityList } from '@/api/authority'
+import { getDeptList } from '@/api/dept'
+import { setUserInfo, resetPassword } from '@/api/user.js'
+import { useUserStore } from '@/pinia/modules/user'
+import ImageCompress from '@/utils/image'
+
+const userStore = useUserStore()
 const path = ref(import.meta.env.VITE_BASE_API)
+const fileSize = ''
+const maxWH = ''
+
+// 上传头像相关
+
+const onImageProgress = (res) => {
+  ElMessage.warning('文件上传中，请耐心等待!')
+}
+
+const beforeImageUpload = (file) => {
+  const isJPG = file.type === 'image/jpeg'
+  const isPng = file.type === 'image/png'
+  const isLt5M = file.size / 1024 / 1024 < 5
+  if (!isJPG && !isPng) {
+    ElMessage.error('上传头像图片只能是 jpg或png 格式!')
+    return false
+  }
+
+  if (!isLt5M) {
+    // 压缩
+    const compress = new ImageCompress(file, fileSize, maxWH)
+    return compress.compress()
+  }
+  return isLt5M
+}
+
+const handleImageSuccess = (res) => {
+  const { data } = res
+  if (data.file) {
+    ElMessage.success('文件上传成功!')
+    userInfo.value.headerImg = data.file.url
+  } else {
+    ElMessage.error('文件上传失败!')
+  }
+}
+
 // 初始化相关
 const setAuthorityOptions = (AuthorityData, optionsData) => {
   AuthorityData &&
-        AuthorityData.forEach(item => {
-          if (item.children && item.children.length) {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              children: []
-            }
-            setAuthorityOptions(item.children, option.children)
-            optionsData.push(option)
-          } else {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName
-            }
-            optionsData.push(option)
-          }
-        })
+  AuthorityData.forEach(item => {
+    if (item.children && item.children.length) {
+      const option = {
+        authorityId: item.authorityId,
+        authorityName: item.authorityName,
+        children: [],
+      }
+      setAuthorityOptions(item.children, option.children)
+      optionsData.push(option)
+    } else {
+      const option = {
+        authorityId: item.authorityId,
+        authorityName: item.authorityName,
+      }
+      optionsData.push(option)
+    }
+  })
 }
 
 const setDepartmentOptions = (DeptData, optionsData) => {
@@ -196,14 +247,14 @@ const setDepartmentOptions = (DeptData, optionsData) => {
       const option = {
         deptId: item.ID,
         deptName: item.deptName,
-        children: []
+        children: [],
       }
       setDepartmentOptions(item.children, option.children)
       optionsData.push(option)
     } else {
       const option = {
         deptId: item.ID,
-        deptName: item.deptName
+        deptName: item.deptName,
       }
       optionsData.push(option)
     }
@@ -258,7 +309,7 @@ const resetPasswordFunc = (row) => {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
-    }
+    },
   ).then(async() => {
     const res = await resetPassword({
       ID: row.ID,
@@ -285,11 +336,6 @@ const setAuthorityIds = () => {
   })
 }
 
-const chooseImg = ref(null)
-const openHeaderChange = () => {
-  chooseImg.value.open()
-}
-
 const authOptions = ref([])
 const setAuthOptions = (authData) => {
   authOptions.value = []
@@ -313,7 +359,7 @@ const deleteUserFunc = async(row) => {
 
 // 弹窗相关
 const userInfo = ref({
-  username: '',
+  userName: '',
   password: '',
   nickName: '',
   headerImg: '',
@@ -325,29 +371,28 @@ const userInfo = ref({
 const rules = ref({
   userName: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 5, message: '最低5位字符', trigger: 'blur' }
+    { min: 5, message: '最低5位字符', trigger: 'blur' },
   ],
   password: [
     { required: true, message: '请输入用户密码', trigger: 'blur' },
-    { min: 6, message: '最低6位字符', trigger: 'blur' }
+    { min: 6, message: '最低6位字符', trigger: 'blur' },
   ],
   nickName: [
-    { required: true, message: '请输入用户昵称', trigger: 'blur' }
+    { required: true, message: '请输入用户昵称', trigger: 'blur' },
   ],
-  authorityId: [
-    { required: true, message: '请选择用户角色', trigger: 'blur' }
+  authorityIds: [
+    { required: true, message: '请选择用户角色', trigger: 'blur' },
   ],
   deptId: [
-    { required: true, message: '请选择用户角色', trigger: 'blur' }
-  ]
+    { required: true, message: '请选择用户角色', trigger: 'blur' },
+  ],
 })
 const userForm = ref(null)
 const enterAddUserDialog = async() => {
-  userInfo.value.authorityId = userInfo.value.authorityIds[0]
   userForm.value.validate(async valid => {
     if (valid) {
       const req = {
-        ...userInfo.value
+        ...userInfo.value,
       }
       if (dialogFlag.value === 'add') {
         const res = await register(req)
@@ -373,6 +418,8 @@ const addUserDialog = ref(false)
 const closeAddUserDialog = () => {
   userForm.value.resetFields()
   userInfo.value.headerImg = ''
+  userInfo.value.userName = ''
+  userInfo.value.nickName = ''
   userInfo.value.authorityIds = []
   userInfo.value.deptId = ''
   addUserDialog.value = false
@@ -392,7 +439,7 @@ const changeAuthority = async(row, flag) => {
   await nextTick()
   const res = await setUserAuthorities({
     ID: row.ID,
-    authorityIds: row.authorityIds
+    authorityIds: row.authorityIds,
   })
   if (res.code === 0) {
     ElMessage({ type: 'success', message: '角色设置成功' })
@@ -407,7 +454,7 @@ const changeDept = async(row, flag) => {
   await nextTick()
   const res = await setUserInfo({
     ID: row.ID,
-    deptId: row.deptId
+    deptId: row.deptId,
   })
   if (res.code === 0) {
     ElMessage({ type: 'success', message: '部门设置成功' })
@@ -424,18 +471,10 @@ const openEdit = (row) => {
 
 <style lang="scss">
 .user-dialog {
-  .header-img-box {
-  width: 200px;
-  height: 200px;
-  border: 1px dashed #ccc;
-  border-radius: 20px;
-  text-align: center;
-  line-height: 200px;
-  cursor: pointer;
-}
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
+
   .avatar-uploader-icon {
     border: 1px dashed #d9d9d9 !important;
     border-radius: 6px;
@@ -446,18 +485,31 @@ const openEdit = (row) => {
     line-height: 178px;
     text-align: center;
   }
+
   .avatar {
     width: 178px;
     height: 178px;
     display: block;
   }
+
+  .header-img-box {
+    width: 200px;
+    height: 200px;
+    border: 1px dashed #ccc;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 200px;
+    cursor: pointer;
+  }
 }
-.nickName{
+
+.nickName {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.pointer{
+
+.pointer {
   cursor: pointer;
   font-size: 16px;
   margin-left: 2px;

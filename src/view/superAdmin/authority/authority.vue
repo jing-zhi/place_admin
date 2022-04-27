@@ -9,8 +9,37 @@
         row-key="authorityId"
         style="width: 100%"
       >
-        <el-table-column label="角色ID" min-width="180" prop="authorityId" />
-        <el-table-column align="left" label="角色名称" min-width="180" prop="authorityName" />
+        <el-table-column label="角色ID" min-width="160" prop="authorityId" />
+        <el-table-column align="left" label="角色名称" min-width="150" prop="authorityName" />
+        <el-table-column align="left" label="数据范围" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.dataScope"
+              :options="dataScopeOption"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'dataScope',value:'dataScope',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDataScope(scope.row,flag)}"
+              @remove-tag="()=>{changeDataScope(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="数据权限" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.deptId"
+              :options="deptOptions"
+              :show-all-levels="false"
+              :disabled="scope.row.dataScope !=='自定义'"
+              collapse-tags
+              :props="{ multiple:true,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDataScope(scope.row,flag)}"
+              @remove-tag="()=>{changeDataScope(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="操作" width="300">
           <template #default="scope">
             <el-button
@@ -18,19 +47,22 @@
               size="small"
               type="text"
               @click="opdendrawer(scope.row)"
-            >设置权限</el-button>
+            >设置权限
+            </el-button>
             <el-button
               icon="edit"
               size="small"
               type="text"
               @click="editAuthority(scope.row)"
-            >编辑</el-button>
+            >编辑
+            </el-button>
             <el-button
               icon="delete"
               size="small"
               type="text"
               @click="deleteAuth(scope.row)"
-            >删除</el-button>
+            >删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,11 +70,31 @@
     <!-- 新增角色弹窗 -->
     <el-dialog v-model="dialogFormVisible" :title="dialogTitle">
       <el-form ref="authorityForm" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="角色ID" prop="authorityId">
-          <el-input v-model="form.authorityId" :disabled="dialogType=='edit'" autocomplete="off" />
+        <el-form-item label="角色名" prop="authorityName">
+          <el-input v-model="form.authorityName" placeholder="请输入角色名" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="角色姓名" prop="authorityName">
-          <el-input v-model="form.authorityName" autocomplete="off" />
+        <el-form-item label="角色级别" prop="level">
+          <el-input v-model="form.level" type="number" placeholder="请输入一个正整数作为角色级别,0为最高级" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="数据范围" prop="dataScope">
+          <el-cascader
+            v-model="form.dataScope"
+            style="width:100%"
+            :options="dataScopeOption"
+            :show-all-levels="false"
+            :props="{ multiple:false,checkStrictly: true,label:'dataScope',value:'dataScope',disabled:'disabled',emitPath:false}"
+            :clearable="false"
+          />
+        </el-form-item>
+        <el-form-item :hidden="form.dataScope !== '自定义'" label="数据权限" prop="deptId">
+          <el-cascader
+            v-model="form.deptId"
+            style="width:100%"
+            :options="deptOptions"
+            :show-all-levels="false"
+            :props="{ multiple:true,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+            :clearable="false"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -77,8 +129,9 @@ import {
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
 import Apis from '@/view/superAdmin/authority/components/apis.vue'
 
-import { ref } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { getDeptList } from '@/api/dept'
 
 const mustUint = (rule, value, callback) => {
   if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
@@ -87,11 +140,16 @@ const mustUint = (rule, value, callback) => {
   return callback()
 }
 
-const AuthorityOption = ref([
+const dataScopeOption = ref([
   {
-    authorityId: '0',
-    authorityName: '根角色'
-  }
+    dataScope: '全部',
+  },
+  {
+    dataScope: '本级',
+  },
+  {
+    dataScope: '自定义',
+  },
 ])
 const drawer = ref(false)
 const dialogType = ref('add')
@@ -104,15 +162,21 @@ const apiDialogFlag = ref(false)
 const form = ref({
   authorityId: '',
   authorityName: '',
+  level: '',
+  dataScope: '',
+  deptId: [],
 })
 
 const rules = ref({
-  authorityId: [
-    { required: true, message: '请输入角色ID', trigger: 'blur' },
-    { validator: mustUint, trigger: 'blur' }
+  level: [
+    { required: true, message: '请输入角色级别', trigger: 'blur' },
+    { validator: mustUint, trigger: 'blur' },
   ],
   authorityName: [
-    { required: true, message: '请输入角色名', trigger: 'blur' }
+    { required: true, message: '请输入角色名', trigger: 'blur' },
+  ],
+  dataScope: [
+    { required: true, message: '请选择角色数据权限', trigger: 'blur' },
   ],
 })
 
@@ -133,7 +197,18 @@ const getTableData = async() => {
   }
 }
 
-getTableData()
+watch(tableData, () => {
+  setDeptIds()
+})
+
+const initPage = async() => {
+  getTableData()
+  const depTs = await getDeptList({ page: 1, pageSize: 999 })
+  setDeptOptions(depTs.data.list)
+  setDataScopeOptions()
+}
+
+initPage()
 
 const changeRow = (key, value) => {
   activeRow.value[key] = value
@@ -151,6 +226,24 @@ const autoEnter = (activeName, oldActiveName) => {
   }
 }
 
+const changeDataScope = async(row, flag) => {
+  if (flag) {
+    return
+  }
+
+  await nextTick()
+  const res = await updateAuthority({
+    authorityId: row.authorityId,
+    level: row.level,
+    authorityName: row.authorityName,
+    dataScope: row.dataScope,
+    deptId: row.deptId,
+  })
+  if (res.code === 0) {
+    ElMessage({ type: 'success', message: '角色设置成功' })
+  }
+}
+
 const opdendrawer = (row) => {
   drawer.value = true
   activeRow.value = row
@@ -160,14 +253,14 @@ const deleteAuth = (row) => {
   ElMessageBox.confirm('此操作将永久删除该角色, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
+    type: 'warning',
   })
     .then(async() => {
       const res = await deleteAuthority({ authorityId: row.authorityId })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
-          message: '删除成功!'
+          message: '删除成功!',
         })
         if (tableData.value.length === 1 && page.value > 1) {
           page.value--
@@ -178,7 +271,7 @@ const deleteAuth = (row) => {
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: '已取消删除'
+        message: '已取消删除',
       })
     })
 }
@@ -191,6 +284,9 @@ const initForm = () => {
   form.value = {
     authorityId: '',
     authorityName: '',
+    level: '',
+    dataScope: '',
+    deptId: [],
   }
 }
 // 关闭窗口
@@ -205,38 +301,37 @@ const enterDialog = () => {
   if (form.value.authorityId === '0') {
     ElMessage({
       type: 'error',
-      message: '角色id不能为0'
+      message: '角色id不能为0',
     })
     return false
   }
   authorityForm.value.validate(async valid => {
     if (valid) {
       switch (dialogType.value) {
-        case 'add':
-          {
-            const res = await createAuthority(form.value)
-            if (res.code === 0) {
-              ElMessage({
-                type: 'success',
-                message: '添加成功!'
-              })
-              getTableData()
-              closeDialog()
-            }
+        case 'add': {
+          form.value.level = Number(form.value.level)
+          const res = await createAuthority(form.value)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '添加成功!',
+            })
+            getTableData()
+            closeDialog()
           }
+        }
           break
-        case 'edit':
-          {
-            const res = await updateAuthority(form.value)
-            if (res.code === 0) {
-              ElMessage({
-                type: 'success',
-                message: '添加成功!'
-              })
-              getTableData()
-              closeDialog()
-            }
+        case 'edit': {
+          const res = await updateAuthority(form.value)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '添加成功!',
+            })
+            getTableData()
+            closeDialog()
           }
+        }
           break
       }
 
@@ -245,58 +340,107 @@ const enterDialog = () => {
     }
   })
 }
-const setOptions = () => {
-  AuthorityOption.value = [
+
+const setDeptIds = () => {
+  tableData.value && tableData.value.forEach((auth) => {
+    const deptIds = auth.depts && auth.depts.map(i => {
+      return i.ID
+    })
+    auth.deptId = deptIds
+  })
+}
+
+const setDataScopeOptions = () => {
+  dataScopeOption.value = [
     {
-      authorityId: '0',
-      authorityName: '根角色'
-    }
+      dataScope: '全部',
+    },
+    {
+      dataScope: '本级',
+    },
+    {
+      dataScope: '自定义',
+    },
   ]
-  setAuthorityOptions(tableData.value, AuthorityOption.value, false)
 }
-const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
-  form.value.authorityId = String(form.value.authorityId)
-  AuthorityData &&
-        AuthorityData.forEach(item => {
-          if (item.children && item.children.length) {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              disabled: disabled || item.authorityId === form.value.authorityId,
-            }
-            setAuthorityOptions(
-              item.children,
-              option.children,
-              disabled || item.authorityId === form.value.authorityId
-            )
-            optionsData.push(option)
-          } else {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              disabled: disabled || item.authorityId === form.value.authorityId
-            }
-            optionsData.push(option)
-          }
-        })
+
+const deptOptions = ref([])
+const setDeptOptions = (deptData) => {
+  deptOptions.value = []
+  setDepartmentOptions(deptData, deptOptions.value)
 }
+
+const setDepartmentOptions = (DeptData, optionsData) => {
+  DeptData &&
+  DeptData.forEach(item => {
+    if (item.children && item.children.length) {
+      const option = {
+        deptId: item.ID,
+        deptName: item.deptName,
+        children: []
+      }
+      setDepartmentOptions(item.children, option.children)
+      optionsData.push(option)
+    } else {
+      const option = {
+        deptId: item.ID,
+        deptName: item.deptName
+      }
+      optionsData.push(option)
+    }
+  })
+}
+
+// const setOptions = () => {
+//   AuthorityOption.value = [
+//     {
+//       authorityId: '0',
+//       authorityName: '根角色',
+//     },
+//   ]
+//   setAuthorityOptions(tableData.value, AuthorityOption.value, false)
+// }
+// const setAuthorityOptions = (AuthorityData, optionsData, disabled) => {
+//   form.value.authorityId = String(form.value.authorityId)
+//   AuthorityData &&
+//   AuthorityData.forEach(item => {
+//     if (item.children && item.children.length) {
+//       const option = {
+//         authorityId: item.authorityId,
+//         authorityName: item.authorityName,
+//         disabled: disabled || item.authorityId === form.value.authorityId,
+//       }
+//       setAuthorityOptions(
+//         item.children,
+//         option.children,
+//         disabled || item.authorityId === form.value.authorityId,
+//       )
+//       optionsData.push(option)
+//     } else {
+//       const option = {
+//         authorityId: item.authorityId,
+//         authorityName: item.authorityName,
+//         disabled: disabled || item.authorityId === form.value.authorityId,
+//       }
+//       optionsData.push(option)
+//     }
+//   })
+// }
 // 增加角色
 const addAuthority = () => {
   initForm()
   dialogTitle.value = '新增角色'
   dialogType.value = 'add'
-  setOptions()
+
   dialogFormVisible.value = true
 }
 // 编辑角色
 const editAuthority = (row) => {
-  setOptions()
   dialogTitle.value = '编辑角色'
   dialogType.value = 'edit'
   for (const key in form.value) {
     form.value[key] = row[key]
   }
-  setOptions()
   dialogFormVisible.value = true
 }
 
@@ -305,7 +449,7 @@ const editAuthority = (row) => {
 <script>
 
 export default {
-  name: 'Authority'
+  name: 'Authority',
 }
 </script>
 
@@ -313,11 +457,13 @@ export default {
 .authority {
   .el-input-number {
     margin-left: 15px;
+
     span {
       display: none;
     }
   }
 }
+
 .role-box {
   .el-tabs__content {
     height: calc(100vh - 72px);
