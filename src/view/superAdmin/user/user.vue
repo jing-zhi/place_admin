@@ -475,6 +475,7 @@ const handleExcelExport = (fileName) => {
   }
   exportExcel(tableData.value, fileName)
 }
+
 </script>
 
 <style lang="scss">
