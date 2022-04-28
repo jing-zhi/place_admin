@@ -79,7 +79,7 @@ export const setDataAuthority = (data) => {
 export const updateAuthority = (data) => {
   return service({
     url: '/authority/updateAuthority',
-    method: 'put',
+    method: 'post',
     data
   })
 }

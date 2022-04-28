@@ -2,77 +2,65 @@
   <div>
     <el-row :gutter="10">
       <el-col :span="12">
-        <!-- <el-card>
-          <template #header>
-            <el-divider>gin-vue-admin</el-divider>
-          </template>
-          <div>
-            <el-row>
-              <el-col :span="8" :offset="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="org-img dom-center"
-                    src="@/assets/logo.png"
-                    alt="gin-vue-admin"
-                  >
-                </a>
-              </el-col>
-            </el-row>
-            <el-row :gutter="10">
-              <el-col :span="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="dom-center"
-                    src="https://img.shields.io/github/watchers/flipped-aurora/gin-vue-admin.svg?label=Watch"
-                    alt=""
-                  >
-                </a>
-              </el-col>
-              <el-col :span="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="dom-center"
-                    src="https://img.shields.io/github/stars/flipped-aurora/gin-vue-admin.svg?style=social"
-                    alt=""
-                  >
-                </a>
-              </el-col>
-              <el-col :span="8">
-                <a href="https://github.com/flipped-aurora/gin-vue-admin">
-                  <img
-                    class="dom-center"
-                    src="https://img.shields.io/github/forks/flipped-aurora/gin-vue-admin.svg?label=Fork"
-                    alt=""
-                  >
-                </a>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card> -->
-        <el-card >
+        <el-card>
           <template #header>
             <div>GoSword</div>
           </template>
           <div>
             <el-row>
               <el-col :span="8" :offset="8">
-                <!-- <a href="https://github.com/flipped-aurora">
-                  <img
-                    class="org-img dom-center"
-                    src="@/assets/flipped-aurora.png"
-                    alt="flipped-aurora"
-                  >
-                </a> -->
+                <img
+                  class="org-img dom-center"
+                  src="@/assets/marchsoftgolang.png"
+                  alt="flipped-aurora"
+                  style="height: 200px"
+                >
               </el-col>
             </el-row>
             <el-row style="margin-left: 40px" :gutter="20">
               <el-col v-for="(item, index) in members" :key="index" :span="8">
                 <a :href="item.html_url">
-                  <img class="avatar-img" :src="item.avatar_url">
-                  <a class="author-name" style="">chenguanglan</a>
+                  <img class="avatar-img" :src="item.Avatar">
+                  <a class="author-name" style="">{{ item.Name }}</a>
                 </a>
               </el-col>
             </el-row>
+          </div>
+        </el-card>
+        <el-card style="margin-top: 10px">
+          <template #header>
+            <el-divider>go-sword</el-divider>
+          </template>
+          <div>
+            <el-row>
+              <el-col :span="8" :offset="8">
+
+               <a href="https://github.com/flipped-aurora">
+
+                <a href="https://marchsoft.coding.net/p/golangkuangjia/d/GoSword/git">
+
+                  <img
+                    class="org-img dom-center"
+                    src="@/assets/golang_jump.gif"
+                    alt="GoSword"
+                  >
+                  <img
+                      class="org-img dom-center"
+                      src="@/assets/weight_lifting.gif"
+                      alt="GoSword"
+                      style="width: 280px"
+                  >
+                  <img
+                      class="org-img dom-center"
+                      src="@/assets/gophercises_punching.gif"
+                      alt="GoSword"
+                      style="width: 300px"
+                  >
+                </a>
+               </a>
+              </el-col>
+            </el-row>
+
           </div>
         </el-card>
       </el-col>
@@ -86,7 +74,7 @@
               <el-timeline-item
                 v-for="(item,index) in dataTimeline"
                 :key="index"
-                timestamp="2018/4/12"
+                :timestamp="item.from"
                 placement="top"
               >
                 <el-card>
@@ -101,6 +89,7 @@
             type="text"
             @click="loadMore"
           >Load more</el-button> -->
+
         </el-card>
       </el-col>
     </el-row>
@@ -116,33 +105,37 @@ export default {
 <script setup>
 import { ref } from 'vue'
 import { Commits, Members } from '@/api/github'
-const page = ref(0)
+import { formatTimeToStr } from '@/utils/date'
 
-// const loadMore = () => {
-//   page.value++
-//   loadCommits()
-// }
+const page = ref(1)
 
 const dataTimeline = ref([])
 const loadCommits = () => {
-  // Commits(page.value).then(({ data }) => {
-  //   data.forEach((element) => {
-  //     if (element.commit.message) {
-  //       dataTimeline.value.push({
-  //         from: new Date(element.commit.author.date),
-  //         title: element.commit.author.name,
-  //         showDayAndMonth: true,
-  //         message: element.commit.message,
-  //       })
-  //     }
-  //   })
-  // })
+  Commits({
+    Action: 'DescribeGitCommits',
+    PageNumber: page.value,
+    DepotId: 9511486,
+    Ref: 'develop',
+    PageSize: 10,
+  }).then(({ data }) => {
+    data.Response.Commits.forEach((element) => {
+      if (element.ShortMessage) {
+        dataTimeline.value.push({
+          from: formatTimeToStr(element.CommitDate, 'yyyy-MM-dd'),
+          title: element.Commiter.Name,
+          showDayAndMonth: true,
+          message: element.ShortMessage,
+        })
+      }
+    })
+  })
 }
 
 const members = ref([])
 const loadMembers = () => {
-  Members({Action: "DescribeProjectMembers",PageNumber: 1,PageSize: 10,ProjectId: 10235846}).then(({ data }) => {
-    members.value = data
+
+  Members({ Action: 'DescribeProjectMembers', PageNumber: 1, PageSize: 10, ProjectId: 10235846 }).then(({ data }) => {
+    members.value = data.Response.Data.ProjectMembers
     members.value.sort()
   })
 }
@@ -168,8 +161,8 @@ loadMembers()
 }
 
 .org-img {
-  height: 150px;
-  width: 150px;
+  height: 200px;
+  width: 200px;
 }
 
 .author-name {
@@ -179,7 +172,7 @@ loadMembers()
   color: darkblue;
   line-height: 100px;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .dom-center {

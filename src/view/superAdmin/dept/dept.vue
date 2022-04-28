@@ -272,7 +272,7 @@ const addDept = (parentId) => {
   initForm()
   dialogTitle.value = '新增部门'
   dialogType.value = 'add'
-  form.value.parentID = parentId
+  form.value.parentID = String(parentId)
   setOptions()
   dialogFormVisible.value = true
 }
