@@ -1,0 +1,186 @@
+<template>
+  <div>
+    <div class="gva-table-box">
+      <div class="gva-btn-list">
+        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
+      </div>
+      <el-table
+        :data="tableData"
+        row-key="ID"
+      >
+        <el-table-column align="left" label="id" min-width="70" prop="id" />
+        <el-table-column align="left" label="场所编号" min-width="90" prop="gldbh" />
+        <el-table-column align="left" label="工作人员姓名" min-width="80" prop="gzryxm" />
+        <el-table-column align="left" label="工作人员手机号" min-width="120" prop="gzrysjh" />
+        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
+        <el-table-column align="left" label="所在地市" min-width="100" prop="gzrds" />
+        <el-table-column align="left" label="所在县区" min-width="200" prop="gzrqx"/>
+        <el-table-column align="left" label="所在乡编码" min-width="80" prop="gzrxz"/>        
+        <el-table-column align="left" label="原工作单位" min-width="80" prop="ydw" />
+        <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" />
+        <el-table-column align="left" label="隔离点岗位" min-width="100" prop="gldgw" />
+        <el-table-column align="left" label="入职隔离点日期" min-width="150" prop="rzrq" />
+        <el-table-column align="left" label="人员状态" min-width="180" prop="zt" />
+        <el-table-column align="left" label="调离时间" min-width="180" prop="sj" />
+        <el-table-column align="left" label="调离隔离点编号" min-width="120" prop="dlgldbh" />
+        <el-table-column label="操作" min-width="150" fixed="right">
+          <template #default="scope">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+              <p>确定要删除此用户吗</p>
+              <div style="text-align: right; margin-top: 8px;">
+                <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="deleteUserFunc(scope.row)">确定</el-button>
+              </div>
+              <template #reference>
+                <el-button type="text" icon="delete" size="small">删除</el-button>
+              </template>
+            </el-popover>
+            <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>       
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <div class="gva-pagination">
+        <el-pagination
+          :current-page="page"
+          :page-size="pageSize"
+          :page-sizes="[10, 30, 50, 100]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'User',
+}
+</script>
+
+<script setup>
+
+import {
+  getUserList,
+  deleteUser,
+} from '@/api/user'
+
+import { nextTick, ref, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+import { getPlaceList,setInfo } from '@/api/place.js'
+
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(10)
+const tableData = ref([])
+// 分页
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  getTableData()
+}
+
+const handleCurrentChange = (val) => {
+  page.value = val
+  getTableData()
+}
+
+// 查询
+const getTableData = async() => {
+//   const table = await getTableData({ page: page.value, pageSize: pageSize.value })
+//   if (table.code === 0) {
+//     tableData.value = table.data.list
+//     total.value = table.data.total
+//     page.value = table.data.page
+//     pageSize.value = table.data.pageSize
+//   }
+    const table = {}
+   // console.log(table.data)
+    //tableData.value = table.data.list.map(item )
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
+
+    
+}
+
+const initPage = async() => {
+  getTableData()
+//   const authorities = await getAuthorityList({ page: 1, pageSize: 999 })
+//   setAuthOptions(authorities.data.list)
+//   const depTs = await getDeptList({ page: 1, pageSize: 999 })
+//   setDeptOptions(depTs.data.list)
+}
+
+initPage()
+
+const switchChange = (row) => {
+    console.log(row)
+    console.log(row.cd_id)
+    const data = { id: row.cd_id }
+    //console.log(data)
+
+    //   pushNotice(data).then(() => {
+    //   })
+}
+
+const addUser = () => {
+//   dialogFlag.value = 'add'
+//   addUserDialog.value = true
+}
+
+</script>
+
+<style lang="scss">
+.user-dialog {
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+
+  .avatar-uploader-icon {
+    border: 1px dashed #d9d9d9 !important;
+    border-radius: 6px;
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+
+  .header-img-box {
+    width: 200px;
+    height: 200px;
+    border: 1px dashed #ccc;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 200px;
+    cursor: pointer;
+  }
+}
+
+.nickName {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pointer {
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 2px;
+}
+.excel-btn+.excel-btn{
+  margin-left: 10px;
+}
+</style>
