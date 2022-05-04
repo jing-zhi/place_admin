@@ -1,39 +1,40 @@
 <template>
   <div>
     <div class="gva-table-box">
-      <!-- <div class="gva-btn-list">
+      <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-      </div> -->
+      </div>
       <el-table
         :data="tableData"
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="90" prop="csbh" />
+        <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" />
         <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" />
         <el-table-column align="left" label="所属乡镇" min-width="80" prop="sq_name" />
         <el-table-column align="left" label="所属村" min-width="80" prop="jd_name" />
-        <el-table-column align="left" label="详细地址" min-width="200" prop="xxdz"/>
-        <el-table-column align="left" label="启用状态" min-width="80">
+        <el-table-column align="left" label="详细地址" min-width="180" prop="xxdz"/>
+        <el-table-column align="left" label="启用状态" min-width="80" prop="qyzt">
           <template #default="scope">
             <el-switch
-              v-model="scope.row.status"
+              v-model="scope.row.qyzt"
                 :active-value="1"
                 :inactive-value="0"
               @click="switchChange(scope.row)"
-            />
+            />          
           </template>
+         
         </el-table-column>
-        <el-table-column align="left" label="经度" min-width="80" prop="gldjd" />
-        <el-table-column align="left" label="纬度" min-width="80" prop="gldwd" />
+        <!-- <el-table-column align="left" label="经度" min-width="80" prop="gldjd" />
+        <el-table-column align="left" label="纬度" min-width="80" prop="gldwd" /> -->
         <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
         <el-table-column align="left" label="负责人电话" min-width="100" prop="fzrdh" />
         <el-table-column align="left" label="负责人身份证" min-width="150" prop="fzrsfz" />
         <el-table-column align="left" label="申领单位" min-width="180" prop="fzrgzdw" />
         <el-table-column align="left" label="申领时间" min-width="180" prop="slsj" />
-        <el-table-column align="left" label="行业类型" min-width="120" prop="hylx" />
-        <!-- <el-table-column label="操作" min-width="150" fixed="right">
+        <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
+        <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗</p>
@@ -47,14 +48,14 @@
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>       
           </template>
-        </el-table-column> -->
+        </el-table-column>
 
       </el-table>
       <div class="gva-pagination">
         <el-pagination
           :current-page="page"
           :page-size="pageSize"
-          :page-sizes="[5, 10, 30, 50, 100]"
+          :page-sizes="[10, 30, 50, 100]"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @current-change="handleCurrentChange"
@@ -73,7 +74,7 @@
       <div style="height:60vh;overflow:auto;padding:0 10px;">
         <el-form ref="placeForm"  :rules="rules" :model="placeInfo" label-width="110px">
           <el-form-item label="行业类型" prop="hylx">
-            <el-select v-model="placeInfo.hylx" class="m-2" placeholder="Select" size="large">
+            <el-select v-model="placeInfo.hylx" class="m-2" placeholder="请选择行业类型" size="large">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -87,7 +88,7 @@
             <el-input v-model="placeInfo.csmc" />
           </el-form-item>
           <!-- 下拉框 -->
-          <el-form-item label="所属区县" prop="qx_name">
+          <!-- <el-form-item label="所属区县" prop="qx_name">
             <el-input v-model="placeInfo.qx" />
           </el-form-item>
           <el-form-item label="所属乡镇" prop="sq_name">
@@ -95,13 +96,25 @@
           </el-form-item>
           <el-form-item label="所属村" prop="jd_name">
             <el-input v-model="placeInfo.jd" />
-          </el-form-item>
-          <el-form-item label="地址" prop="dz">
+          </el-form-item> -->
+          <el-form-item label="区/街道" prop="dz">
             <el-cascader
               v-model="value"
               :options="res"
               @change="handleChange"></el-cascader>
           </el-form-item>
+          <el-form-item label="村" prop="jd">
+            <el-select v-model="placeInfo.jd_name" class="m-2" placeholder="请选择" size="large">
+              <el-option
+                v-for="item in cunList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                 @click="handleSelect(item)"
+              />
+            </el-select>
+          </el-form-item>
+          
           <el-form-item label="详细地址" prop="xxdz">
             <el-input v-model="placeInfo.xxdz" />
           </el-form-item>
@@ -145,18 +158,22 @@ import { nextTick, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getPlaceList,setStatus,createPlace,setInfo,deletePlace } from '@/api/place.js'
 import json from '@/utils/address/xinxiang.json'
+import vlgs from '@/utils/address/villages.json'
 
 const page = ref(1)
 const total = ref(0)
-const pageSize = ref(5)
+const pageSize = ref(10)
 const tableData = ref([])
-const res =ref([])
+// 区和街道
+const res = ref([])
+const streetValue = ref(410702001)
+const cunList = ref([])
+const address = ref({})
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
   getTableData()
 }
-
 
 const handleCurrentChange = (val) => {
   page.value = val
@@ -169,7 +186,7 @@ const getTableData = async() => {
   //console.log({ page: page.value, pageSize: pageSize.value });
   const table = await getPlaceList({ page: page.value, pageSize: pageSize.value })
   if (table.code === 0) {
-    console.log(table)
+    //console.log(table)
     tableData.value = table.data.list
     total.value = table.data.total
     page.value = table.data.page
@@ -177,6 +194,7 @@ const getTableData = async() => {
   }
 }
 
+// 行业类型
 const options = [
         { label: "隔离点", code: 43 },
         { label: "体育场馆", code: 8 },
@@ -211,239 +229,36 @@ const options = [
         { label: "医废运输处理公司", code: 42 },        
 ]
 
-const adds =  [{
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }, 
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [{
-            value: 'basic',
-            label: 'Basic',
-            children: [{
-              value: 'layout',
-              label: 'Layout 布局'
-            }, {
-              value: 'color',
-              label: 'Color 色彩'
-            }, {
-              value: 'typography',
-              label: 'Typography 字体'
-            }, {
-              value: 'icon',
-              label: 'Icon 图标'
-            }, {
-              value: 'button',
-              label: 'Button 按钮'
-            }]
-          }, {
-            value: 'form',
-            label: 'Form',
-            children: [{
-              value: 'radio',
-              label: 'Radio 单选框'
-            }, {
-              value: 'checkbox',
-              label: 'Checkbox 多选框'
-            }, {
-              value: 'input',
-              label: 'Input 输入框'
-            }, {
-              value: 'input-number',
-              label: 'InputNumber 计数器'
-            }, {
-              value: 'select',
-              label: 'Select 选择器'
-            }, {
-              value: 'cascader',
-              label: 'Cascader 级联选择器'
-            }, {
-              value: 'switch',
-              label: 'Switch 开关'
-            }, {
-              value: 'slider',
-              label: 'Slider 滑块'
-            }, {
-              value: 'time-picker',
-              label: 'TimePicker 时间选择器'
-            }, {
-              value: 'date-picker',
-              label: 'DatePicker 日期选择器'
-            }, {
-              value: 'datetime-picker',
-              label: 'DateTimePicker 日期时间选择器'
-            }, {
-              value: 'upload',
-              label: 'Upload 上传'
-            }, {
-              value: 'rate',
-              label: 'Rate 评分'
-            }, {
-              value: 'form',
-              label: 'Form 表单'
-            }]
-          }, {
-            value: 'data',
-            label: 'Data',
-            children: [{
-              value: 'table',
-              label: 'Table 表格'
-            }, {
-              value: 'tag',
-              label: 'Tag 标签'
-            }, {
-              value: 'progress',
-              label: 'Progress 进度条'
-            }, {
-              value: 'tree',
-              label: 'Tree 树形控件'
-            }, {
-              value: 'pagination',
-              label: 'Pagination 分页'
-            }, {
-              value: 'badge',
-              label: 'Badge 标记'
-            }]
-          }, {
-            value: 'notice',
-            label: 'Notice',
-            children: [{
-              value: 'alert',
-              label: 'Alert 警告'
-            }, {
-              value: 'loading',
-              label: 'Loading 加载'
-            }, {
-              value: 'message',
-              label: 'Message 消息提示'
-            }, {
-              value: 'message-box',
-              label: 'MessageBox 弹框'
-            }, {
-              value: 'notification',
-              label: 'Notification 通知'
-            }]
-          }, {
-            value: 'navigation',
-            label: 'Navigation',
-            children: [{
-              value: 'menu',
-              label: 'NavMenu 导航菜单'
-            }, {
-              value: 'tabs',
-              label: 'Tabs 标签页'
-            }, {
-              value: 'breadcrumb',
-              label: 'Breadcrumb 面包屑'
-            }, {
-              value: 'dropdown',
-              label: 'Dropdown 下拉菜单'
-            }, {
-              value: 'steps',
-              label: 'Steps 步骤条'
-            }]
-          }, {
-            value: 'others',
-            label: 'Others',
-            children: [{
-              value: 'dialog',
-              label: 'Dialog 对话框'
-            }, {
-              value: 'tooltip',
-              label: 'Tooltip 文字提示'
-            }, {
-              value: 'popover',
-              label: 'Popover 弹出框'
-            }, {
-              value: 'card',
-              label: 'Card 卡片'
-            }, {
-              value: 'carousel',
-              label: 'Carousel 走马灯'
-            }, {
-              value: 'collapse',
-              label: 'Collapse 折叠面板'
-            }]
-          }]
-        }, {
-          value: 'ziyuan',
-          label: '资源',
-          children: [{
-            value: 'axure',
-            label: 'Axure Components'
-          }, {
-            value: 'sketch',
-            label: 'Sketch Templates'
-          }, {
-            value: 'jiaohu',
-            label: '组件交互文档'
-          }]
-        }]
-
 const getRes = async() => {
-  console.log(json.children)
+  //console.log(json.children)
   const test = json.children
   var ans = []
   var children = []
   for (let i = 0; i < test.length; i++) {
     for (let j = 0; j < test[i].children.length; j++) {
        children[j] = {"value":test[i].children[j].code,"label":test[i].children[j].name}
+       //console.log(children[j]);
     }
-    children = []
     ans[i] = {"value":test[i].code,"label":test[i].name,"children":children}
+    children = []
   }
   res.value = ans
-  console.log(ans)
+  //console.log(ans)
 }
 
 const initPage = async() => {
   getTableData()
   getRes()
-  // console.log(json.children)
-  // const test = json.children
-  // var ans = []
-  // for (let i = 0; i < test.length; i++) {
-  //   ans[i] = {"value":test[i].code,"label":test[i].name}
-  // }
-  // res = ans
-  // console.log(ans)
 }
 
 initPage()
 
 
 const switchChange = async(row) => {
-    console.log({ id: row.id,status:row.status })
-    const resStatus = await setStatus({ id: row.id,status:row.status })
+    console.log({ id: row.id,status:row.qyzt })
+    const resStatus = await setStatus({ id: row.id,status:row.qyzt })
       if (resStatus.code === 0) {
+        console.log(resStatus)
         ElMessage.success('修改成功')
       }
 }
@@ -474,28 +289,27 @@ const deletePlaceFun = async(row) => {
 
 // 弹窗
 const placeInfo = ref({
-  "csmc":"",
-    "qx":"410702",
-    "qx_name":"红旗区",
-    "sq":"410702001",
-    "sq_name":"西街街道",
-    "jd":"410702001016",
-    "jd_name":"曙光社区居民委员会",
+    "csmc":"",
+    "qx":"",
+    "qx_name":"",
+    "sq":"",
+    "sq_name":"",
+    "jd":"",
+    "jd_name":"",
     "xxdz":"",
     "qyzt":0,
-    "gldjd":"242",
-    "gldwd":"242",
+    "gldjd":"",
+    "gldwd":"",
     "fzrxm":"",
     "fzrdh":"",
     "fzrsfz":"",
     "fzrgzdw":"",
-    "slsj":"1998-03-24 20:58:41",
-    "hylx":""
+    "hylx":"",
+    "dz":""
 })
 const rules = ref({
   csmc: [
-    { required: true, message: '请输入名', trigger: 'blur' },
-    { min: 5, message: '最低5位字符', trigger: 'blur' },
+    { required: true, message: '请输入场合名称', trigger: 'blur' }
   ],
   xxdz: [
     { required: true, message: '请输入详细地址', trigger: 'blur' },
@@ -507,16 +321,20 @@ const rules = ref({
   ],
   fzrdh: [
     { required: true, message: '请输入负责人电话', trigger: 'blur' },
-    { min: 20, message: '最低6位字符', trigger: 'blur' },
+    // 正则
   ],
   fzrsfz: [
     { required: true, message: '请输入负责人身份证', trigger: 'blur' },
-    //{ min: 6, message: '最低6位字符', trigger: 'blur' }, 18
+    // 正则
   ],
   fzrgzdw: [
     { required: true, message: '请输入申领单位', trigger: 'blur' },
     { min: 2, message: '最低2位字符', trigger: 'blur' }, 
   ],
+  hylx: [
+    {required:true}
+  ],
+  
 
 })
 
@@ -533,7 +351,7 @@ const enterAddDialog = async() => {
   // placeForm.value.validate(async valid => {
   //   if (valid) {
   //     const req = {
-  //       ...p laceInfo.value,
+  //       ...placeInfo.value,
   //     }
   //     if (dialogFlag.value === 'add') {
   //       const res = await register(req)
@@ -578,7 +396,27 @@ const enterAddDialog = async() => {
         // }
       }
 }
+// 切换村选项列表
+const handleChange = (value) => {
+  console.log(value)
+  streetValue.value = value[1]
+  let list = []
+  for (let i = 0; i < vlgs.length; i++) {
+    if (vlgs[i].streetCode == streetValue.value) {
+      let temp = {}
+      temp = {"value":vlgs[i].code,"label":vlgs[i].name}
+      list.push(temp);         
+    }
+  }
+  cunList.value = list
+  console.log(cunList.value);
+  //address.value = {"qu_id":value[0],"jie_id":value[1]}
+}
 
+const handleSelect = (item) => {
+  console.log(item);
+ // address.value[cunid] = item.value
+}
 </script>
 
 <style lang="scss">
