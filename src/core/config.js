@@ -3,7 +3,7 @@
  */
 
 const config = {
-  appName: 'GoSword',
+  appName: '重要场所管理',
   appLogo: 'https://www.gin-vue-admin.com/img/logo.png',
   showViteLogo: true
 }
