@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="gva-table-box">
-      <div class="gva-btn-list">
+      <!-- <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-      </div>
+      </div> -->
       <el-table
         :data="tableData"
         row-key="ID"
@@ -13,8 +13,8 @@
         <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" />
         <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" />
         <el-table-column align="left" label="所属乡镇" min-width="80" prop="sq_name" />
-        <el-table-column align="left" label="所属村" min-width="80" prop="jd_name" />
-        <el-table-column align="left" label="详细地址" min-width="180" prop="xxdz"/>
+        <el-table-column align="left" label="所属村" min-width="120" prop="jd_name" />
+        <el-table-column align="left" label="详细地址" min-width="150" prop="xxdz"/>
         <el-table-column align="left" label="启用状态" min-width="80" prop="qyzt">
           <template #default="scope">
             <el-switch
@@ -29,12 +29,12 @@
         <!-- <el-table-column align="left" label="经度" min-width="80" prop="gldjd" />
         <el-table-column align="left" label="纬度" min-width="80" prop="gldwd" /> -->
         <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
-        <el-table-column align="left" label="负责人电话" min-width="100" prop="fzrdh" />
-        <el-table-column align="left" label="负责人身份证" min-width="150" prop="fzrsfz" />
-        <el-table-column align="left" label="申领单位" min-width="180" prop="fzrgzdw" />
-        <el-table-column align="left" label="申领时间" min-width="180" prop="slsj" />
+        <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh" />
+        <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz" />
+        <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" />
+        <el-table-column align="left" label="申领时间" min-width="220" prop="slsj" />
         <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
-        <el-table-column label="操作" min-width="150" fixed="right">
+        <!-- <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗</p>
@@ -48,7 +48,7 @@
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>       
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
       </el-table>
       <div class="gva-pagination">
@@ -97,7 +97,7 @@
           <el-form-item label="所属村" prop="jd_name">
             <el-input v-model="placeInfo.jd" />
           </el-form-item> -->
-          <el-form-item label="区/街道" prop="dz">
+          <el-form-item label="区/街道">
             <el-cascader
               v-model="value"
               :options="res"
@@ -108,8 +108,8 @@
               <el-option
                 v-for="item in cunList"
                 :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :label="item.name"
+                :value="item.code"
                  @click="handleSelect(item)"
               />
             </el-select>
@@ -166,7 +166,8 @@ const pageSize = ref(10)
 const tableData = ref([])
 // 区和街道
 const res = ref([])
-const streetValue = ref(410702001)
+const areaValue = ref()
+const streetValue = ref()
 const cunList = ref([])
 const address = ref({})
 // 分页
@@ -304,8 +305,17 @@ const placeInfo = ref({
     "fzrdh":"",
     "fzrsfz":"",
     "fzrgzdw":"",
-    "hylx":"",
-    "dz":""
+    "hylx":""
+
+//     fzrgzdw: ""
+// gldjd: ""
+// gldwd: ""
+// jd: ""
+// jd_name: "410702001016"
+// qx: ""
+// qx_name: ""
+// sq: ""
+// sq_name: ""
 })
 const rules = ref({
   csmc: [
@@ -396,10 +406,15 @@ const enterAddDialog = async() => {
         // }
       }
 }
-// 切换村选项列表
+
+// 级联切换区/街道
 const handleChange = (value) => {
   console.log(value)
+  areaValue.value = value[0]
   streetValue.value = value[1]
+  console.log(areaValue.value,streetValue.value)
+
+  // 获取村选项列表
   let list = []
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].streetCode == streetValue.value) {
@@ -409,13 +424,15 @@ const handleChange = (value) => {
     }
   }
   cunList.value = list
-  console.log(cunList.value);
+  
+  let obj = {}
+  obj = res.value.find
   //address.value = {"qu_id":value[0],"jie_id":value[1]}
 }
 
 const handleSelect = (item) => {
   console.log(item);
- // address.value[cunid] = item.value
+  //address.value[cunName] = cun.name
 }
 </script>
 
