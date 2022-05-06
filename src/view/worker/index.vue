@@ -74,7 +74,7 @@
         <el-table-column align="left" label="调离隔离点编号" min-width="150" prop="dlgldbh" />
         <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
-            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="100">
               <p>确定要删除此用户吗</p>
               <div style="text-align: right; margin-top: 8px;">
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
@@ -238,6 +238,10 @@ import dsData from '@/utils/address/ds.json'
 import vlgs from '@/utils/address/jlhenan.json'
 
 import {formatTimeToStr} from '@/utils/date.js'
+import { useRoute } from 'vue-router'
+const router = useRoute()
+const csbh = ref('')
+csbh.value = router.params.csbh ? router.params.csbh : ''
 
 const page = ref(1)
 const total = ref(0)
@@ -286,28 +290,18 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async(value) => {
+    let rqt = { csbh:csbh.value, page: page.value, pageSize: pageSize.value }
     if(value) {
-       // console.log(value);
-        
-        let rqt = { page: page.value, pageSize: pageSize.value, ...value }
-        console.log(rqt);
-        const table = await getWorkerList(rqt)
-        if (table.code === 0) {
-            tableData.value = table.data.list
-            total.value = table.data.total
-            page.value = table.data.page
-            pageSize.value = table.data.pageSize
-        } 
-    } else {
-        console.log({ page: page.value, pageSize: pageSize.value });
-        const table = await getWorkerList({ page: page.value, pageSize: pageSize.value })
-        if (table.code === 0) {
-            tableData.value = table.data.list
-            total.value = table.data.total
-            page.value = table.data.page
-            pageSize.value = table.data.pageSize
-        } 
-    }
+        rqt = { csbh:csbh.value, page: page.value, pageSize: pageSize.value, ...value }   
+    } 
+    console.log(rqt);
+    const table = await getWorkerList(rqt)
+    if (table.code === 0) {
+        tableData.value = table.data.list
+        total.value = table.data.total
+        page.value = table.data.page
+        pageSize.value = table.data.pageSize
+    } 
 }
 
 // 搜索
@@ -394,7 +388,8 @@ const workerInfo = ref({
     "gldgw": "",    //gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
     "rzrq": "",    //rzrq入职隔离点日期
     "zt": "",    //zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
-    "sj": "",    //sj 调离时间
+    //"sj": "",    //sj 调离时间
+    "sj": new Date(),
     "dlgldbh": "",    //dlgldbh 调离隔离点编号
 })
 //const rules = ref({})
@@ -506,7 +501,8 @@ const enterAddDialog = async() => {
       }
       //console.log(req)
       let request = req;
-      request.csbh = "084107030070091651747871";
+      //request.csbh = "084107030070091651747871";
+      request.csbh = csbh.value;
     //   request.gzrdsname =dsname.value;
     //   request.gzrqxname =qxname.value;
     //   request.gzrxzname =xzname.value;
