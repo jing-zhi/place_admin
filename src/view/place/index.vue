@@ -47,6 +47,8 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>
+            <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
+            <el-button type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
           </template>
         </el-table-column>
@@ -357,6 +359,24 @@ const editPlace = () => {
 }
 
 const router = useRouter()
+// 跳转工作人员管理
+const enterWorker = (row) => {
+  router.push({
+    name: 'worker',
+    params: {
+      'csbh': row.csbh
+    }
+  })
+}
+//跳转隔离人员管理
+const enterPeople = (row) => {
+  router.push({
+    name: 'quarantinedPersonManag',
+    params: {
+      'csbh': row.csbh
+    }
+  })
+}
 
 // 跳转房间管理
 const editPlaceRoome = (row) => {
