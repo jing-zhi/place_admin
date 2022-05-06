@@ -31,7 +31,7 @@
               <el-date-picker
                     v-model="searchWorker.rz"
                     type="daterange"
-                    range-separator="到"
+                    range-separator="至"
                     start-placeholder="入职Start日期"
                     end-placeholder="入职End日期"
                 />
@@ -40,7 +40,7 @@
               <el-date-picker
                     v-model="searchWorker.dl"
                     type="daterange"
-                    range-separator="到"
+                    range-separator="至"
                     start-placeholder="调离Start日期"
                     end-placeholder="调离End日期"
                 />
@@ -389,7 +389,7 @@ const workerInfo = ref({
     "rzrq": "",    //rzrq入职隔离点日期
     "zt": "",    //zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
     //"sj": "",    //sj 调离时间
-    "sj": new Date(),
+    //"sj": new Date(),
     "dlgldbh": "",    //dlgldbh 调离隔离点编号
 })
 //const rules = ref({})
@@ -397,7 +397,7 @@ const workerInfo = ref({
 const rules = ref({
   gzryxm: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 1, max:5, message: '最低6位字符', trigger: 'blur' },
+    { min: 1, max:5, message: '不合要求', trigger: 'blur' },
   ],
   gzrysjh: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -415,13 +415,13 @@ const rules = ref({
         trigger: 'blur'}
   ],
   gzrds:[
-    { required: true, message: '请选择地市', trigger: 'blur' },
+    { required: true, message: '请选择地市' },
   ],
   gzrqx:[
-    { required: true, message: '请选择区县', trigger: 'blur' },
+    { required: true, message: '请选择区县' },
   ],
   gzrxz:[
-    { required: true, message: '请选择乡镇', trigger: 'blur' },
+    { required: true, message: '请选择乡镇' },
   ],
   // 地区
   ydw: [
@@ -431,18 +431,14 @@ const rules = ref({
   //zw gw
 
   gldgw: [
-    { required: true, message: '请选择人员类别', trigger: 'blur' },
+    { required: true, message: '请选择人员类别' },
   ],
   rzrq: [
     { required: true, message: '请输入入职日期', trigger: 'blur' }
   ],
   zt: [
-    { required: true, message: '请选择人员状态', trigger: 'blur' }
+    { required: true, message: '请选择人员状态' }
   ]
-  // sf
-//   sf: [
-//     { required: true, message: '请输入日期', trigger: 'blur' }
-//   ],
 })
 
 const workerForm = ref(null)
