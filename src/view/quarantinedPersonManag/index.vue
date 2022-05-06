@@ -1,8 +1,8 @@
 <template>
   <div>
     
-    <div class="gva-table-box">
-      <div class="gva-btn-list">
+    <div >
+      <div class="gva-table-box" style="margin-bottom:10px;">
         <el-form
           :inline='true'
           ref="searchForm"
@@ -51,12 +51,13 @@
           <el-form-item label="手机号码" label-width='auto'>
             <el-input v-model="searchInfo.sjhm" placeholder="手机号码" />
           </el-form-item>
-          <el-form-item label="隔离点房间编号" label-width='auto'>
+          
+          <!-- <el-form-item label="隔离点房间新编号" label-width='auto'>
             <el-input
               v-model="searchInfo.gldfjbh"
-              placeholder="隔离点房间编号"
+              placeholder="隔离点房间新编号"
             />
-          </el-form-item>
+          </el-form-item> -->
             <el-form-item label="隔离状态" label-width='auto'>
             <el-select
               v-model="searchInfo.glzt"
@@ -97,7 +98,7 @@
               <el-option value="1" label="是" />
             </el-select>
           </el-form-item>
-        
+
 
           <div class="searchForm">
              <el-button
@@ -109,7 +110,12 @@
           >
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
           </div>
-          <div>
+          
+          
+         
+        </el-form>
+        </div>
+        <div class="gva-table-box" style="margin-bottom:10px;">
              <el-button
             size="small"
             type="primary"
@@ -118,8 +124,6 @@
             >新增隔离人员</el-button
           >
           </div>
-         
-        </el-form>
       </div>
       <el-table :data="tableData" row-key="ID">
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
@@ -170,7 +174,12 @@
           min-width="150"
           prop="sjhm"
         />
-
+        <el-table-column
+          align="left"
+          label="入境航班编号"
+          min-width="170"
+          prop="rjhbh"
+        />
         <el-table-column
           align="left"
           label="隔离点房间编号"
@@ -271,7 +280,7 @@
         :dialogFormVisible="dialogFormVisible"
         :dialogTitle="dialogTitle"
       />
-    </div>
+    
   </div>
 </template>
 <script>
@@ -290,6 +299,7 @@ import {
   Qshortcuts,
   QsearchList
 } from "../../data/quarantined";
+import { useRoute } from 'vue-router'
 import addOrUpdateForm from "./componments/addOrUpdate.vue";
 import { formatTimeToStr } from "@/utils/date";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -302,7 +312,9 @@ import {
 } from "@/api/quarantinedPersonManag";
 import { nextTick } from "@vue/runtime-core";
 import { provide } from "vue";
-
+const router = useRoute()
+const csbh = ref('')
+csbh.value = router.params.csbh ? router.params.csbh : ''
 const renew = ref(true); //操作按钮刷新
 const searchInfo = reactive(QsearchList);
 const addOrUpdateFormRef = ref();
@@ -331,7 +343,8 @@ const getTableData = async (tag) => {
   const table = await getData({
     page: page.value,
     pageSize: pageSize.value,
-    ...tag
+    ...tag,
+    csbh:csbh.value,
   });
   if (table.code === 0) {
     tableData.value = table.data.list;
@@ -342,7 +355,7 @@ const getTableData = async (tag) => {
 };
 const searchHandler = async() => {//搜索
   getTableData(searchInfo);
-  onReset()
+  // onReset()
 };
 const onReset = ()=>{//重置
   for(let key in searchInfo){
