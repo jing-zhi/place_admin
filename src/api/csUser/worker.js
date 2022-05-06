@@ -1,33 +1,32 @@
 import service from '@/utils/request'
 
-// @Summary 场合新增
+// @Summary 新增
 // @Produce  application/json
 // @Param data body {}
 // @Router /place [post]
-export const createPlace = (data) => {
+export const createWorker = (data) => {
   return service({
-    url: '/cd/lists',
+    url: '/cdworker/createWorkerDetails',
     method: 'post',
     data: data
   })
 }
 
 // @Tags User
-// @Summary 分页获取用户列表
+// @Summary 分页获取列表
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
 // @Param data body modelInterface.PageInfo true "分页获取用户列表"
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /user/getUserList [post]
-export const getPlaceList = (data) => {
+export const getWorkerList = (data) => {
   return service({
-    url: '/cd/lists',
+    url: '/cdworker/pageWorkerList',
     method: 'post',
-    data: data //
+    data: data
   })
 }
-
 
 // @Tags User
 // @Summary 删除
@@ -37,10 +36,10 @@ export const getPlaceList = (data) => {
 // @Param data body request.SetUserAuth true "删除"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
 // @Router /user/deleteUser [delete]
-export const deletePlace = (data) => {
+export const deleteWorker = (data) => {
   return service({
-    url: '/',
-    method: 'delete',
+    url: '/cdworker/deleteWorker',
+    method: 'post',
     data: data
   })
 }
@@ -53,21 +52,9 @@ export const deletePlace = (data) => {
 // @Param data body model.SysUser true "设置信息"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
 // @Router /user/setUserInfo [put]
-export const setInfo = (data) => {
+export const setWorker = (data) => {
   return service({
-    url: '/',
-    method: 'put',
-    data: data
-  })
-}
-
-// @Summary 场合修改
-// @Produce  application/json
-// @Param data body {}
-// @Router /place [post]
-export const setStatus = (data) => {
-  return service({
-    url: '/cd/status',
+    url: '/cdworker/updateWorkerDetails',
     method: 'post',
     data: data
   })

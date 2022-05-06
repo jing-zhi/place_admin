@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="gva-table-box">
-      <!-- <div class="gva-btn-list">
+      <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-      </div> -->
+      </div>
       <el-table
         :data="tableData"
         row-key="ID"
@@ -140,7 +140,7 @@
           <el-button size="small" type="primary" @click="enterAddDialog">确 定</el-button>
         </div>
       </template>
-    </el-dialog>
+      </el-dialog>
 
     </div>
   </div>
