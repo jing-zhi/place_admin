@@ -1,22 +1,17 @@
 <template>
   <div>
-    <div class="gva-table-box">
-      <div class="gva-btn-list">
-        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addWorker">新增</el-button>
-         <!-- gzryxm，gzrysjh，gzrysfz，zt，rzrq,create_time,end_time,sj -->
-         <!-- 工作人员姓名、工作人员手机号、身份证号、人员状态、入职日期：时间范围、调离时间 -->
-        <!-- searchInfo -->
-        <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
-          <el-form-item>
+    <div class="gva-search-box">
+      <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
+          <el-form-item label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
           </el-form-item>  
-          <el-form-item>
+          <el-form-item label="手机号">
             <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
           </el-form-item>    
-          <el-form-item>
+          <el-form-item label="身份证">
             <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
           </el-form-item>    
-          <el-form-item>
+          <el-form-item label="状态">
             <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
               <el-option
                 v-for="item in ztList"
@@ -27,22 +22,22 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item>
+          <el-form-item label="入职时间范围">
               <el-date-picker
                     v-model="searchWorker.rz"
                     type="daterange"
                     range-separator="至"
-                    start-placeholder="入职Start日期"
-                    end-placeholder="入职End日期"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                 />
           </el-form-item>      
-          <el-form-item>
+          <el-form-item label="调离时间范围">
               <el-date-picker
                     v-model="searchWorker.dl"
                     type="daterange"
                     range-separator="至"
-                    start-placeholder="调离Start日期"
-                    end-placeholder="调离End日期"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                 />
           </el-form-item>      
           <el-form-item>
@@ -51,8 +46,12 @@
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
           </el-form-item>
         </el-form>
-        
+    </div>
+    <div class="gva-table-box">
+      <div class="gva-btn-list">
+        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addWorker">新增</el-button>  
       </div>
+      <div class="gva-btn-list"></div>
       <el-table
         :data="tableData"
         row-key="ID"
@@ -336,6 +335,7 @@ const onSubmit = async() => {
 }
 const onReset = () => {
   searchWorker.value = {}
+  getTableData()
 }
 
 
