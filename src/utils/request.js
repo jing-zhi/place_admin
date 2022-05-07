@@ -5,7 +5,7 @@ import { emitter } from '@/utils/bus.js'
 import router from '@/router/index'
 
 const service = axios.create({
-  
+
   baseURL: import.meta.env.VITE_BASE_API,
   timeout: 99999
 })
@@ -40,7 +40,6 @@ service.interceptors.request.use(
     config.headers = {
       'Content-Type': 'application/json',
       'x-token': userStore.token,
-      'x-user-id': userStore.userInfo.ID,
       ...config.headers
     }
     return config
