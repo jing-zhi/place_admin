@@ -1,22 +1,17 @@
 <template>
   <div>
-    <div class="gva-table-box">
-      <div class="gva-btn-list">
-        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addWorker">新增</el-button>
-         <!-- gzryxm，gzrysjh，gzrysfz，zt，rzrq,create_time,end_time,sj -->
-         <!-- 工作人员姓名、工作人员手机号、身份证号、人员状态、入职日期：时间范围、调离时间 -->
-        <!-- searchInfo -->
-        <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
-          <el-form-item>
+    <div class="gva-search-box">
+      <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
+          <el-form-item label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
           </el-form-item>  
-          <el-form-item>
+          <el-form-item label="手机号">
             <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
           </el-form-item>    
-          <el-form-item>
+          <el-form-item label="身份证">
             <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
           </el-form-item>    
-          <el-form-item>
+          <el-form-item label="状态">
             <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
               <el-option
                 v-for="item in ztList"
@@ -27,22 +22,22 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item>
+          <el-form-item label="入职时间范围">
               <el-date-picker
                     v-model="searchWorker.rz"
                     type="daterange"
-                    range-separator="到"
-                    start-placeholder="入职Start日期"
-                    end-placeholder="入职End日期"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                 />
           </el-form-item>      
-          <el-form-item>
+          <el-form-item label="调离时间范围">
               <el-date-picker
                     v-model="searchWorker.dl"
                     type="daterange"
-                    range-separator="到"
-                    start-placeholder="调离Start日期"
-                    end-placeholder="调离End日期"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                 />
           </el-form-item>      
           <el-form-item>
@@ -51,8 +46,12 @@
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
           </el-form-item>
         </el-form>
-        
+    </div>
+    <div class="gva-table-box">
+      <div class="gva-btn-list">
+        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addWorker">新增</el-button>  
       </div>
+      <div class="gva-btn-list"></div>
       <el-table
         :data="tableData"
         row-key="ID"
@@ -74,7 +73,7 @@
         <el-table-column align="left" label="调离隔离点编号" min-width="150" prop="dlgldbh" />
         <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
-            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="100">
               <p>确定要删除此用户吗</p>
               <div style="text-align: right; margin-top: 8px;">
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
@@ -238,6 +237,10 @@ import dsData from '@/utils/address/ds.json'
 import vlgs from '@/utils/address/jlhenan.json'
 
 import {formatTimeToStr} from '@/utils/date.js'
+import { useRoute } from 'vue-router'
+const router = useRoute()
+const csbh = ref('')
+csbh.value = router.params.csbh ? router.params.csbh : ''
 
 const page = ref(1)
 const total = ref(0)
@@ -286,28 +289,18 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async(value) => {
+    let rqt = { csbh:csbh.value, page: page.value, pageSize: pageSize.value }
     if(value) {
-       // console.log(value);
-        
-        let rqt = { page: page.value, pageSize: pageSize.value, ...value }
-        console.log(rqt);
-        const table = await getWorkerList(rqt)
-        if (table.code === 0) {
-            tableData.value = table.data.list
-            total.value = table.data.total
-            page.value = table.data.page
-            pageSize.value = table.data.pageSize
-        } 
-    } else {
-        console.log({ page: page.value, pageSize: pageSize.value });
-        const table = await getWorkerList({ page: page.value, pageSize: pageSize.value })
-        if (table.code === 0) {
-            tableData.value = table.data.list
-            total.value = table.data.total
-            page.value = table.data.page
-            pageSize.value = table.data.pageSize
-        } 
-    }
+        rqt = { csbh:csbh.value, page: page.value, pageSize: pageSize.value, ...value }   
+    } 
+    console.log(rqt);
+    const table = await getWorkerList(rqt)
+    if (table.code === 0) {
+        tableData.value = table.data.list
+        total.value = table.data.total
+        page.value = table.data.page
+        pageSize.value = table.data.pageSize
+    } 
 }
 
 // 搜索
@@ -342,6 +335,7 @@ const onSubmit = async() => {
 }
 const onReset = () => {
   searchWorker.value = {}
+  getTableData()
 }
 
 
@@ -394,7 +388,8 @@ const workerInfo = ref({
     "gldgw": "",    //gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
     "rzrq": "",    //rzrq入职隔离点日期
     "zt": "",    //zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
-    "sj": "",    //sj 调离时间
+    //"sj": "",    //sj 调离时间
+    //"sj": new Date(),
     "dlgldbh": "",    //dlgldbh 调离隔离点编号
 })
 //const rules = ref({})
@@ -402,7 +397,7 @@ const workerInfo = ref({
 const rules = ref({
   gzryxm: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 1, max:5, message: '最低6位字符', trigger: 'blur' },
+    { min: 1, max:5, message: '不合要求', trigger: 'blur' },
   ],
   gzrysjh: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -420,13 +415,13 @@ const rules = ref({
         trigger: 'blur'}
   ],
   gzrds:[
-    { required: true, message: '请选择地市', trigger: 'blur' },
+    { required: true, message: '请选择地市' },
   ],
   gzrqx:[
-    { required: true, message: '请选择区县', trigger: 'blur' },
+    { required: true, message: '请选择区县' },
   ],
   gzrxz:[
-    { required: true, message: '请选择乡镇', trigger: 'blur' },
+    { required: true, message: '请选择乡镇' },
   ],
   // 地区
   ydw: [
@@ -436,18 +431,14 @@ const rules = ref({
   //zw gw
 
   gldgw: [
-    { required: true, message: '请选择人员类别', trigger: 'blur' },
+    { required: true, message: '请选择人员类别' },
   ],
   rzrq: [
     { required: true, message: '请输入入职日期', trigger: 'blur' }
   ],
   zt: [
-    { required: true, message: '请选择人员状态', trigger: 'blur' }
+    { required: true, message: '请选择人员状态' }
   ]
-  // sf
-//   sf: [
-//     { required: true, message: '请输入日期', trigger: 'blur' }
-//   ],
 })
 
 const workerForm = ref(null)
@@ -506,7 +497,8 @@ const enterAddDialog = async() => {
       }
       //console.log(req)
       let request = req;
-      request.csbh = "084107030070091651747871";
+      //request.csbh = "084107030070091651747871";
+      request.csbh = csbh.value;
     //   request.gzrdsname =dsname.value;
     //   request.gzrqxname =qxname.value;
     //   request.gzrxzname =xzname.value;

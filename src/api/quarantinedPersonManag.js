@@ -28,3 +28,10 @@ export const getData = data => {
         data
     })
 }
+export const getRoomList = data => {
+    return service({
+        url: '/placeRoom/getPlaceRoomList',
+        method: "POST",
+        data
+    })
+}

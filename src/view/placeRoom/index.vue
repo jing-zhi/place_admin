@@ -31,10 +31,10 @@
         <el-table-column align="left" label="隔离点房间使用状态" min-width="150" prop="State">
           <template #default="scope">
             <el-switch
-                v-model="scope.row.State"
-                :disabled="true"
-                :active-value="'1'"
-                :inactive-value="'0'"
+              v-model="scope.row.State"
+              :disabled="true"
+              :active-value="'1'"
+              :inactive-value="'0'"
             />
           </template>
         </el-table-column>
@@ -47,17 +47,17 @@
         <el-table-column align="left" fixed="right" label="操作" width="200">
           <template #default="scope">
             <el-button
-                icon="edit"
-                size="small"
-                type="text"
-                @click="editPlaceRoomFunc(scope.row)"
+              icon="edit"
+              size="small"
+              type="text"
+              @click="editPlaceRoomFunc(scope.row)"
             >编辑
             </el-button>
             <el-button
-                icon="delete"
-                size="small"
-                type="text"
-                @click="deletePlaceRoomFunc(scope.row)"
+              icon="delete"
+              size="small"
+              type="text"
+              @click="deletePlaceRoomFunc(scope.row)"
             >删除
             </el-button>
           </template>
@@ -65,13 +65,13 @@
       </el-table>
       <div class="gva-pagination">
         <el-pagination
-            :current-page="page"
-            :page-size="pageSize"
-            :page-sizes="[10, 30, 50, 100]"
-            :total="total"
-            layout="total, sizes, prev, pager, next, jumper"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
+          :current-page="page"
+          :page-size="pageSize"
+          :page-sizes="[10, 30, 50, 100]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
 
@@ -265,13 +265,13 @@ const enterDialog = async() => {
           break
         default:
           // eslint-disable-next-line no-lone-blocks
-        {
-          ElMessage({
-            type: 'error',
-            message: '未知操作',
-            showClose: true,
-          })
-        }
+          {
+            ElMessage({
+              type: 'error',
+              message: '未知操作',
+              showClose: true,
+            })
+          }
           break
       }
     }
@@ -284,19 +284,19 @@ const deletePlaceRoomFunc = async(row) => {
     cancelButtonText: '取消',
     type: 'warning',
   })
-      .then(async() => {
-        const res = await deletePlaceRoom(row)
-        if (res.code === 0) {
-          ElMessage({
-            type: 'success',
-            message: '删除成功!',
-          })
-          if (tableData.value.length === 1 && page.value > 1) {
-            page.value--
-          }
-          getTableData()
+    .then(async() => {
+      const res = await deletePlaceRoom(row)
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功!',
+        })
+        if (tableData.value.length === 1 && page.value > 1) {
+          page.value--
         }
-      })
+        getTableData()
+      }
+    })
 }
 
 </script>

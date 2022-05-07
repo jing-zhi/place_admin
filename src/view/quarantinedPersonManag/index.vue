@@ -9,7 +9,7 @@
           :model="searchInfo"
         >
           <el-form-item label="姓名" label-width='auto'>
-            <el-input v-model="searchInfo.name" placeholder="姓名" />
+            <el-input v-model="searchInfo.glryxm" placeholder="姓名" />
           </el-form-item>
           <el-form-item label="人员类别">
             <el-select
@@ -42,6 +42,17 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="隔离点房间编号" prop="gldfjbh">
+         <el-select :style="{ width: '80%' }" v-model="searchInfo.gldfjbh" placeholder="请选择"  >
+          <el-option
+            v-for="item in roomList"
+            :key="item.ID"
+            :label="item.BuildingNumber+'栋'+item.FloorNumber+'层'+item.RoomNumber+'房间'"
+            :value="item.ID"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
           <el-form-item label="入境航班号" label-width='auto'>
             <el-input v-model="searchInfo.rjhbh" placeholder="入境航班号" />
           </el-form-item>
@@ -52,12 +63,7 @@
             <el-input v-model="searchInfo.sjhm" placeholder="手机号码" />
           </el-form-item>
           
-          <!-- <el-form-item label="隔离点房间新编号" label-width='auto'>
-            <el-input
-              v-model="searchInfo.gldfjbh"
-              placeholder="隔离点房间新编号"
-            />
-          </el-form-item> -->
+        
             <el-form-item label="隔离状态" label-width='auto'>
             <el-select
               v-model="searchInfo.glzt"
@@ -279,6 +285,8 @@
         ref="addOrUpdateFormRef"
         :dialogFormVisible="dialogFormVisible"
         :dialogTitle="dialogTitle"
+        :csbh ='csbh '
+       
       />
     
   </div>
@@ -303,12 +311,13 @@ import { useRoute } from 'vue-router'
 import addOrUpdateForm from "./componments/addOrUpdate.vue";
 import { formatTimeToStr } from "@/utils/date";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive } from "@vue/reactivity";
+import { ref, reactive,unref } from "@vue/reactivity";
 import {
   addData,
   getData,
   singleDelete,
   updateData,
+  getRoomList
 } from "@/api/quarantinedPersonManag";
 import { nextTick } from "@vue/runtime-core";
 import { provide } from "vue";
@@ -327,10 +336,18 @@ const total = ref(0);
 const rylbList = QrylbList;
 const searchForm = ref()
 const gjList = QgjList ;
+const roomList = ref()//房间
+
 const handleSizeChange = async (val) => {
   pageSize.value = val;
   getTableData();
 };
+const getRoom = async()=>{
+  let res = await getRoomList({"PlaceID":csbh.value,"page":1,"pageSize":999})
+  console.log(res)
+  roomList.value = res.data.list
+}
+getRoom()
 const timeScopeDiv = ()=>{
   searchInfo.start_time = searchInfo.glsj[0]
   searchInfo.end_time = searchInfo.glsj[1]
@@ -395,12 +412,12 @@ const addOrUpdate = (v, data) => {
   if (v == 0) {
     //新增操作
     dialogTitle.value = "新增隔离人员信息";
-    addOrUpdateFormRef.value.initForm();
+    addOrUpdateFormRef.value.initForm(unref(roomList));
     dialogFormVisible.value = true;
   } else {
     //修改操作
     dialogTitle.value = "修改隔离人员信息";
-    addOrUpdateFormRef.value.echoData(data);
+    addOrUpdateFormRef.value.echoData(data,roomList);
     dialogFormVisible.value = true;
   }
 };

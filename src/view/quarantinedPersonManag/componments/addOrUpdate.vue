@@ -374,6 +374,7 @@ import {
   getData,
   singleDelete,
   updateData,
+  getRoomList
 } from "@/api/quarantinedPersonManag";
 import { defineProps, ref, reactive, inject, nextTick, onMounted } from "vue";
 import {
@@ -397,13 +398,24 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  csbh:{
+     type: String,
+    default: "",
+  }
 });
 //多选数据
-const roomList = [];
+let roomList = ref([])
 const rylbList = QrylbList;
 const gjList = QgjList;
 const zjlxList = QzjlxList;
 const cityList = QcityList;
+const csbh = props.csbh
+const getRoom = async()=>{
+  let res = await getRoomList({"PlaceID":csbh,"page":1,"pageSize":999})
+  console.log(res)
+  roomList.value = res.data.list
+}
+getRoom()
 // 禁用
 let disable = false;
 //表单
@@ -441,7 +453,7 @@ const rules = reactive({
             message: "手机号格式错误",
             trigger: "blur",
           },],
-  // gldfjbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  gldfjbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   //   gljssj: [{ validator: checkTime, trigger: "blur" }],
 });
 
@@ -480,23 +492,37 @@ const closeDialog = () => {
 };
 //表单提交
 const enterDialog = () => {
+  
+  
   Form.value.validate(async (valid) => {
     if (!valid) {
       return;
     }
-    console.log(props.dialogTitle);
+    let result = JSON.parse(JSON.stringify(form)) 
+      if(!result.gljssj||result.gljssj=='0001-01-01T00:00:00Z'){
+        delete result.gljssj
+      }
+      if(!result.glkssj||result.glkssj=='0001-01-01T00:00:00Z'){
+        delete result.glkssj
+      }
+      if(!result.zcsj||result.zcsj=='0001-01-01T00:00:00Z'){
+        delete result.zcsj
+      }
     if (props.dialogTitle.includes("新增")) {
       //新增逻辑处理
       console.log("新增");
       form.gldfjbh = 2;
       form.csbh = "084107030070091651747871";
-      let res = await addData({ ...form });
+      
+      let res = await addData({ ...result });
       reGetData();
     } else {
       //修改逻辑处理
       console.log("修改");
       form.gldfjbh = 2;
-      let res = await updateData({ ...form });
+      
+      
+      let res = await updateData({ ...result });
       reGetData();
     }
     for (let key in form) {
@@ -506,24 +532,27 @@ const enterDialog = () => {
   });
 };
 //回显数据
-const echoData = (data) => {
+const echoData = (data,v) => {
+ 
   disable = true;
   for (let key in form) {
     for (let key1 in data) if (key1 === key) form[key1] = data[key1];
   }
   if (data.gljssj.Time) {
-    form.gljssj = data.gljssj.Time;
+    form.gljssj = data.gljssj.Time=='0001-01-01T00:00:00Z'?'':data.gljssj.Time;
+    
   }
   if (data.yjjcglrq.Time) {
-    form.yjjcglrq = data.yjjcglrq.Time;
+    form.yjjcglrq = data.yjjcglrq.Time=='0001-01-01T00:00:00Z'?'':data.yjjcglrq.Time;
   }
   if (data.zcsj.Time) {
-    form.zcsj = data.zcsj.Time;
+    form.zcsj = data.zcsj.Time=='0001-01-01T00:00:00Z'?'':data.zcsj.Time;
   }
   form.old_gldfjbh = JSON.parse(JSON.stringify(form.gldfjbh)); //保存旧编号
 };
 //新增数据初始化表单
-const initForm = function () {
+const initForm = function (v) {
+ 
   disable = false;
   for (let key in form) {
     form[key] = "";

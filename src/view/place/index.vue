@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="gva-table-box">
-      <div class="gva-btn-list">
+      <!-- <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-      </div>
+      </div> -->
       <el-table
         :data="tableData"
         row-key="ID"
@@ -36,7 +36,7 @@
         <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
         <el-table-column label="操作" min-width="200" fixed="right">
           <template #default="scope">
-            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+            <!-- <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗</p>
               <div style="text-align: right; margin-top: 8px;">
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
@@ -46,7 +46,9 @@
                 <el-button type="text" icon="delete" size="small">删除</el-button>
               </template>
             </el-popover>
-            <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>
+            <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button> -->
+            <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
+            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
           </template>
         </el-table-column>
@@ -357,6 +359,24 @@ const editPlace = () => {
 }
 
 const router = useRouter()
+// 跳转工作人员管理
+const enterWorker = (row) => {
+  router.push({
+    name: 'worker',
+    params: {
+      'csbh': row.csbh
+    }
+  })
+}
+//跳转隔离人员管理
+const enterPeople = (row) => {
+  router.push({
+    name: 'quarantinedPersonManag',
+    params: {
+      'csbh': row.csbh
+    }
+  })
+}
 
 // 跳转房间管理
 const editPlaceRoome = (row) => {

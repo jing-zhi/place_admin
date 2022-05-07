@@ -35,7 +35,7 @@ export const Qform = {
     glzt: '',
     zcsj: '',
     zcdd: '',
-    jsrxm: '',
+    jsryxm: '',
     jsrdh: '',
     zcyy: ''
     
@@ -132,7 +132,7 @@ export const Qshortcuts = [
     },
 ]
 export const QsearchList = {
-    name: '',
+    glryxm: '',
     rylb: '',
     gj: '',
     rjhbh: '',
@@ -143,5 +143,5 @@ export const QsearchList = {
     sfjzym: "",
     sfyx: '',
     glzt: '',
-    
+    gldfjbh:'',
 }
