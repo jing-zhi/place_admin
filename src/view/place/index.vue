@@ -10,11 +10,12 @@
       >
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
         <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" />
-        <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" />
-        <el-table-column align="left" label="所属乡镇" min-width="80" prop="sq_name" />
-        <el-table-column align="left" label="所属村" min-width="120" prop="jd_name" />
-        <el-table-column align="left" label="详细地址" min-width="150" prop="xxdz" />
+        <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
+        <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="所属乡镇" min-width="90" prop="sq_name" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="所属村" min-width="120" prop="jd_name" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="详细地址" min-width="150" prop="xxdz" show-overflow-tooltip="true" />
         <el-table-column align="left" label="启用状态" min-width="80" prop="qyzt">
           <template #default="scope">
             <el-switch
@@ -31,10 +32,10 @@
         <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
         <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh" />
         <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz" />
-        <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" />
+        <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" show-overflow-tooltip="true" />
         <el-table-column align="left" label="申领时间" min-width="220" prop="slsj" />
-        <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
-        <el-table-column label="操作" min-width="200" fixed="right">
+        
+        <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <!-- <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗</p>
@@ -47,8 +48,8 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button> -->
-            <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
-            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
+            <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button><br>
+            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button><br>
             <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
           </template>
         </el-table-column>
@@ -102,6 +103,7 @@
             </el-form-item> -->
             <el-form-item label="区/街道">
               <el-cascader
+                ref="qx"
                 v-model="value"
                 :options="res"
                 @change="handleChange"
