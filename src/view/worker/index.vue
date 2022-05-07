@@ -476,6 +476,7 @@ const openEdit = (row) => {
     getxzList(row.gzrqx)
     workerInfo.value.gzrxz = row.gzrxz
     workerInfo.value.sj = row.sj.Valid?workerInfo.value.sj.Time:'';
+    if(workerInfo.value.sj == '') delete workerInfo.value.sj 
     //workerInfo.value.sj = row.sj.Time
     console.log(workerInfo.value);
 //   const res = await getApiById({ id: row.id })
