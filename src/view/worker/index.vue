@@ -69,7 +69,12 @@
         <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
         <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq" />
         <el-table-column align="left" label="人员状态" min-width="80" prop="zt" />
-        <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time" />
+        <!-- <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time" /> -->
+        <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time">
+          <template #default="scope">
+            {{tableData.sj = scope.row.sj.Valid?scope.row.sj.Time:''}}
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="调离隔离点编号" min-width="150" prop="dlgldbh" />
         <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
@@ -193,7 +198,6 @@
             </el-select>
           </el-form-item>
           <el-form-item label="调离时间" prop="sj">
-            <!-- <el-input v-model="workerInfo.sj" /> -->
             <el-date-picker v-model="workerInfo.sj" type="date" placeholder="请选择" />
           </el-form-item>
           <el-form-item label="调离隔离点编号" prop="dlgldbh">
@@ -471,14 +475,8 @@ const openEdit = (row) => {
     workerInfo.value.gzrqx = row.gzrqx
     getxzList(row.gzrqx)
     workerInfo.value.gzrxz = row.gzrxz
-    //await 
-    // if(xzList.length) {
-    //     console.log(xzList);
-    //     workerInfo.value.gzrxz = row.gzrxz
-    // }
-
-
-    workerInfo.value.sj = row.sj.Time
+    workerInfo.value.sj = row.sj.Valid?workerInfo.value.sj.Time:'';
+    //workerInfo.value.sj = row.sj.Time
     console.log(workerInfo.value);
 //   const res = await getApiById({ id: row.id })
 //   form.value = res.data.api
@@ -507,6 +505,7 @@ const enterAddDialog = async() => {
       request.gldzwid =zwid.value;
       request.gldgwid =gwid.value;
       request.ztid =ztid.value;
+      //tableData.sj = scope.row.sj.Valid?tableData.sj.Time:'';
       console.log(request)
 
       // 新增
