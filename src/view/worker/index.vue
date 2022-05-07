@@ -15,7 +15,7 @@
             <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
               <el-option
                 v-for="item in ztList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.name"
                  @click="ztSearch(item)"
@@ -185,7 +185,7 @@
             <el-select v-model="workerInfo.zt" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in ztList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.name"
                  @click="ztSelect(item)"
