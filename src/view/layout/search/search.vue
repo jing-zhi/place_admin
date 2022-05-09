@@ -25,24 +25,24 @@
     >
       <div class="gvaIcon gvaIcon-refresh"  :class="[reload ? 'reloading' : '']" @click="handleReload"></div>
     </div>
-    <div
+    <!-- <div
       v-if="btnShow"
       class="user-box"
     >
       <div class="gvaIcon gvaIcon-search"  @click="showSearch"></div>
-    </div>
+    </div> -->
     <div
       v-if="btnShow"
       class="user-box"
     >
       <Screenfull class="search-icon" :style="{cursor:'pointer'}" />
     </div>
-    <div
+    <!-- <div
       v-if="btnShow"
       class="user-box"
     >
      <div class="gvaIcon gvaIcon-customer-service"  @click=""></div>
-    </div>
+    </div> -->
   </div>
 </template>
 

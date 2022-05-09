@@ -1,0 +1,213 @@
+<template>
+  <div>
+    <div class="gva-search-box">
+      <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
+          <el-form-item label="姓名">
+            <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
+          </el-form-item>  
+          <el-form-item label="手机号">
+            <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
+          </el-form-item>    
+          <el-form-item label="身份证">
+            <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
+          </el-form-item>
+          <el-form-item label="体温范围">
+              <el-input v-model="searchWorker.gzrys" min-width="30" placeholder="start" />
+          </el-form-item> 
+          <el-form-item>
+              <el-input v-model="searchWorker.gzrye" min-width="30" placeholder="end" />
+          </el-form-item>       
+          <el-form-item label="打卡时间范围">
+              <el-date-picker
+                    v-model="searchWorker.dk"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                />
+          </el-form-item>      
+          <el-form-item>
+            <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
+            
+            <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+    </div>
+    <div class="gva-table-box">
+      <div class="gva-btn-list"></div>
+      <el-table
+        :data="tableData"
+        row-key="ID"
+      >
+        <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
+        <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
+        <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
+        <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
+        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
+        <el-table-column align="left" label="体温" min-width="150" prop="gzrywd" />
+      </el-table>
+      <div class="gva-pagination">
+        <el-pagination
+          :current-page="page"
+          :page-size="pageSize"
+          :page-sizes="[10, 30, 50, 100]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'workerclock',
+}
+</script>
+
+<script setup>
+import {
+  getWorkerList,
+  
+} from '@/api/csUser/worker.js'
+// 查询搜索
+import { nextTick, ref, watch ,toRaw } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+import {formatTimeToStr} from '@/utils/date.js'
+import { useRoute } from 'vue-router'
+const router = useRoute()
+const csbh = ref('')
+csbh.value = router.params.csbh ? router.params.csbh : ''
+
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(10)
+const tableData = ref([])
+const searchWorker = ref({})
+
+// 分页
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  getTableData()
+}
+
+const handleCurrentChange = (val) => {
+  page.value = val
+  getTableData()
+}
+
+// 查询
+const getTableData = async(value) => {
+    let rqt = { csbh:csbh.value, page: page.value, pageSize: pageSize.value }
+    if(value) {
+        rqt = { csbh:csbh.value, page: page.value, pageSize: pageSize.value, ...value }   
+    } 
+    console.log(rqt);
+    const table = await getWorkerList(rqt)
+    if (table.code === 0) {
+        tableData.value = table.data.list
+        total.value = table.data.total
+        page.value = table.data.page
+        pageSize.value = table.data.pageSize
+    } 
+}
+
+// 搜索
+const onSubmit = async() => {
+    let retFind = toRaw(searchWorker.value)
+    if(searchWorker.value.rz) {
+      retFind.start_time = searchWorker.value.rz[0]
+      retFind.end_time = searchWorker.value.rz[1]
+      delete retFind.rz
+    }
+    if(searchWorker.value.dl) {
+        retFind.transfer_start_time = searchWorker.value.dl[0]
+        retFind.transfer_end_time = searchWorker.value.dl[1]
+        delete retFind.dl
+    }
+    // let resFind = {   
+    //     gzrysfz: "",
+    //     gzrysjh: "",
+    //     gzryxm: "",
+    //     zt: "",
+    //     ztid: null,
+    //     start_time: null,
+    //     end_time:null,
+    //     transfer_start_time:null,
+    //     transfer_end_time:null
+    // }
+    //console.log(resFind)
+    console.log(toRaw(searchWorker.value));
+    //console.log(searchWorker.value)
+
+    getTableData(retFind)
+}
+const onReset = () => {
+  searchWorker.value = {}
+  getTableData()
+}
+
+
+const initPage = async() => {
+    getTableData()
+    dsList.value = dsData;
+}
+
+initPage()
+
+
+</script>
+
+<style lang="scss">
+.user-dialog {
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+
+  .avatar-uploader-icon {
+    border: 1px dashed #d9d9d9 !important;
+    border-radius: 6px;
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+
+  .header-img-box {
+    width: 200px;
+    height: 200px;
+    border: 1px dashed #ccc;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 200px;
+    cursor: pointer;
+  }
+}
+
+.nickName {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pointer {
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 2px;
+}
+.excel-btn+.excel-btn{
+  margin-left: 10px;
+}
+</style>
