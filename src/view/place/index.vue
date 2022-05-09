@@ -274,7 +274,6 @@ const getRes = async() => {
 const initPage = async() => {
   getTableData()
   //getRes()
-  console.log(json.children)
   qxList.value = json.children
 }
 

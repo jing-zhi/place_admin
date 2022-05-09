@@ -3,8 +3,8 @@
     <div class="gva-card-box">
       <div class="gva-card gva-top-card">
         <div class="gva-top-card-left">
-          <div class="gva-top-card-left-title">早安，管理员，请开始一天的工作吧</div>
-          <div class="gva-top-card-left-dot">今日晴，0℃ - 10℃，天气寒冷，注意添加衣物。</div>
+          <div class="gva-top-card-left-title">您好，管理员</div>
+          <div class="gva-top-card-left-dot">疫情期间，注意防护</div>
           <div class="gva-top-card-left-rows">
             <el-row v-auth="888">
               <el-col :span="8" :xs="24" :sm="8">
@@ -55,7 +55,8 @@
         <img src="@/assets/dashboard.png" class="gva-top-card-right" alt>
       </div>
     </div>
-    <div class="gva-card-box">
+    
+    <!-- <div class="gva-card-box">
       <el-card class="gva-card quick-entrance">
         <template #header>
           <div class="card-header">
@@ -82,8 +83,9 @@
           </el-col>
         </el-row>
       </el-card>
-    <!-- <div class="quick-entrance-title"></div> -->
-    </div>
+    <div class="quick-entrance-title"></div>
+    </div> -->
+    
     <!-- <div class="gva-card-box">
       <div class="gva-card">
         <div class="card-header">

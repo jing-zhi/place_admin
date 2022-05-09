@@ -56,7 +56,7 @@
         :data="tableData"
         row-key="ID"
       >
-        <el-table-column align="left" label="id" min-width="70" prop="id" />
+        <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
