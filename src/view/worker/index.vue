@@ -128,7 +128,7 @@
             <el-select v-model="workerInfo.gzrds" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in dsList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.name"
                 :value="item.code"
                 @click="dsSelect(item)"
@@ -139,7 +139,7 @@
             <el-select v-model="workerInfo.gzrqx" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in qxList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.name"
                 :value="item.code"
                  @click="qxSelect(item)"
@@ -150,7 +150,7 @@
             <el-select v-model="workerInfo.gzrxz" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in xzList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.name"
                 :value="item.code"
                 @click="xzSelect(item)"

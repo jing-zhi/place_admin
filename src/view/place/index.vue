@@ -1,21 +1,21 @@
 <template>
   <div>
     <div class="gva-table-box">
-      <!-- <div class="gva-btn-list">
+      <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-      </div> -->
+      </div>
       <el-table
         :data="tableData"
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
         <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" show-overflow-tooltip />
         <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
-        <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" show-overflow-tooltip="true" />
-        <el-table-column align="left" label="所属乡镇" min-width="90" prop="sq_name" show-overflow-tooltip="true" />
-        <el-table-column align="left" label="所属村" min-width="120" prop="jd_name" show-overflow-tooltip="true" />
-        <el-table-column align="left" label="详细地址" min-width="150" prop="xxdz" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" show-overflow-tooltip />
+        <el-table-column align="left" label="所属乡镇" min-width="90" prop="sq_name" show-overflow-tooltip />
+        <el-table-column align="left" label="所属村" min-width="120" prop="jd_name" show-overflow-tooltip />
+        <el-table-column align="left" label="详细地址" min-width="150" prop="xxdz" show-overflow-tooltip />
         <el-table-column align="left" label="启用状态" min-width="80" prop="qyzt">
           <template #default="scope">
             <el-switch
@@ -32,12 +32,12 @@
         <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
         <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh" />
         <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz" />
-        <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" show-overflow-tooltip="true" />
+        <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" show-overflow-tooltip />
         <el-table-column align="left" label="申领时间" min-width="220" prop="slsj" />
         
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
-            <!-- <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗</p>
               <div style="text-align: right; margin-top: 8px;">
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
@@ -47,9 +47,9 @@
                 <el-button type="text" icon="delete" size="small">删除</el-button>
               </template>
             </el-popover>
-            <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button> -->
-            <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button><br>
-            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button><br>
+            <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>
+            <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
+            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
           </template>
         </el-table-column>
@@ -92,31 +92,49 @@
               <el-input v-model="placeInfo.csmc" />
             </el-form-item>
             <!-- 下拉框 -->
-            <!-- <el-form-item label="所属区县" prop="qx_name">
-              <el-input v-model="placeInfo.qx" />
-            </el-form-item>
-            <el-form-item label="所属乡镇" prop="sq_name">
-              <el-input v-model="placeInfo.sq" />
-            </el-form-item>
-            <el-form-item label="所属村" prop="jd_name">
+            
+            <!-- <el-form-item label="所属村" prop="jd_name">
               <el-input v-model="placeInfo.jd" />
             </el-form-item> -->
-            <el-form-item label="区/街道">
+
+            <!-- <el-form-item label="区/街道">
               <el-cascader
                 ref="qx"
                 v-model="value"
                 :options="res"
                 @change="handleChange"
               />
-            </el-form-item>
-            <el-form-item label="村" prop="jd">
-              <el-select v-model="placeInfo.jd_name" class="m-2" placeholder="请选择" size="large">
+            </el-form-item> -->
+            <el-form-item label="所属区县" prop="qx">
+              <el-select v-model="placeInfo.qx" class="m-2" placeholder="请选择" size="large">
                 <el-option
-                  v-for="item in cunList"
-                  :key="item.value"
+                  v-for="item in qxList"
+                  :key="item.code"
                   :label="item.name"
                   :value="item.code"
-                  @click="handleSelect(item)"
+                  @click="qxSelect(item)"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="所属乡镇" prop="sq">
+              <el-select v-model="placeInfo.sq" class="m-2" placeholder="请选择" size="large">
+                <el-option
+                  v-for="item in xzList"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                  @click="xzSelect(item)"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="所属村" prop="jd">
+              <el-select v-model="placeInfo.jd" class="m-2" placeholder="请选择" size="large">
+                <el-option
+                  v-for="item in cunList"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                  @click="cunSelect(item)"
                 />
               </el-select>
             </el-form-item>
@@ -161,7 +179,7 @@ export default {
 
 import { nextTick, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getPlaceList, setStatus, createPlace, setInfo, deletePlace } from '@/api/place.js'
+import { getPlaceList, setStatus, createPlace, setPlace, deletePlace } from '@/api/place.js'
 import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
@@ -174,8 +192,9 @@ const tableData = ref([])
 const res = ref([])
 const areaValue = ref()
 const streetValue = ref()
+const qxList = ref([])
+const xzList = ref([])
 const cunList = ref([])
-const address = ref({})
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -244,18 +263,19 @@ const getRes = async() => {
   for (let i = 0; i < test.length; i++) {
     for (let j = 0; j < test[i].children.length; j++) {
       children[j] = { 'value': test[i].children[j].code, 'label': test[i].children[j].name }
-      // console.log(children[j]);
     }
     ans[i] = { 'value': test[i].code, 'label': test[i].name, 'children': children }
     children = []
   }
   res.value = ans
-  // console.log(ans)
+  console.log(ans)
 }
 
 const initPage = async() => {
   getTableData()
-  getRes()
+  //getRes()
+  console.log(json.children)
+  qxList.value = json.children
 }
 
 initPage()
@@ -311,16 +331,6 @@ const placeInfo = ref({
   'fzrsfz': '',
   'fzrgzdw': '',
   'hylx': '',
-
-//     fzrgzdw: ""
-// gldjd: ""
-// gldwd: ""
-// jd: ""
-// jd_name: "410702001016"
-// qx: ""
-// qx_name: ""
-// sq: ""
-// sq_name: ""
 })
 const rules = ref({
   csmc: [
@@ -328,28 +338,41 @@ const rules = ref({
   ],
   xxdz: [
     { required: true, message: '请输入详细地址', trigger: 'blur' },
-    // { min: 6, message: '最低6位字符', trigger: 'blur' },
   ],
   fzrxm: [
     { required: true, message: '请输入负责人姓名', trigger: 'blur' },
-    { min: 1, max: 5, message: '最低6位字符', trigger: 'blur' },
+    { min: 1, max: 5, message: '不合要求', trigger: 'blur' },
   ],
   fzrdh: [
     { required: true, message: '请输入负责人电话', trigger: 'blur' },
     // 正则
+     { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+        message: '手机号不合法' ,
+        trigger: 'blur'}
   ],
   fzrsfz: [
     { required: true, message: '请输入负责人身份证', trigger: 'blur' },
     // 正则
+    { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+        message: '身份证号不合法' ,
+        trigger: 'blur'}
   ],
   fzrgzdw: [
     { required: true, message: '请输入申领单位', trigger: 'blur' },
-    { min: 2, message: '最低2位字符', trigger: 'blur' },
+    // { min: 2, message: '最低2位字符', trigger: 'blur' },
   ],
   hylx: [
-    { required: true },
+    { required: true, message: '请选择行业类型' },
   ],
-
+  qx:[
+    { required: true, message: '请选择区县' },
+  ],
+  sq:[
+    { required: true, message: '请选择乡镇' },
+  ],
+  jd:[
+    { required: true, message: '请选择该项' },
+  ],
 })
 
 const placeForm = ref(null)
@@ -392,53 +415,39 @@ const editPlaceRoome = (row) => {
 
 // 确认增加修改
 const enterAddDialog = async() => {
-  // placeForm.value.validate(async valid => {
-  //   if (valid) {
-  //     const req = {
-  //       ...placeInfo.value,
-  //     }
-  //     if (dialogFlag.value === 'add') {
-  //       const res = await register(req)
-  //       if (res.code === 0) {
-  //         ElMessage({ type: 'success', message: '创建成功' })
-  //         await getTableData()
-  //         closeAddUserDialog()
-  //       }
-  //     }
-  //     if (dialogFlag.value === 'edit') {
-  //       const res = await setplaceInfo(req)
-  //       if (res.code === 0) {
-  //         ElMessage({ type: 'success', message: '编辑成功' })
-  //         await getTableData()
-  //         closeAddUserDialog()
-  //       }
-  //     }
-  //   }
-  // })
-  const req = {
-    ...placeInfo.value,
-  }
-  console.log(req)
-  // 新增
-  if (dialogFlag.value === 'add') {
-    console.log('add')
-    // const res = await createPlace(req)
-    // if (res.code === 0) {
-    //   ElMessage({ type: 'success', message: '创建成功' })
-    //   await getTableData()
-    //   closeAddUserDialog()
-    // }
-  }
-  // 修改
-  if (dialogFlag.value === 'edit') {
-    console.log('edit')
-    // const res = await setInfo(req)
-    // if (res.code === 0) {
-    //   ElMessage({ type: 'success', message: '编辑成功' })
-    //   await getTableData()
-    //   closeAddUserDialog()
-    // }
-  }
+  placeForm.value.validate(async valid => {
+    if (valid) {
+      const req = {
+        ...placeInfo.value,
+      }
+      req.qx_name = qx_name.value
+      req.sq_name = sq_name.value
+      req.jd_name = jd_name.value
+      console.log(req)
+      // 新增
+      if (dialogFlag.value === 'add') {
+        console.log('add')
+        // const res = await createPlace(req)
+        // if (res.code === 0) {
+        //   ElMessage({ type: 'success', message: '创建成功' })
+        //   await getTableData()
+        //   closeAddUserDialog()
+        // }
+      }
+      // 修改
+      if (dialogFlag.value === 'edit') {
+        console.log('edit')
+        // const res = await setPlace(req)
+        // if (res.code === 0) {
+        //   ElMessage({ type: 'success', message: '编辑成功' })
+        //   await getTableData()
+        //   closeAddUserDialog()
+        // }
+      }
+      
+    }
+  })
+
 }
 
 // 级联切换区/街道
@@ -449,7 +458,7 @@ const handleChange = (value) => {
   console.log(areaValue.value, streetValue.value)
 
   // 获取村选项列表
-  const list = []
+  let list = []
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].streetCode == streetValue.value) {
       let temp = {}
@@ -458,16 +467,42 @@ const handleChange = (value) => {
     }
   }
   cunList.value = list
-
-  let obj = {}
-  obj = res.value.find
-  // address.value = {"qu_id":value[0],"jie_id":value[1]}
 }
 
-const handleSelect = (item) => {
+// const handleSelect = (item) => {
+//   console.log(item)
+// }
+
+const qx_name = ref('')
+const sq_name = ref('')
+const jd_name = ref('')
+const qxSelect = (item) => {
   console.log(item)
-  // address.value[cunName] = cun.name
+  qx_name.value = item.name
+  let qus = json.children;
+  for (let i = 0; i < qus.length; i++) {
+    if (qus[i].code == item.code) {
+        xzList.value = qus[i].children 
+        console.log(xzList.value);
+    }
+  }
 }
+const xzSelect = (item) => {
+  console.log(item)
+  sq_name.value = item.name
+  let list = []
+  for (let i = 0; i < vlgs.length; i++) {
+    if (vlgs[i].streetCode == item.code) {
+      list.push(vlgs[i])
+    }
+  }
+  cunList.value = list
+}
+const cunSelect = (item) => {
+  console.log(item)
+  jd_name.value = item.name
+}
+
 </script>
 
 <style lang="scss">
