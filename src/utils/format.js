@@ -8,10 +8,10 @@ export const formatBoolean = (bool) => {
     return ''
   }
 }
-export const formatDate = (time) => {
+export const formatDate = (time,type='yyyy-MM-dd hh:mm:ss') => {
   if (time !== null && time !== '') {
     var date = new Date(time)
-    return formatTimeToStr(date, 'yyyy-MM-dd hh:mm:ss')
+    return formatTimeToStr(date, type)
   } else {
     return ''
   }

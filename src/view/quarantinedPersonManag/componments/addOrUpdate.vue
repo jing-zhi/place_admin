@@ -3,7 +3,7 @@
   <el-dialog
     v-model="dialogFormVisible"
     :title="dialogTitle"
-    :show-close="false"
+    :show-close="true"
     :before-close="closeDialog"
     :close-on-press-escape="false"
     :close-on-click-modal="false"
@@ -19,15 +19,7 @@
             />
           </el-form-item>
         </el-col>
-        <!-- <el-col :span="12">
-              <el-form-item label="场所编号" label-width="140px" prop="csbh">
-                <el-input
-                  v-model="form.csbh"
-                  placeholder="请输入场所编号"
-                  autocomplete="off"
-                />
-              </el-form-item>
-            </el-col> -->
+     
         <el-col :span="12">
           <el-form-item label="人员类别" label-width="140px" prop="rylb">
             <el-select
@@ -99,6 +91,17 @@
             />
           </el-form-item>
         </el-col>
+         <!-- <el-col :span="12">
+          <el-form-item label="场所编号" prop="csbh" label-width="140px">
+            <el-input
+              :disabled='hasCsbh'
+              style="width: 100%"
+              v-model="form.csbh"
+              placeholder="请输入所在的场所编号"
+              autocomplete="off"
+            />
+          </el-form-item>
+        </el-col> -->
         <el-col :span="12">
           <el-form-item label="入境证件号码" prop="rjzjhm" label-width="140px">
             <el-input
@@ -187,9 +190,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="隔离开始时间" prop="glkssj" label-width="140px" >
+          <el-form-item label="隔离开始时间" prop="glkssj" label-width="140px">
             <el-date-picker
-              
               style="width: 100%"
               v-model="form.glkssj"
               type="date"
@@ -199,14 +201,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item 
-            
+          <el-form-item
             label="预计解除隔离时间"
             prop="yjjcglrq"
             label-width="140px"
           >
             <el-date-picker
-            
               style="width: 100%"
               v-model="form.yjjcglrq"
               type="date"
@@ -374,8 +374,10 @@ import {
   getData,
   singleDelete,
   updateData,
+  getRoomList,
 } from "@/api/quarantinedPersonManag";
-import { defineProps, ref, reactive, inject, nextTick, onMounted } from "vue";
+import { defineProps, ref, reactive, inject, nextTick, onMounted, computed } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
   Qform,
   QrylbList,
@@ -384,6 +386,7 @@ import {
   QcityList,
   QglztList,
 } from "../../../data/quarantined";
+
 //父组件方法
 const dialogFormVisibleShow = inject("dialogFormVisibleShow");
 const reGetData = inject("reGetData");
@@ -397,13 +400,28 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  csbh: {
+    type: String,
+    default: "",
+  },
 });
+// let hasCsbh = computed(()=>{
+//   console.log(csbh)
+//   return csbh?true:false
+// })
 //多选数据
-const roomList = [];
+let roomList = ref([]);
 const rylbList = QrylbList;
 const gjList = QgjList;
 const zjlxList = QzjlxList;
 const cityList = QcityList;
+const csbh = props.csbh;
+const getRoom = async () => {
+  let res = await getRoomList({ PlaceID: csbh, page: 1, pageSize: 999 });
+  console.log(res);
+  roomList.value = res.data.list;
+};
+getRoom();
 // 禁用
 let disable = false;
 //表单
@@ -430,18 +448,21 @@ const checkTime = (rule, value, callback) => {
 };
 const rules = reactive({
   glryxm: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  csbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  // csbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   rylb: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   sfffrjry: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   gj: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   zjlx: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   zjhm: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  sjhm: [{ required: true, message: "必填项不能为空", trigger: "blur" },{
-            pattern: /^1(3|4|5|7|8|9)\d{9}$/,
-            message: "手机号格式错误",
-            trigger: "blur",
-          },],
-  // gldfjbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  sjhm: [
+    { required: true, message: "必填项不能为空", trigger: "blur" },
+    {
+      pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+      message: "手机号格式错误",
+      trigger: "blur",
+    },
+  ],
+  gldfjbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   //   gljssj: [{ validator: checkTime, trigger: "blur" }],
 });
 
@@ -484,20 +505,70 @@ const enterDialog = () => {
     if (!valid) {
       return;
     }
-    console.log(props.dialogTitle);
+    let result = JSON.parse(JSON.stringify(form));
+    result.csbh = csbh;
+    if (!result.gljssj || result.gljssj == "0001-01-01T00:00:00Z") {
+      delete result.gljssj;
+    }
+    if (!result.glkssj || result.glkssj == "0001-01-01T00:00:00Z") {
+      delete result.glkssj;
+    }
+    if (!result.zcsj || result.zcsj == "0001-01-01T00:00:00Z") {
+      delete result.zcsj;
+    }
     if (props.dialogTitle.includes("新增")) {
+      try {
+        console.log("新增");
+        form.gldfjbh = 2;
+        form.csbh = "084107030070091651747871";
+        let res = await addData({ ...result });
+        reGetData();
+        console.log(res, "这是新增是否成功的数据");
+        if (res.code !== 0) {
+          throw new Error(res.msg);
+        }
+        ElMessage({
+          showClose: true,
+          message: res.msg,
+          type: "success",
+          duration: 3000,
+        });
+      } catch (error) {
+        ElMessage({
+          showClose: true,
+          message: error,
+          type: "error",
+          duration: 0,
+        });
+      }
       //新增逻辑处理
-      console.log("新增");
-      form.gldfjbh = 2;
-      form.csbh = "084107030070091651747871";
-      let res = await addData({ ...form });
-      reGetData();
+
+     
     } else {
       //修改逻辑处理
-      console.log("修改");
-      form.gldfjbh = 2;
-      let res = await updateData({ ...form });
-      reGetData();
+      try {
+        console.log("修改");
+        form.gldfjbh = 2;
+        let res = await updateData({ ...result });
+        reGetData();
+        console.log(res, "这是修改是否成功的数据");
+        if (res.code !== 0) {
+          throw new Error(res.msg);
+        }
+        ElMessage({
+          showClose: true,
+          message: res.msg,
+          type: "success",
+          duration: 3000,
+        });
+      } catch (error) {
+        ElMessage({
+          showClose: true,
+          message: error,
+          type: "error",
+          duration: 0,
+        });
+      }
     }
     for (let key in form) {
       form[key] = "";
@@ -506,32 +577,28 @@ const enterDialog = () => {
   });
 };
 //回显数据
-const echoData = (data) => {
+const echoData = (data, v) => {
   disable = true;
   for (let key in form) {
     for (let key1 in data) if (key1 === key) form[key1] = data[key1];
   }
-  if (data.gljssj.Time) {
-    form.gljssj = data.gljssj.Time;
-  }
-  if (data.yjjcglrq.Time) {
-    form.yjjcglrq = data.yjjcglrq.Time;
-  }
-  if (data.zcsj.Time) {
-    form.zcsj = data.zcsj.Time;
-  }
+  if (data.gljssj.Time) form.gljssj = data.gljssj.Time == "0001-01-01T00:00:00Z" ? "" : data.gljssj.Time;
+  
+  if (data.yjjcglrq.Time) form.yjjcglrq = data.yjjcglrq.Time == "0001-01-01T00:00:00Z" ? "" : data.yjjcglrq.Time;
+  
+  if (data.zcsj.Time) form.zcsj = data.zcsj.Time == "0001-01-01T00:00:00Z" ? "" : data.zcsj.Time;
+  
   form.old_gldfjbh = JSON.parse(JSON.stringify(form.gldfjbh)); //保存旧编号
 };
 //新增数据初始化表单
-const initForm = function () {
+const initForm = function (v) {
   disable = false;
   for (let key in form) {
     form[key] = "";
   }
   onMounted(() => {
-    console.log('挂载---refresh')
+    console.log("挂载---refresh");
     Form.value.resetFields();
-
   });
 };
 defineExpose({

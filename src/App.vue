@@ -24,4 +24,10 @@ export default {
 .el-button{
   font-weight: 400 !important;
 }
+.el-scrollbar__bar{
+  height: 10px !important;
+  display: block !important;
+
+}
+
 </style>

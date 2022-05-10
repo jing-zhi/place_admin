@@ -1,15 +1,15 @@
 <template>
   <div>
     
-    <div class="gva-table-box">
-      <div class="gva-btn-list">
+    <div >
+      <div class="gva-table-box" style="margin-bottom:10px;">
         <el-form
           :inline='true'
           ref="searchForm"
           :model="searchInfo"
         >
           <el-form-item label="姓名" label-width='auto'>
-            <el-input v-model="searchInfo.name" placeholder="姓名" />
+            <el-input v-model="searchInfo.glryxm" placeholder="姓名" />
           </el-form-item>
           <el-form-item label="人员类别">
             <el-select
@@ -42,6 +42,17 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="隔离点房间编号" prop="gldfjbh">
+         <el-select :style="{ width: '80%' }" v-model="searchInfo.gldfjbh" placeholder="请选择"  >
+          <el-option
+            v-for="item in roomList"
+            :key="item.ID"
+            :label="item.BuildingNumber+'栋'+item.FloorNumber+'层'+item.RoomNumber+'房间'"
+            :value="item.ID"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
           <el-form-item label="入境航班号" label-width='auto'>
             <el-input v-model="searchInfo.rjhbh" placeholder="入境航班号" />
           </el-form-item>
@@ -51,12 +62,8 @@
           <el-form-item label="手机号码" label-width='auto'>
             <el-input v-model="searchInfo.sjhm" placeholder="手机号码" />
           </el-form-item>
-          <el-form-item label="隔离点房间编号" label-width='auto'>
-            <el-input
-              v-model="searchInfo.gldfjbh"
-              placeholder="隔离点房间编号"
-            />
-          </el-form-item>
+          
+        
             <el-form-item label="隔离状态" label-width='auto'>
             <el-select
               v-model="searchInfo.glzt"
@@ -97,7 +104,7 @@
               <el-option value="1" label="是" />
             </el-select>
           </el-form-item>
-        
+
 
           <div class="searchForm">
              <el-button
@@ -109,7 +116,12 @@
           >
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
           </div>
-          <div>
+          
+          
+         
+        </el-form>
+        </div>
+        <div class="gva-table-box" style="margin-bottom:10px;">
              <el-button
             size="small"
             type="primary"
@@ -118,8 +130,6 @@
             >新增隔离人员</el-button
           >
           </div>
-         
-        </el-form>
       </div>
       <el-table :data="tableData" row-key="ID">
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
@@ -134,6 +144,12 @@
           label="场所编号"
           min-width="230"
           prop="csbh"
+        />
+        <el-table-column
+          align="left"
+          label="场所名称"
+          min-width="230"
+          prop="csmc"
         />
         <el-table-column
           align="left"
@@ -170,7 +186,12 @@
           min-width="150"
           prop="sjhm"
         />
-
+        <el-table-column
+          align="left"
+          label="入境航班编号"
+          min-width="170"
+          prop="rjhbh"
+        />
         <el-table-column
           align="left"
           label="隔离点房间编号"
@@ -190,7 +211,7 @@
         <el-table-column
           align="left"
           label="是否阳性"
-          min-width="220"
+          min-width="120"
           prop="sfyx"
         >
           <template #default="scope">
@@ -215,7 +236,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          min-width="150"
+          min-width="220"
           fixed="right"
           v-if="renew"
         >
@@ -251,6 +272,13 @@
               @click="addOrUpdate(1, scope.row)"
               >编辑</el-button
             >
+             <el-button
+              type="text"
+              icon="edit"
+              size="small"
+              @click="lookOutSign(scope.row)"
+              >打卡</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -270,8 +298,10 @@
         ref="addOrUpdateFormRef"
         :dialogFormVisible="dialogFormVisible"
         :dialogTitle="dialogTitle"
+        :csbh ='csbh '
+       
       />
-    </div>
+    
   </div>
 </template>
 <script>
@@ -290,19 +320,26 @@ import {
   Qshortcuts,
   QsearchList
 } from "../../data/quarantined";
+import { useRoute,useRouter } from 'vue-router'
 import addOrUpdateForm from "./componments/addOrUpdate.vue";
 import { formatTimeToStr } from "@/utils/date";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive } from "@vue/reactivity";
+import { ref, reactive,unref } from "@vue/reactivity";
 import {
   addData,
   getData,
   singleDelete,
   updateData,
+  getRoomList
 } from "@/api/quarantinedPersonManag";
 import { nextTick } from "@vue/runtime-core";
 import { provide } from "vue";
 
+
+const router = useRouter()
+const route = useRoute()
+const csbh = ref('')
+csbh.value = route.params.csbh ? route.params.csbh : ''
 const renew = ref(true); //操作按钮刷新
 const searchInfo = reactive(QsearchList);
 const addOrUpdateFormRef = ref();
@@ -315,10 +352,18 @@ const total = ref(0);
 const rylbList = QrylbList;
 const searchForm = ref()
 const gjList = QgjList ;
+const roomList = ref()//房间
+
 const handleSizeChange = async (val) => {
   pageSize.value = val;
   getTableData();
 };
+const getRoom = async()=>{
+  let res = await getRoomList({"PlaceID":csbh.value,"page":1,"pageSize":999})
+  console.log(res)
+  roomList.value = res.data.list
+}
+getRoom()
 const timeScopeDiv = ()=>{
   searchInfo.start_time = searchInfo.glsj[0]
   searchInfo.end_time = searchInfo.glsj[1]
@@ -331,7 +376,8 @@ const getTableData = async (tag) => {
   const table = await getData({
     page: page.value,
     pageSize: pageSize.value,
-    ...tag
+    ...tag,
+    csbh:csbh.value,
   });
   if (table.code === 0) {
     tableData.value = table.data.list;
@@ -342,7 +388,6 @@ const getTableData = async (tag) => {
 };
 const searchHandler = async() => {//搜索
   getTableData(searchInfo);
-  onReset()
 };
 const onReset = ()=>{//重置
   for(let key in searchInfo){
@@ -373,7 +418,10 @@ const cancel = (row) => {
     renew.value = true;
   });
 };
-
+const lookOutSign = (v)=>{//查看
+console.log(v)
+  router.push({name:'quarantinedPersonSign',params:{cd_id:v.cd_id,csbh:v.csbh||route.params.csbh}})
+}
 // 弹框******************************
 let dialogFormVisible = ref(false);
 let dialogTitle = ref("");
@@ -382,12 +430,12 @@ const addOrUpdate = (v, data) => {
   if (v == 0) {
     //新增操作
     dialogTitle.value = "新增隔离人员信息";
-    addOrUpdateFormRef.value.initForm();
+    addOrUpdateFormRef.value.initForm(unref(roomList));
     dialogFormVisible.value = true;
   } else {
     //修改操作
     dialogTitle.value = "修改隔离人员信息";
-    addOrUpdateFormRef.value.echoData(data);
+    addOrUpdateFormRef.value.echoData(data,roomList);
     dialogFormVisible.value = true;
   }
 };
@@ -405,4 +453,6 @@ provide("reGetData", reGetData);
   display: inline-flex;
   vertical-align: top;
 }
+
+
 </style>
