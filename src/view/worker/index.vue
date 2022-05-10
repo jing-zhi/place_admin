@@ -10,7 +10,8 @@
           </el-form-item>    
           <el-form-item label="身份证">
             <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
-          </el-form-item>    
+          </el-form-item>  
+
           <el-form-item label="状态">
             <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
               <el-option
@@ -56,7 +57,7 @@
         :data="tableData"
         row-key="ID"
       >
-        <el-table-column align="left" label="id" min-width="70" prop="id" />
+        <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
@@ -69,7 +70,12 @@
         <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
         <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq" />
         <el-table-column align="left" label="人员状态" min-width="80" prop="zt" />
-        <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time" />
+        <!-- <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time" /> -->
+        <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time">
+          <template #default="scope">
+            {{tableData.sj = scope.row.sj.Valid?scope.row.sj.Time:''}}
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="调离隔离点编号" min-width="150" prop="dlgldbh" />
         <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
@@ -84,6 +90,8 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>       
+            <el-button type="text" icon="edit" size="small" @click="openDetails(scope.row)">查看打卡详情</el-button>       
+
           </template>
         </el-table-column>
 
@@ -123,7 +131,7 @@
             <el-select v-model="workerInfo.gzrds" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in dsList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.name"
                 :value="item.code"
                 @click="dsSelect(item)"
@@ -134,7 +142,7 @@
             <el-select v-model="workerInfo.gzrqx" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in qxList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.name"
                 :value="item.code"
                  @click="qxSelect(item)"
@@ -145,7 +153,7 @@
             <el-select v-model="workerInfo.gzrxz" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in xzList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.name"
                 :value="item.code"
                 @click="xzSelect(item)"
@@ -159,7 +167,7 @@
             <el-select v-model="workerInfo.gldzw" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in zwList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.name"
                  @click="zwSelect(item)"
@@ -170,7 +178,7 @@
             <el-select v-model="workerInfo.gldgw" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in gwList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.name"
                  @click="gwSelect(item)"
@@ -193,7 +201,6 @@
             </el-select>
           </el-form-item>
           <el-form-item label="调离时间" prop="sj">
-            <!-- <el-input v-model="workerInfo.sj" /> -->
             <el-date-picker v-model="workerInfo.sj" type="date" placeholder="请选择" />
           </el-form-item>
           <el-form-item label="调离隔离点编号" prop="dlgldbh">
@@ -237,10 +244,10 @@ import dsData from '@/utils/address/ds.json'
 import vlgs from '@/utils/address/jlhenan.json'
 
 import {formatTimeToStr} from '@/utils/date.js'
-import { useRoute } from 'vue-router'
-const router = useRoute()
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
 const csbh = ref('')
-csbh.value = router.params.csbh ? router.params.csbh : ''
+csbh.value = route.params.csbh ? route.params.csbh : ''
 
 const page = ref(1)
 const total = ref(0)
@@ -309,12 +316,12 @@ const onSubmit = async() => {
     if(searchWorker.value.rz) {
       retFind.start_time = searchWorker.value.rz[0]
       retFind.end_time = searchWorker.value.rz[1]
-      delete retFind.rz
+      // delete retFind.rz
     }
     if(searchWorker.value.dl) {
         retFind.transfer_start_time = searchWorker.value.dl[0]
         retFind.transfer_end_time = searchWorker.value.dl[1]
-        delete retFind.dl
+      //  delete retFind.dl
     }
     // let resFind = {   
     //     gzrysfz: "",
@@ -466,19 +473,14 @@ const openEdit = (row) => {
     console.log(row.id);
     // console.log(row.value);
     workerInfo.value = JSON.parse(JSON.stringify(row))
-    workerInfo.value.gzrds = row.gzrds
+    //workerInfo.value.gzrds = row.gzrds
     getqxList(row.gzrds)
-    workerInfo.value.gzrqx = row.gzrqx
+    //workerInfo.value.gzrqx = row.gzrqx
     getxzList(row.gzrqx)
-    workerInfo.value.gzrxz = row.gzrxz
-    //await 
-    // if(xzList.length) {
-    //     console.log(xzList);
-    //     workerInfo.value.gzrxz = row.gzrxz
-    // }
-
-
-    workerInfo.value.sj = row.sj.Time
+    //workerInfo.value.gzrxz = row.gzrxz
+    workerInfo.value.sj = row.sj.Valid?workerInfo.value.sj.Time:'';
+    if(workerInfo.value.sj == '') delete workerInfo.value.sj 
+    //workerInfo.value.sj = row.sj.Time
     console.log(workerInfo.value);
 //   const res = await getApiById({ id: row.id })
 //   form.value = res.data.api
@@ -507,6 +509,7 @@ const enterAddDialog = async() => {
       request.gldzwid =zwid.value;
       request.gldgwid =gwid.value;
       request.ztid =ztid.value;
+      //tableData.sj = scope.row.sj.Valid?tableData.sj.Time:'';
       console.log(request)
 
       // 新增
@@ -534,6 +537,19 @@ const enterAddDialog = async() => {
   })
 
 }
+
+// 跳转详情
+const router = useRouter()
+const openDetails = (row) => {
+  console.log(row.id);
+  router.push({
+    name: 'workerclock',
+    params: {
+      'pid': row.id
+    }
+  })
+}
+
 
 // 市 区 镇
 // const dsname = ref("")
