@@ -236,7 +236,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          min-width="220"
+          min-width="260"
           fixed="right"
           v-if="renew"
         >
@@ -277,7 +277,7 @@
               icon="edit"
               size="small"
               @click="lookOutSign(scope.row)"
-              >打卡</el-button
+              >查看打卡详情</el-button
             >
           </template>
         </el-table-column>
