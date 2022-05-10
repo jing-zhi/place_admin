@@ -147,6 +147,12 @@
         />
         <el-table-column
           align="left"
+          label="场所名称"
+          min-width="230"
+          prop="csmc"
+        />
+        <el-table-column
+          align="left"
           label="人员类别"
           min-width="100"
           prop="rylb"
@@ -205,7 +211,7 @@
         <el-table-column
           align="left"
           label="是否阳性"
-          min-width="220"
+          min-width="120"
           prop="sfyx"
         >
           <template #default="scope">
@@ -230,7 +236,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          min-width="150"
+          min-width="220"
           fixed="right"
           v-if="renew"
         >
@@ -265,6 +271,13 @@
               size="small"
               @click="addOrUpdate(1, scope.row)"
               >编辑</el-button
+            >
+             <el-button
+              type="text"
+              icon="edit"
+              size="small"
+              @click="lookOutSign(scope.row)"
+              >打卡</el-button
             >
           </template>
         </el-table-column>
@@ -307,7 +320,7 @@ import {
   Qshortcuts,
   QsearchList
 } from "../../data/quarantined";
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import addOrUpdateForm from "./componments/addOrUpdate.vue";
 import { formatTimeToStr } from "@/utils/date";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -321,9 +334,12 @@ import {
 } from "@/api/quarantinedPersonManag";
 import { nextTick } from "@vue/runtime-core";
 import { provide } from "vue";
-const router = useRoute()
+
+
+const router = useRouter()
+const route = useRoute()
 const csbh = ref('')
-csbh.value = router.params.csbh ? router.params.csbh : ''
+csbh.value = route.params.csbh ? route.params.csbh : ''
 const renew = ref(true); //操作按钮刷新
 const searchInfo = reactive(QsearchList);
 const addOrUpdateFormRef = ref();
@@ -372,7 +388,6 @@ const getTableData = async (tag) => {
 };
 const searchHandler = async() => {//搜索
   getTableData(searchInfo);
-  // onReset()
 };
 const onReset = ()=>{//重置
   for(let key in searchInfo){
@@ -403,7 +418,10 @@ const cancel = (row) => {
     renew.value = true;
   });
 };
-
+const lookOutSign = (v)=>{//查看
+console.log(v)
+  router.push({name:'quarantinedPersonSign',params:{cd_id:v.cd_id,csbh:v.csbh||route.params.csbh}})
+}
 // 弹框******************************
 let dialogFormVisible = ref(false);
 let dialogTitle = ref("");
@@ -435,4 +453,6 @@ provide("reGetData", reGetData);
   display: inline-flex;
   vertical-align: top;
 }
+
+
 </style>

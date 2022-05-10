@@ -68,7 +68,8 @@ export const QcityList = [
     { lable: '信阳', value: '14' },
     { lable: '周口', value: '15' },
     { lable: '驻马店', value: '16'},
-    { lable: '济源示范区', value: '17'},
+    { lable: '济源示范区', value: '17' },
+    { lable: '其他地市', value: '18'},
 ]
 export const QglztList = [
     { lable: '隔离', value: '1' },
