@@ -6,7 +6,7 @@ import service from '@/utils/request'
 // @Router /place [post]
 export const createPlace = (data) => {
   return service({
-    url: '/cd/lists',
+    url: '/cd/cdRegister',
     method: 'post',
     data: data
   })
@@ -24,8 +24,8 @@ export const getPlaceList = (data) => {
 // @Summary 删除场合
 export const deletePlace = (data) => {
   return service({
-    url: '/',
-    method: 'delete',
+    url: '/cd/deleteCd',
+    method: 'post',
     data: data
   })
 }
@@ -36,8 +36,8 @@ export const deletePlace = (data) => {
 // @Router /place [post]
 export const setPlace = (data) => {
   return service({
-    url: '/',
-    method: 'put',
+    url: '/cd/updateCd',
+    method: 'post',
     data: data
   })
 }

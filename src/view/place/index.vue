@@ -77,13 +77,14 @@
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
           <el-form ref="placeForm" :rules="rules" :model="placeInfo" label-width="110px">
-            <el-form-item label="行业类型" prop="hylx">
-              <el-select v-model="placeInfo.hylx" class="m-2" placeholder="请选择行业类型" size="large">
+            <el-form-item label="行业类型" prop="hylx_name">
+              <el-select v-model="placeInfo.hylx_name" class="m-2" placeholder="请选择行业类型" size="large">
                 <el-option
                   v-for="item in options"
-                  :key="item.value"
+                  :key="item.code"
                   :label="item.label"
-                  :value="item.code"
+                  :value="item.label"
+                  @click="hylxSelect(item)"
                 />
               </el-select>
               <!-- <el-input v-model="placeInfo.hylx" /> -->
@@ -195,6 +196,7 @@ const streetValue = ref()
 const qxList = ref([])
 const xzList = ref([])
 const cunList = ref([])
+const hylx = ref()
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -203,7 +205,7 @@ const handleSizeChange = (val) => {
 
 const handleCurrentChange = (val) => {
   page.value = val
-  console.log(val)
+  //console.log(val)
   getTableData()
 }
 
@@ -268,7 +270,7 @@ const getRes = async() => {
     children = []
   }
   res.value = ans
-  console.log(ans)
+  //console.log(ans)
 }
 
 const initPage = async() => {
@@ -290,10 +292,33 @@ const switchChange = async(row) => {
 // 弹窗
 const addDialog = ref(false)
 const closeAddDialog = () => {
-  placeForm.value.resetFields()
   // 置空
+  clearForm()
   addDialog.value = false
 }
+const clearForm = () => {
+  placeForm.value.resetFields()
+  placeInfo.value = {
+    'csmc': '',
+    'qx': '',
+    'qx_name': '',
+    'sq': '',
+    'sq_name': '',
+    'jd': '',
+    'jd_name': '',
+    'xxdz': '',
+    'qyzt': 0,
+    'gldjd': '',
+    'gldwd': '',
+    'fzrxm': '',
+    'fzrdh': '',
+    'fzrsfz': '',
+    'fzrgzdw': '',
+    'hylx_name': '',
+    'hylx': null,
+  }
+}
+
 const dialogFlag = ref('add')
 
 // 新增
@@ -303,8 +328,8 @@ const addPlace = () => {
 }
 // 删除
 const deletePlaceFun = async(row) => {
-  console.log(row.cd_id)
-  const res = await deletePlace({ id: row.cd_id })
+  console.log(row.id)
+  const res = await deletePlace({ id: row.id })
   if (res.code === 0) {
     ElMessage.success('删除成功')
     row.visible = false
@@ -329,7 +354,8 @@ const placeInfo = ref({
   'fzrdh': '',
   'fzrsfz': '',
   'fzrgzdw': '',
-  'hylx': '',
+  'hylx_name': '',
+  'hylx': null,
 })
 const rules = ref({
   csmc: [
@@ -360,7 +386,7 @@ const rules = ref({
     { required: true, message: '请输入申领单位', trigger: 'blur' },
     // { min: 2, message: '最低2位字符', trigger: 'blur' },
   ],
-  hylx: [
+  hylx_name: [
     { required: true, message: '请选择行业类型' },
   ],
   qx:[
@@ -377,7 +403,18 @@ const rules = ref({
 const placeForm = ref(null)
 
 // 修改
-const editPlace = () => {
+const editPlace = (row) => {
+  placeInfo.value = JSON.parse(JSON.stringify(row))
+  //placeInfo.value.qx_name = row.qx_name
+  getXzList(row.qx)
+  //placeInfo.value.sq_name = row.sq_name
+  getCunList(row.sq)
+  //placeInfo.value.jd_name = row.jd_name
+  qx_name.value = row.qx_name
+  sq_name.value = row.sq_name
+  jd_name.value = row.jd_name
+  hylx.value = Number(row.hylx)
+  //console.log(placeInfo.value);
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
@@ -418,30 +455,31 @@ const enterAddDialog = async() => {
     if (valid) {
       const req = {
         ...placeInfo.value,
-      }
+      }     
+      req.hylx = hylx.value
       req.qx_name = qx_name.value
       req.sq_name = sq_name.value
       req.jd_name = jd_name.value
-      console.log(req)
+      //console.log(req)
       // 新增
       if (dialogFlag.value === 'add') {
         console.log('add')
-        // const res = await createPlace(req)
-        // if (res.code === 0) {
-        //   ElMessage({ type: 'success', message: '创建成功' })
-        //   await getTableData()
-        //   closeAddUserDialog()
-        // }
+        const res = await createPlace(req)
+        if (res.code === 0) {
+          ElMessage({ type: 'success', message: '创建成功' })
+          await getTableData()
+          closeAddDialog()
+        }
       }
       // 修改
       if (dialogFlag.value === 'edit') {
         console.log('edit')
-        // const res = await setPlace(req)
-        // if (res.code === 0) {
-        //   ElMessage({ type: 'success', message: '编辑成功' })
-        //   await getTableData()
-        //   closeAddUserDialog()
-        // }
+        const res = await setPlace(req)
+        if (res.code === 0) {
+          ElMessage({ type: 'success', message: '编辑成功' })
+          await getTableData()
+          closeAddDialog()
+        }
       }
       
     }
@@ -478,20 +516,26 @@ const jd_name = ref('')
 const qxSelect = (item) => {
   console.log(item)
   qx_name.value = item.name
+  getXzList(item.code)
+}
+const getXzList = async(code) => {
   let qus = json.children;
   for (let i = 0; i < qus.length; i++) {
-    if (qus[i].code == item.code) {
+    if (qus[i].code == code) {
         xzList.value = qus[i].children 
-        console.log(xzList.value);
+        //console.log(xzList.value);
     }
   }
 }
 const xzSelect = (item) => {
   console.log(item)
   sq_name.value = item.name
+  getCunList(item.code)
+}
+const getCunList = async(code) => {
   let list = []
   for (let i = 0; i < vlgs.length; i++) {
-    if (vlgs[i].streetCode == item.code) {
+    if (vlgs[i].streetCode == code) {
       list.push(vlgs[i])
     }
   }
@@ -501,56 +545,14 @@ const cunSelect = (item) => {
   console.log(item)
   jd_name.value = item.name
 }
-
+const hylxSelect = (item) => {
+  hylx.value = item.code
+}
 </script>
 
 <style lang="scss">
-.user-dialog {
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
-
-  .avatar-uploader-icon {
-    border: 1px dashed #d9d9d9 !important;
-    border-radius: 6px;
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-
-  .header-img-box {
-    width: 200px;
-    height: 200px;
-    border: 1px dashed #ccc;
-    border-radius: 20px;
-    text-align: center;
-    line-height: 200px;
-    cursor: pointer;
-  }
-}
-
-.nickName {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.pointer {
-  cursor: pointer;
-  font-size: 16px;
-  margin-left: 2px;
-}
-
 .excel-btn + .excel-btn {
   margin-left: 10px;
 }
+
 </style>

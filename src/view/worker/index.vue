@@ -10,7 +10,8 @@
           </el-form-item>    
           <el-form-item label="身份证">
             <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
-          </el-form-item>    
+          </el-form-item>  
+
           <el-form-item label="状态">
             <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
               <el-option
@@ -89,6 +90,8 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>       
+            <el-button type="text" icon="edit" size="small" @click="openDetails(scope.row)">查看打卡详情</el-button>       
+
           </template>
         </el-table-column>
 
@@ -164,7 +167,7 @@
             <el-select v-model="workerInfo.gldzw" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in zwList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.name"
                  @click="zwSelect(item)"
@@ -175,7 +178,7 @@
             <el-select v-model="workerInfo.gldgw" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in gwList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.name"
                  @click="gwSelect(item)"
@@ -241,10 +244,10 @@ import dsData from '@/utils/address/ds.json'
 import vlgs from '@/utils/address/jlhenan.json'
 
 import {formatTimeToStr} from '@/utils/date.js'
-import { useRoute } from 'vue-router'
-const router = useRoute()
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
 const csbh = ref('')
-csbh.value = router.params.csbh ? router.params.csbh : ''
+csbh.value = route.params.csbh ? route.params.csbh : ''
 
 const page = ref(1)
 const total = ref(0)
@@ -313,12 +316,12 @@ const onSubmit = async() => {
     if(searchWorker.value.rz) {
       retFind.start_time = searchWorker.value.rz[0]
       retFind.end_time = searchWorker.value.rz[1]
-      delete retFind.rz
+      // delete retFind.rz
     }
     if(searchWorker.value.dl) {
         retFind.transfer_start_time = searchWorker.value.dl[0]
         retFind.transfer_end_time = searchWorker.value.dl[1]
-        delete retFind.dl
+      //  delete retFind.dl
     }
     // let resFind = {   
     //     gzrysfz: "",
@@ -470,11 +473,11 @@ const openEdit = (row) => {
     console.log(row.id);
     // console.log(row.value);
     workerInfo.value = JSON.parse(JSON.stringify(row))
-    workerInfo.value.gzrds = row.gzrds
+    //workerInfo.value.gzrds = row.gzrds
     getqxList(row.gzrds)
-    workerInfo.value.gzrqx = row.gzrqx
+    //workerInfo.value.gzrqx = row.gzrqx
     getxzList(row.gzrqx)
-    workerInfo.value.gzrxz = row.gzrxz
+    //workerInfo.value.gzrxz = row.gzrxz
     workerInfo.value.sj = row.sj.Valid?workerInfo.value.sj.Time:'';
     if(workerInfo.value.sj == '') delete workerInfo.value.sj 
     //workerInfo.value.sj = row.sj.Time
@@ -534,6 +537,19 @@ const enterAddDialog = async() => {
   })
 
 }
+
+// 跳转详情
+const router = useRouter()
+const openDetails = (row) => {
+  console.log(row.id);
+  router.push({
+    name: 'workerclock',
+    params: {
+      'pid': row.id
+    }
+  })
+}
+
 
 // 市 区 镇
 // const dsname = ref("")

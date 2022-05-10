@@ -59,3 +59,12 @@ export const setWorker = (data) => {
     data: data
   })
 }
+
+// 详情
+export const getWorkerDetailsList = (data) => {
+  return service({
+    url: '/cdworker/pageWorkerRecordList',
+    method: 'post',
+    data: data
+  })
+}
