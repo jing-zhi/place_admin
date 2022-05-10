@@ -419,8 +419,8 @@ const cancel = (row) => {
   });
 };
 const lookOutSign = (v)=>{//查看
-console.log(v)
-  router.push({name:'quarantinedPersonSign',params:{cd_id:v.cd_id,csbh:v.csbh||route.params.csbh}})
+console.log(v,'此人的id')
+  router.push({name:'quarantinedPersonSign',params:{zjhm:v.zjhm,csbh:v.csbh||route.params.csbh}})
 }
 // 弹框******************************
 let dialogFormVisible = ref(false);

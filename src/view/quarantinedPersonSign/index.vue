@@ -9,10 +9,10 @@
           <el-form-item
             label="身份证号"
             label-width="auto"
-            prop="documentNumber"
+            prop="gzrsfz"
           >
             <el-input
-              v-model="searchInfo.documentNumber"
+              v-model="searchInfo.gzrsfz"
               placeholder="身份证号"
             />
           </el-form-item>
@@ -295,11 +295,11 @@ const timeScopeDiv = () => {
 };
 //路由跳转拿到的数据
 const route = useRoute();
-const cd_id = route.params.cd_id ? route.params.cd_id : "";
+const zjhm= route.params.zjhm ? route.params.zjhm : "";
 // const csbh = route.params.csbh ? route.params.csbh :"";
 console.log(
-  cd_id,
-  "拿到了路由跳转的人的id",
+  zjhm,
+  "拿到了路由跳转的人的zjhm",
   "route.params.cd_id",
   route.params
 );
@@ -343,10 +343,12 @@ const getTableData = async () => {
   const searchList = JSON.parse(JSON.stringify(searchInfo));
 
   delete searchList.csbh;
+  delete searchList.Time
+  delete searchList.SMTime
   const table = await getData({
     page: page.value,
     pageSize: pageSize.value,
-    ID: route.params.cd_id ? parseInt(route.params.cd_id) : 0,
+    zjhm: route.params.zjhm? route.params.zjhm : '',
     csbh: Rcsbh,
     ...searchList,
   });

@@ -1,6 +1,6 @@
 export const QSsearchList = {
     name: "",//姓名
-    documentNumber: "",//身份证
+    gzrsfz: "",//身份证
     phone: "",//收集
     hasHsjl: '',//有无核酸
     small_bodyTemperature: '',//开始体温
