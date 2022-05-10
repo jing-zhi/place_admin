@@ -58,6 +58,11 @@
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
         <el-table-column align="left" label="工作区域" min-width="150" prop="gzqy" />
         <el-table-column align="left" label="温度" min-width="150" prop="gzrtw" />
+        <el-table-column align="left" label="扫码时间" min-width="150" prop="smsj">
+          <template #default="scope">
+            {{tableData.smsj = scope.row.smsj?timestampToTime(scope.row.smsj):''}}
+          </template>
+        </el-table-column>
       </el-table>
       <div class="gva-pagination">
         <el-pagination
@@ -178,6 +183,16 @@ const onReset = () => {
   getTableData()
 }
 
+const timestampToTime = (timestamp) => {
+	var date = new Date(timestamp)
+	var Y = date.getFullYear() + '-'
+	var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+	var D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+	var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+	var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+	var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+	return Y + M + D + h + m + s
+}
 
 const initPage = async() => {
     getTableData()
