@@ -51,6 +51,14 @@ export const updatePlaceRoom = (data) => {
   })
 }
 
+export const updatePlaceRoomState = (data) => {
+  return service({
+    url: '/placeRoom/updatePlaceRoomState',
+    method: 'post',
+    data
+  })
+}
+
 // @Tags Api
 // @Summary 删除指定api
 // @Security ApiKeyAuth
