@@ -1,5 +1,48 @@
 <template>
   <div>
+    <div class="gva-search-box">
+      <el-form :inline="true" :model="searchPlace" style="margin-left:20px">
+          <el-form-item label="场所编号" prop="csbh">
+            <el-input v-model="searchPlace.csbh"   placeholder="场所编号" size="" />
+          </el-form-item>
+          <el-form-item label="场所名称" prop="csmc">
+            <el-input v-model="searchPlace.csmc"   placeholder="场所名称" />
+          </el-form-item> 
+
+          <el-form-item label="行业类型" prop="hylx">
+              <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
+                <el-option
+                  v-for="item in options"
+                  :key="item.code"
+                  :label="item.label"
+                  :value="item.code"
+                />
+              </el-select>
+          </el-form-item>
+          <el-form-item label="启用状态">
+            <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择人员状态" size="large">
+              <el-option label="是" :value="1" />
+              <el-option label="否" :value="0" />
+            </el-select>
+          </el-form-item> 
+          <el-form-item label="负责人姓名">
+            <el-input v-model="searchPlace.fzrxm" min-width="50" placeholder="负责人姓名" />
+          </el-form-item>  
+          <el-form-item label="负责人电话">
+            <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="负责人电话" />
+          </el-form-item>    
+          <el-form-item label="负责人身份证">
+            <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
+          </el-form-item>  
+
+          
+          <el-form-item>
+            <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
+            
+            <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
+          </el-form-item>
+      </el-form>
+    </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
@@ -178,7 +221,7 @@ export default {
 
 <script setup>
 
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getPlaceList, setStatus, createPlace, setPlace, deletePlace } from '@/api/place.js'
 import json from '@/utils/address/xinxiang.json'
@@ -189,6 +232,8 @@ const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
+const searchPlace = ref({})
+
 // 区和街道
 const res = ref([])
 const areaValue = ref()
@@ -210,9 +255,13 @@ const handleCurrentChange = (val) => {
 }
 
 // 查询
-const getTableData = async() => {
-  // console.log({ page: page.value, pageSize: pageSize.value });
-  const table = await getPlaceList({ page: page.value, pageSize: pageSize.value })
+const getTableData = async(value) => {
+    let rqt = { page: page.value, pageSize: pageSize.value }
+    if(value) {
+        rqt = { page: page.value, pageSize: pageSize.value, ...value }   
+    } 
+    console.log(rqt);
+  const table = await getPlaceList(rqt)
   if (table.code === 0) {
     // console.log(table)
     tableData.value = table.data.list
@@ -271,6 +320,17 @@ const getRes = async() => {
   }
   res.value = ans
   //console.log(ans)
+}
+
+// 搜索
+const onSubmit = async() => {
+    let retFind = toRaw(searchPlace.value)
+    console.log(retFind);
+    getTableData(retFind)
+}
+const onReset = () => {
+  searchPlace.value = {}
+  getTableData()
 }
 
 const initPage = async() => {
