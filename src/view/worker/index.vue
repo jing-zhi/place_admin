@@ -2,6 +2,13 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
+          <el-form-item v-show="csbh==''" label="场所编号" prop="csbh">
+            <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
+          </el-form-item>
+          <el-form-item v-show="csbh==''" label="场所名称" prop="csmc">
+            <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
+          </el-form-item> 
+
           <el-form-item label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
           </el-form-item>  
@@ -46,7 +53,7 @@
             
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
           </el-form-item>
-        </el-form>
+      </el-form>
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
@@ -59,6 +66,7 @@
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
+        <el-table-column align="left" label="场所名称" min-width="120" prop="csmc" />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
@@ -90,7 +98,7 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>       
-            <el-button type="text" icon="edit" size="small" @click="openDetails(scope.row)">查看打卡详情</el-button>       
+            <el-button type="text" icon="edit" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>       
 
           </template>
         </el-table-column>
@@ -118,6 +126,9 @@
       >
       <div style="height:60vh;overflow:auto;padding:0 10px;">
         <el-form ref="workerForm"  :rules="rules" :model="workerInfo" label-width="130px">
+          <el-form-item label="场所编号" prop="csbh">
+            <el-input v-model="csbh"   placeholder="场所编号" />
+          </el-form-item>
           <el-form-item label="工作人员姓名" prop="gzryxm">
             <el-input v-model="workerInfo.gzryxm" />
           </el-form-item>
@@ -349,6 +360,7 @@ const onReset = () => {
 const initPage = async() => {
     getTableData()
     dsList.value = dsData;
+    console.log(csbh.value);
 }
 
 initPage()

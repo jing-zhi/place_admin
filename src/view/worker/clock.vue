@@ -2,6 +2,13 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
+          <el-form-item v-show="pid==null" label="场所编号" prop="csbh">
+            <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
+          </el-form-item>
+          <el-form-item v-show="pid==null" label="场所名称" prop="csmc">
+            <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
+          </el-form-item> 
+
           <el-form-item v-show="pid==null" label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
           </el-form-item>  
@@ -22,13 +29,13 @@
               />
             </el-select>
           </el-form-item> 
-          <el-form-item label="温度">
-            <el-input v-model="searchWorker.temp_min" min-width="80" placeholder="最低" />
+          <el-form-item label="体温范围">
+            <el-input v-model="searchWorker.temp_min" min-width="80" placeholder="最低体温" />
           </el-form-item> 
           <el-form-item>
-            <el-input v-model="searchWorker.temp_max" min-width="80" placeholder="最高" />
+            <el-input v-model="searchWorker.temp_max" min-width="80" placeholder="最高体温" />
           </el-form-item>   
-          <el-form-item label="打卡时间范围">
+          <el-form-item label="扫码时间范围">
               <el-date-picker
                     v-model="searchWorker.dk"
                     type="daterange"
@@ -57,7 +64,7 @@
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
         <el-table-column align="left" label="工作区域" min-width="150" prop="gzqy" />
-        <el-table-column align="left" label="温度" min-width="150" prop="gzrtw" />
+        <el-table-column align="left" label="体温" min-width="150" prop="gzrtw" />
         <el-table-column align="left" label="扫码时间" min-width="150" prop="smsj">
           <template #default="scope">
             {{tableData.smsj = scope.row.smsj?timestampToTime(scope.row.smsj):''}}
