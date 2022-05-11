@@ -489,7 +489,7 @@ const enterWorker = (row) => {
     }
   })
 }
-//跳转隔离人员管理
+// 跳转隔离人员管理
 const enterPeople = (row) => {
   router.push({
     name: 'quarantinedPersonManag',

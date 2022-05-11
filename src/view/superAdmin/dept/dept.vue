@@ -60,7 +60,7 @@
           <el-input v-model="form.deptName" autocomplete="off" />
         </el-form-item>
         <el-form-item :hidden="true" label="部门ID" prop="ID">
-          <el-input  v-model="form.ID" autocomplete="off" />
+          <el-input v-model="form.ID" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -247,7 +247,7 @@ const setDepartMentOptions = (deptData, optionsData, disabled) => {
   deptData.forEach(item => {
     if (item.children && item.children.length) {
       const option = {
-        deptId: item.ID,
+        deptId: String(item.ID),
         deptName: item.deptName,
         disabled: disabled || item.ID === form.value.ID,
         children: [],
@@ -260,7 +260,7 @@ const setDepartMentOptions = (deptData, optionsData, disabled) => {
       optionsData.push(option)
     } else {
       const option = {
-        deptId: item.ID,
+        deptId: String(item.ID),
         deptName: item.deptName,
         disabled: disabled || item.ID === form.value.ID,
       }

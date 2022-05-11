@@ -5,6 +5,19 @@
         <el-form-item label="场所编号">
           <el-input v-model="searchInfo.PlaceID" placeholder="场所编号" />
         </el-form-item>
+        <el-form-item label="场所名称">
+          <el-input v-model="searchInfo.PlaceName" placeholder="场所名称" />
+        </el-form-item>
+        <el-form-item label="房间状态">
+          <el-cascader
+            v-model="searchInfo.State"
+            style="width:100%"
+            :options="queryStateOptions"
+            :show-all-levels="false"
+            :props="{ multiple:false,checkStrictly: true,label:'state',value:'state_id',emitPath:false}"
+            :clearable="false"
+          />
+        </el-form-item>
         <el-form-item label="原房间号">
           <el-input v-model="searchInfo.RoomNumber" placeholder="原房间号" />
         </el-form-item>
@@ -30,11 +43,34 @@
         <el-table-column align="left" label="隔离点楼层号" min-width="150" prop="FloorNumber" />
         <el-table-column align="left" label="隔离点房间使用状态" min-width="150" prop="State">
           <template #default="scope">
-            <el-switch
+            <el-cascader
               v-model="scope.row.State"
-              :disabled="true"
-              :active-value="'1'"
-              :inactive-value="'0'"
+              style="width:100%"
+              :options="stateOptions"
+              :show-all-levels="false"
+              :props="{ multiple:false,checkStrictly: true,label:'state',value:'state_id',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeState(scope.row,flag)}"
+              @remove-tag="()=>{changeState(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="消毒完成时间" min-width="250">
+          <template #default="scope">
+            <el-date-picker
+              v-if="scope.row.State === '0'"
+              v-model="scope.row.CleanTime.Time"
+              :disabled="scope.row.State !== '0'"
+              type="datetime"
+              placeholder="消毒完成时间"
+              @change="()=>{changeCleanTime(scope.row)}"
+            />
+            <el-date-picker
+              v-else
+              :disabled="scope.row.State !== '0'"
+              type="datetime"
+              placeholder="消毒完成时间"
+              @change="()=>{changeCleanTime(scope.row)}"
             />
           </template>
         </el-table-column>
@@ -114,9 +150,15 @@ export default {
 
 <script setup>
 import warningBar from '@/components/warningBar/warningBar.vue'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getPlaceRoomList, createPlaceRoom, updatePlaceRoom, deletePlaceRoom } from '@/api/place_room'
+import {
+  getPlaceRoomList,
+  createPlaceRoom,
+  updatePlaceRoom,
+  deletePlaceRoom,
+  updatePlaceRoomState,
+} from '@/api/place_room'
 import { formatDate } from '@/utils/format'
 
 const form = ref({
@@ -126,6 +168,10 @@ const form = ref({
   BuildingNumber: '',
   FloorNumber: '',
   State: '',
+  CleanTime: {
+    Time: '',
+    Valid: false
+  },
 })
 
 const type = ref('')
@@ -155,6 +201,58 @@ const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
 const searchInfo = ref({ PlaceID: placeID.value })
+const stateOptions = ref([{
+  'state': '消毒中',
+  'state_id': '0',
+  'disabled': true
+},
+{
+  'state': '空闲中',
+  'state_id': '1',
+},
+{
+  'state': '使用中',
+  'state_id': '2',
+  'disabled': true
+}])
+const changeState = async(row, flag) => {
+  if (flag) {
+    return
+  }
+
+  await nextTick()
+  const res = await updatePlaceRoomState({
+    ID: row.ID,
+    State: row.State,
+  })
+  if (res.code === 0) {
+    ElMessage({ type: 'success', message: '状态更新成功' })
+  }
+}
+
+const changeCleanTime = async(row) => {
+  await nextTick()
+  const res = await updatePlaceRoomState({
+    ID: row.ID,
+    CleanTime: row.CleanTime.Time,
+  })
+  if (res.code === 0) {
+    ElMessage({ type: 'success', message: '消毒完成时间更新成功' })
+  }
+}
+
+const queryStateOptions = ref([{
+  'state': '消毒中',
+  'state_id': '0',
+},
+{
+  'state': '空闲中',
+  'state_id': '1',
+},
+{
+  'state': '使用中',
+  'state_id': '2',
+}])
 
 const onReset = () => {
   searchInfo.value = {}
