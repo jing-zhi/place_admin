@@ -12,7 +12,8 @@ export const QSsearchList = {
     start_time: '',//扫码结束
     end_time:'',//扫码开始
     SMTime: '',
-    csbh:'',
+    csbh: '',//场所编号
+    csmc:'',//场所名称
     Time:''//这个做数据处理用的，
 }
 export const QSsymptomList = [

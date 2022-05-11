@@ -19,6 +19,10 @@
           <el-form-item label="手机号码" label-width="auto" prop="phone">
             <el-input v-model="searchInfo.phone" placeholder="手机号" />
           </el-form-item>
+         
+          <el-form-item label="场所名称" label-width="auto" prop="csmc">
+            <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
+          </el-form-item>
           <el-form-item
             label="有无有效核酸记录"
             label-width="auto"
@@ -116,44 +120,44 @@
     </div>
     <el-table :data="tableData" row-key="ID">
       <el-table-column
-        align="left"
-        label="打卡人姓名"
+        align="center"
+        label="扫码人姓名"
         min-width="120"
         prop="name"
       />
       <el-table-column
-        align="left"
-        label="打卡人身份证号"
+        align="center"
+        label="扫码人身份证号"
         min-width="180"
         prop="documentNumber"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="手机号"
         min-width="100"
         prop="phone"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="场所码编号"
         min-width="120"
         prop="placeNumber"
       >
       </el-table-column>
       <el-table-column
-        align="left"
-        label="打卡人体温"
+        align="center"
+        label="扫码人体温"
         min-width="120"
         prop="bodyTemperature"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="症状信息"
         min-width="120"
         prop="symptomInformation"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="有无有效核酸记录"
         min-width="140"
         prop="hasHsjl"
@@ -163,13 +167,13 @@
         </template>
       </el-table-column>
       <!-- <el-table-column
-          align="left"
+          align="center"
           label="核酸规则"
           min-width="150"
           prop="sjhm"
         /> -->
       <el-table-column
-        align="left"
+        align="center"
         label="核酸时间"
         min-width="170"
         prop="hsTime"
@@ -183,13 +187,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="left"
+        align="center"
         label="核酸结果"
         min-width="170"
         prop="hsResult"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="扫码时间"
         min-width="160"
         prop="createdAt"
