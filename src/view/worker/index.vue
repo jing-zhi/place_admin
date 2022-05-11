@@ -527,12 +527,12 @@ const enterAddDialog = async() => {
       // 新增
       if (dialogFlag.value === 'add') {
         console.log("add")
-        // const res = await createWorker(request)
-        // if (res.code === 0) {
-        //   ElMessage({ type: 'success', message: '创建成功' })
-        //   await getTableData()
-        //   closeAddDialog()
-        // }
+        const res = await createWorker(request)
+        if (res.code === 0) {
+          ElMessage({ type: 'success', message: '创建成功' })
+          await getTableData()
+          closeAddDialog()
+        }
       }
       // 修改
       if (dialogFlag.value === 'edit') {
