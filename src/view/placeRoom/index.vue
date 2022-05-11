@@ -5,6 +5,9 @@
         <el-form-item label="场所编号">
           <el-input v-model="searchInfo.PlaceID" placeholder="场所编号" />
         </el-form-item>
+        <el-form-item label="场所名称">
+          <el-input v-model="searchInfo.PlaceName" placeholder="场所名称" />
+        </el-form-item>
         <el-form-item label="房间状态">
           <el-cascader
             v-model="searchInfo.State"
