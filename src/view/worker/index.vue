@@ -50,8 +50,10 @@
           </el-form-item>      
           <el-form-item>
             <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
-            
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
+
+            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('cdWorker_export.xlsx')">按条件导出</el-button>
+
           </el-form-item>
       </el-form>
     </div>
@@ -66,7 +68,7 @@
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="120" prop="csmc" />
+        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
@@ -126,7 +128,7 @@
       >
       <div style="height:60vh;overflow:auto;padding:0 10px;">
         <el-form ref="workerForm"  :rules="rules" :model="workerInfo" label-width="130px">
-          <el-form-item label="场所编号" prop="csbh">
+          <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
             <el-input v-model="csbh"   placeholder="场所编号" />
           </el-form-item>
           <el-form-item label="工作人员姓名" prop="gzryxm">
@@ -247,6 +249,7 @@ import {
   setWorker
 } from '@/api/csUser/worker.js'
 
+import { exportExcel, loadExcelData, downloadTemplate } from '@/api/excel'
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import dsData from '@/utils/address/ds.json'
@@ -321,6 +324,7 @@ const getTableData = async(value) => {
     } 
 }
 
+const find = ref({})
 // 搜索
 const onSubmit = async() => {
     let retFind = toRaw(searchWorker.value)
@@ -348,7 +352,7 @@ const onSubmit = async() => {
     //console.log(resFind)
     console.log(toRaw(searchWorker.value));
     //console.log(searchWorker.value)
-
+    find.value = retFind
     getTableData(retFind)
 }
 const onReset = () => {
@@ -636,6 +640,18 @@ const ztSearch = (item) => {
     //console.log(searchWorker);
 }
 
+
+// 导出
+const handleExcelExport = (fileName) => {
+  if (!fileName || typeof fileName !== 'string') {
+    fileName = 'cdWorker_export.xlsx'
+  }
+  exportExcel(tableData.value, fileName)
+
+  onSubmit()
+  console.log(find.value)
+  exportExcel(find.value, fileName)
+}
 </script>
 
 <style lang="scss">
