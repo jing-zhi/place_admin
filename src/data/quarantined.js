@@ -144,5 +144,7 @@ export const QsearchList = {
     sfjzym: "",
     sfyx: '',
     glzt: '',
-    gldfjbh:'',
+    gldfjbh: '',
+    csbh: '',
+    csmc:'',
 }

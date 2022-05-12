@@ -1,4 +1,4 @@
-<template>
+<template>场所名称名称
   <div>
     <div>
       <div class="gva-table-box" style="margin-bottom: 10px">
@@ -9,15 +9,19 @@
           <el-form-item
             label="身份证号"
             label-width="auto"
-            prop="documentNumber"
+            prop="gzrsfz"
           >
             <el-input
-              v-model="searchInfo.documentNumber"
+              v-model="searchInfo.gzrsfz"
               placeholder="身份证号"
             />
           </el-form-item>
           <el-form-item label="手机号码" label-width="auto" prop="phone">
             <el-input v-model="searchInfo.phone" placeholder="手机号" />
+          </el-form-item>
+         
+          <el-form-item label="场所名称" label-width="auto" prop="csmc">
+            <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
           </el-form-item>
           <el-form-item
             label="有无有效核酸记录"
@@ -116,44 +120,44 @@
     </div>
     <el-table :data="tableData" row-key="ID">
       <el-table-column
-        align="left"
-        label="打卡人姓名"
+        align="center"
+        label="扫码人姓名"
         min-width="120"
         prop="name"
       />
       <el-table-column
-        align="left"
-        label="打卡人身份证号"
+        align="center"
+        label="扫码人身份证号"
         min-width="180"
         prop="documentNumber"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="手机号"
         min-width="100"
         prop="phone"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="场所码编号"
         min-width="120"
         prop="placeNumber"
       >
       </el-table-column>
       <el-table-column
-        align="left"
-        label="打卡人体温"
+        align="center"
+        label="扫码人体温"
         min-width="120"
         prop="bodyTemperature"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="症状信息"
         min-width="120"
         prop="symptomInformation"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="有无有效核酸记录"
         min-width="140"
         prop="hasHsjl"
@@ -163,13 +167,13 @@
         </template>
       </el-table-column>
       <!-- <el-table-column
-          align="left"
+          align="center"
           label="核酸规则"
           min-width="150"
           prop="sjhm"
         /> -->
       <el-table-column
-        align="left"
+        align="center"
         label="核酸时间"
         min-width="170"
         prop="hsTime"
@@ -183,13 +187,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="left"
+        align="center"
         label="核酸结果"
         min-width="170"
         prop="hsResult"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="扫码时间"
         min-width="160"
         prop="createdAt"
@@ -295,11 +299,11 @@ const timeScopeDiv = () => {
 };
 //路由跳转拿到的数据
 const route = useRoute();
-const cd_id = route.params.cd_id ? route.params.cd_id : "";
+const zjhm= route.params.zjhm ? route.params.zjhm : "";
 // const csbh = route.params.csbh ? route.params.csbh :"";
 console.log(
-  cd_id,
-  "拿到了路由跳转的人的id",
+  zjhm,
+  "拿到了路由跳转的人的zjhm",
   "route.params.cd_id",
   route.params
 );
@@ -343,10 +347,12 @@ const getTableData = async () => {
   const searchList = JSON.parse(JSON.stringify(searchInfo));
 
   delete searchList.csbh;
+  delete searchList.Time
+  delete searchList.SMTime
   const table = await getData({
     page: page.value,
     pageSize: pageSize.value,
-    ID: route.params.cd_id ? parseInt(route.params.cd_id) : 0,
+    zjhm: route.params.zjhm? route.params.zjhm : '',
     csbh: Rcsbh,
     ...searchList,
   });

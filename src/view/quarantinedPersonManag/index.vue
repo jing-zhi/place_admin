@@ -53,18 +53,24 @@
           </el-option>
         </el-select>
       </el-form-item>
-          <el-form-item label="入境航班号" label-width='auto'>
+          <el-form-item label="入境航班号" label-width='auto' prop="rjhbh">
             <el-input v-model="searchInfo.rjhbh" placeholder="入境航班号" />
           </el-form-item>
-          <el-form-item label="身份证号" label-width='auto'>
+          <el-form-item label="身份证号" label-width='auto' prop="zjhm">
             <el-input v-model="searchInfo.zjhm" placeholder="身份证号" />
           </el-form-item>
-          <el-form-item label="手机号码" label-width='auto'>
+          <el-form-item label="手机号码" label-width='auto' prop="sjhm">
             <el-input v-model="searchInfo.sjhm" placeholder="手机号码" />
+          </el-form-item>
+          <el-form-item label="场所编号" label-width='auto' prop="csbh">
+            <el-input v-model="searchInfo.csbh" placeholder="场所编号" />
+          </el-form-item>
+          <el-form-item label="场所名称" label-width='auto' prop="csmc">
+            <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
           </el-form-item>
           
         
-            <el-form-item label="隔离状态" label-width='auto'>
+            <el-form-item label="隔离状态" label-width='auto' prop="glzt">
             <el-select
               v-model="searchInfo.glzt"
               placeholder="请选择"
@@ -75,7 +81,7 @@
               <el-option value="3" label="结束隔离" />
             </el-select>
           </el-form-item>
-          <el-form-item label="隔离时间范围" label-width='auto'>
+          <el-form-item label="隔离时间范围" label-width='auto' prop="glsj">
             <el-date-picker
             @change="timeScopeDiv"
               v-model="searchInfo.glsj"
@@ -86,7 +92,7 @@
               end-placeholder="结束时间"
             />
           </el-form-item>
-           <el-form-item label="是否接种疫苗" label-width='auto'>
+           <el-form-item label="是否接种疫苗" label-width='auto' prop="sfjzym">
             <el-select
               v-model="searchInfo.sfjzym"
               placeholder="请选择"
@@ -95,7 +101,7 @@
               <el-option value="1" label="已接种" />
             </el-select>
           </el-form-item>
-           <el-form-item label="是否阳性" label-width='auto'>
+           <el-form-item label="是否阳性" label-width='auto' prop="sfyz">
             <el-select
               v-model="searchInfo.sfyx"
               placeholder="请选择"
@@ -236,7 +242,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          min-width="220"
+          min-width="260"
           fixed="right"
           v-if="renew"
         >
@@ -277,7 +283,7 @@
               icon="edit"
               size="small"
               @click="lookOutSign(scope.row)"
-              >打卡</el-button
+              >查看扫码详情</el-button
             >
           </template>
         </el-table-column>
@@ -372,13 +378,18 @@ const handleCurrentChange = (val) => {
   page.value = val;
   getTableData();
 };
-const getTableData = async (tag) => {
+const getTableData = async () => {
+  const searchList = JSON.parse(JSON.stringify(searchInfo));
+  let Scsbh = ''
+  if(searchInfo)if(searchInfo.csbh!==''){Scsbh = searchInfo.csbh }else{Scsbh = csbh.value} 
+  delete searchList.csbh;
   const table = await getData({
     page: page.value,
     pageSize: pageSize.value,
-    ...tag,
-    csbh:csbh.value,
+    ...searchList,
+    csbh:Scsbh,
   });
+  console.log(table,'table')
   if (table.code === 0) {
     tableData.value = table.data.list;
     total.value = table.data.total;
@@ -386,14 +397,30 @@ const getTableData = async (tag) => {
     pageSize.value = table.data.pageSize;
   }
 };
-const searchHandler = async() => {//搜索
-  getTableData(searchInfo);
-};
+
+// const searchHandler = async() => {//搜索
+//   getTableData();
+// };
+
 const onReset = ()=>{//重置
   for(let key in searchInfo){
     searchInfo[key] = ''
   }
 }
+const debounce = (fn,wait=500)=>{
+  let timer = null
+  let that = this
+  return (...args)=>{
+    if(timer){
+      clearTimeout(timer)
+    }
+    timer = setTimeout(()=>{
+      fn.call(that,args)
+      console.log('防抖')
+    },wait)
+  }
+}
+const searchHandler = debounce(getTableData)
 getTableData();
 //页面中的操作******************************
 const deletePlaceFun = (v) => {
@@ -419,8 +446,8 @@ const cancel = (row) => {
   });
 };
 const lookOutSign = (v)=>{//查看
-console.log(v)
-  router.push({name:'quarantinedPersonSign',params:{cd_id:v.cd_id,csbh:v.csbh||route.params.csbh}})
+console.log(v,'此人的id')
+  router.push({name:'quarantinedPersonSign',params:{zjhm:v.zjhm,csbh:v.csbh||route.params.csbh}})
 }
 // 弹框******************************
 let dialogFormVisible = ref(false);
