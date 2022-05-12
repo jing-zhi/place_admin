@@ -20,7 +20,7 @@
               </el-select>
           </el-form-item>
           <el-form-item label="启用状态">
-            <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择人员状态" size="large">
+            <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择启用状态" size="large">
               <el-option label="是" :value="1" />
               <el-option label="否" :value="0" />
             </el-select>
@@ -37,9 +37,11 @@
 
           
           <el-form-item>
-            <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
-            
+            <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>       
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
+
+            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('cd_export.xlsx')">按条件导出</el-button>
+
           </el-form-item>
       </el-form>
     </div>
@@ -221,9 +223,17 @@ export default {
 
 <script setup>
 
+import { 
+  getPlaceList,
+  setStatus,
+  createPlace,
+  setPlace,
+  deletePlace
+} from '@/api/place.js'
+
+import { exportExcel, loadExcelData, downloadTemplate } from '@/api/excel'
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getPlaceList, setStatus, createPlace, setPlace, deletePlace } from '@/api/place.js'
 import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
@@ -322,11 +332,12 @@ const getRes = async() => {
   //console.log(ans)
 }
 
+const retFind = ref({})
 // 搜索
 const onSubmit = async() => {
-    let retFind = toRaw(searchPlace.value)
-    console.log(retFind);
-    getTableData(retFind)
+    retFind.value = toRaw(searchPlace.value)
+    //console.log(retFind.value);
+    getTableData(retFind.value)
 }
 const onReset = () => {
   searchPlace.value = {}
@@ -607,6 +618,19 @@ const cunSelect = (item) => {
 }
 const hylxSelect = (item) => {
   hylx.value = item.code
+}
+
+// 导出
+const handleExcelExport = (fileName) => {
+  if (!fileName || typeof fileName !== 'string') {
+    fileName = 'cd_export.xlsx'
+  }
+  onSubmit()
+  console.log(retFind.value)
+  console.log(tableData.value);
+
+  exportExcel(retFind.value, fileName)
+  // exportExcel(tableData.value, fileName)
 }
 </script>
 

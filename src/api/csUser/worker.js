@@ -60,7 +60,7 @@ export const setWorker = (data) => {
   })
 }
 
-// 详情
+// 工作人员打卡详情分页列表
 export const getWorkerDetailsList = (data) => {
   return service({
     url: '/cdworker/pageWorkerRecordList',
