@@ -119,12 +119,12 @@ const searchWorker = ref({})
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
-  getTableData()
+  getTableData(retFind.value)
 }
 
 const handleCurrentChange = (val) => {
   page.value = val
-  getTableData()
+  getTableData(retFind.value)
 }
 
 // 查询
@@ -163,11 +163,12 @@ const gzqyList = [
     }
 ]
 
+const retFind = ref({})
 // 搜索
 const onSubmit = debounce(() => {
 
-    let retFind = getRetFind()
-    getTableData(retFind)
+    retFind.value = getRetFind()
+    getTableData(retFind.value)
 })
 const getRetFind = () => {
       let retFind = toRaw(searchWorker.value)

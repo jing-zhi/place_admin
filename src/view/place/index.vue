@@ -256,13 +256,15 @@ const hylx = ref()
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
-  getTableData()
+  //console.log(retFind.value);
+  getTableData(retFind.value)
 }
 
 const handleCurrentChange = (val) => {
   page.value = val
   //console.log(val)
-  getTableData()
+  //console.log(retFind.value);
+  getTableData(retFind.value)
 }
 
 // 查询

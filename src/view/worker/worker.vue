@@ -305,12 +305,12 @@ const ztList = [
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
-  getTableData()
+  getTableData(find.value)
 }
 
 const handleCurrentChange = (val) => {
   page.value = val
-  getTableData()
+  getTableData(find.value)
 }
 
 // 查询
@@ -642,7 +642,7 @@ const getExcel = (fileName) => {
   //   fileName = 'cdWorker_export.xlsx'
   // }
   console.log(find.value);
-  exportExcel({fileName,...find.value})
+  exportExcel({fileName,csbh:csbh.value,...find.value})
 }
 </script>
 
