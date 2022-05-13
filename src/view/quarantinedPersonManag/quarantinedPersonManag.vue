@@ -191,7 +191,11 @@
         label="隔离点房间编号"
         min-width="170"
         prop="gldfjbh"
-      />
+      >
+      <template #default="scope">
+          {{ scope.row.GLRoom.gldfjh }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="left"
         label="是否接种疫苗"
