@@ -97,7 +97,6 @@ export default {
 <script setup>
 import {
   getWorkerDetailsList,
-  
 } from '@/api/csUser/worker.js'
 // 查询搜索
 import { nextTick, ref, watch ,toRaw } from 'vue'
@@ -105,6 +104,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import {formatTimeToStr} from '@/utils/date.js'
 import { useRoute } from 'vue-router'
+import { debounce } from '@/utils/debounce.js'
+
 const router = useRoute()
 const pid = ref(null)
 pid.value = router.params.pid ? router.params.pid : null
@@ -163,8 +164,13 @@ const gzqyList = [
 ]
 
 // 搜索
-const onSubmit = async() => {
-    let retFind = toRaw(searchWorker.value)
+const onSubmit = debounce(() => {
+
+    let retFind = getRetFind()
+    getTableData(retFind)
+})
+const getRetFind = () => {
+      let retFind = toRaw(searchWorker.value)
     if(searchWorker.value.dk) {
       retFind.start_time = Number(searchWorker.value.dk[0])
       retFind.end_time = Number(searchWorker.value.dk[1])
@@ -181,10 +187,10 @@ const onSubmit = async() => {
         delete retFind.temp_max
     }
     
-    console.log(toRaw(searchWorker.value));
+    //console.log(toRaw(searchWorker.value));
     //console.log(searchWorker.value)
-
-    getTableData(retFind)
+    console.log(retFind);
+    return retFind
 }
 const onReset = () => {
   searchWorker.value = {}
