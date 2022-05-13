@@ -544,7 +544,7 @@ const enterAddDialog = async() => {
         const res = await createPlace(req)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
-          await getTableData()
+          await getTableData(retFind.value)
           closeAddDialog()
         }
       }
@@ -554,7 +554,7 @@ const enterAddDialog = async() => {
         const res = await setPlace(req)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
-          await getTableData()
+          await getTableData(retFind.value)
           closeAddDialog()
         }
       }
