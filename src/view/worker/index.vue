@@ -68,14 +68,14 @@
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" />
+        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
         <el-table-column align="left" label="所在地市" min-width="100" prop="gzrdsname" />
         <el-table-column align="left" label="所在县区" min-width="100" prop="gzrqxname"/>
         <el-table-column align="left" label="所在乡" min-width="100" prop="gzrxzname"/>        
-        <el-table-column align="left" label="原工作单位" min-width="100" prop="ydw" />
+        <el-table-column align="left" label="原工作单位" min-width="100" prop="ydw" show-overflow-tooltip />
         <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" />
         <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
         <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq" />
@@ -129,7 +129,10 @@
       <div style="height:60vh;overflow:auto;padding:0 10px;">
         <el-form ref="workerForm"  :rules="rules" :model="workerInfo" label-width="130px">
           <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
-            <el-input v-model="csbh"   placeholder="场所编号" />
+            <el-input v-model="csbh" placeholder="场所编号" />
+          </el-form-item>
+          <el-form-item v-else label="场所编号" prop="csbh">
+            <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
           </el-form-item>
           <el-form-item label="工作人员姓名" prop="gzryxm">
             <el-input v-model="workerInfo.gzryxm" />
@@ -507,13 +510,6 @@ const enterAddDialog = async() => {
       }
       //console.log(req)
       let request = req;
-      //request.csbh = "084107030070091651747871";
-      request.csbh = csbh.value;
-    //   request.gzrdsname =dsname.value;
-    //   request.gzrqxname =qxname.value;
-    //   request.gzrxzname =xzname.value;
-     // request.sj = formatTimeToStr(request.sj)
-      //console.log(request.sj)
       request.gldzwid =zwid.value;
       request.gldgwid =gwid.value;
       request.ztid =ztid.value;
@@ -523,6 +519,8 @@ const enterAddDialog = async() => {
       // 新增
       if (dialogFlag.value === 'add') {
         console.log("add")
+        request.csbh = csbh.value;
+        console.log(request)
         const res = await createWorker(request)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })

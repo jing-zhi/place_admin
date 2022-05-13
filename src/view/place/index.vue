@@ -489,7 +489,7 @@ const editPlace = (row) => {
   sq_name.value = row.sq_name
   jd_name.value = row.jd_name
   hylx.value = Number(row.hylx)
-  //console.log(placeInfo.value);
+  console.log(placeInfo.value);
   dialogFlag.value = 'edit'
   addDialog.value = true
 }

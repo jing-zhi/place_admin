@@ -1,4 +1,4 @@
-<template>场所名称名称
+<template>
   <div>
     <div>
       <div class="gva-table-box" style="margin-bottom: 10px">
