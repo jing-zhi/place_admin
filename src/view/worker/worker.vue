@@ -52,7 +52,7 @@
             <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
-            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('cdWorker_export.xlsx')">按条件导出</el-button>
+            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
 
           </el-form-item>
       </el-form>
@@ -246,10 +246,10 @@ import {
   getWorkerList,
   deleteWorker,
   createWorker,
-  setWorker
+  setWorker,
+  exportExcel
 } from '@/api/csUser/worker.js'
 
-import { exportExcel, loadExcelData, downloadTemplate } from '@/api/excel'
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import dsData from '@/utils/address/ds.json'
@@ -259,6 +259,8 @@ import vlgs from '@/utils/address/jlhenan.json'
 
 import {formatTimeToStr} from '@/utils/date.js'
 import { useRoute, useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce.js'
+
 const route = useRoute()
 const csbh = ref('')
 csbh.value = route.params.csbh ? route.params.csbh : ''
@@ -326,8 +328,12 @@ const getTableData = async(value) => {
 
 const find = ref({})
 // 搜索
-const onSubmit = async() => {
-    let retFind = toRaw(searchWorker.value)
+const onSubmit = debounce(() => {
+    let retFind = getFind()
+    getTableData(retFind)
+})
+const getFind = () => {
+   let retFind = toRaw(searchWorker.value)
     if(searchWorker.value.rz) {
       retFind.start_time = searchWorker.value.rz[0]
       retFind.end_time = searchWorker.value.rz[1]
@@ -338,22 +344,8 @@ const onSubmit = async() => {
         retFind.transfer_end_time = searchWorker.value.dl[1]
       //  delete retFind.dl
     }
-    // let resFind = {   
-    //     gzrysfz: "",
-    //     gzrysjh: "",
-    //     gzryxm: "",
-    //     zt: "",
-    //     ztid: null,
-    //     start_time: null,
-    //     end_time:null,
-    //     transfer_start_time:null,
-    //     transfer_end_time:null
-    // }
-    //console.log(resFind)
-    console.log(toRaw(searchWorker.value));
-    //console.log(searchWorker.value)
     find.value = retFind
-    getTableData(retFind)
+    return retFind
 }
 const onReset = () => {
   searchWorker.value = {}
@@ -642,15 +634,17 @@ const ztSearch = (item) => {
 
 
 // 导出
-const handleExcelExport = (fileName) => {
-  if (!fileName || typeof fileName !== 'string') {
-    fileName = 'cdWorker_export.xlsx'
-  }
-  exportExcel(tableData.value, fileName)
+const handleExcelExport = debounce(()=>{
+  getFind()
+  getExcel('cdWorker_export.xlsx')
+})
 
-  onSubmit()
-  console.log(find.value)
-  exportExcel(find.value, fileName)
+const getExcel = (fileName) => {
+  // if (!fileName || typeof fileName !== 'string') {
+  //   fileName = 'cdWorker_export.xlsx'
+  // }
+  console.log(find.value);
+  exportExcel({fileName,...find.value})
 }
 </script>
 

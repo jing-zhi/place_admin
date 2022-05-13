@@ -40,7 +40,7 @@
             <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>       
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
-            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('cd_export.xlsx')">按条件导出</el-button>
+            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
 
           </el-form-item>
       </el-form>
@@ -228,15 +228,16 @@ import {
   setStatus,
   createPlace,
   setPlace,
-  deletePlace
+  deletePlace,
+  exportExcel
 } from '@/api/place.js'
 
-import { exportExcel, loadExcelData, downloadTemplate } from '@/api/excel'
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
 import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
+import { debounce } from '@/utils/debounce.js'
 
 const page = ref(1)
 const total = ref(0)
@@ -270,7 +271,7 @@ const getTableData = async(value) => {
     if(value) {
         rqt = { page: page.value, pageSize: pageSize.value, ...value }   
     } 
-    console.log(rqt);
+    //console.log(rqt);
   const table = await getPlaceList(rqt)
   if (table.code === 0) {
     // console.log(table)
@@ -334,10 +335,13 @@ const getRes = async() => {
 
 const retFind = ref({})
 // 搜索
-const onSubmit = async() => {
-    retFind.value = toRaw(searchPlace.value)
-    //console.log(retFind.value);
+const onSubmit = debounce(() => {
+    getRetFind()
     getTableData(retFind.value)
+})
+const getRetFind = () => {
+  retFind.value = toRaw(searchPlace.value)
+  console.log(retFind.value);
 }
 const onReset = () => {
   searchPlace.value = {}
@@ -621,16 +625,16 @@ const hylxSelect = (item) => {
 }
 
 // 导出
-const handleExcelExport = (fileName) => {
-  if (!fileName || typeof fileName !== 'string') {
-    fileName = 'cd_export.xlsx'
-  }
-  onSubmit()
-  console.log(retFind.value)
-  console.log(tableData.value);
+const handleExcelExport = debounce(()=>{
+  getRetFind()
+  getExcel('cd_export.xlsx')
+})
 
-  exportExcel(retFind.value, fileName)
-  // exportExcel(tableData.value, fileName)
+const getExcel = (fileName) => {
+  // if (!fileName || typeof fileName !== 'string') {
+  //   fileName = 'cd_export.xlsx'
+  // }
+  exportExcel({fileName,...retFind.value})
 }
 </script>
 
