@@ -256,13 +256,15 @@ const hylx = ref()
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
-  getTableData()
+  //console.log(retFind.value);
+  getTableData(retFind.value)
 }
 
 const handleCurrentChange = (val) => {
   page.value = val
   //console.log(val)
-  getTableData()
+  //console.log(retFind.value);
+  getTableData(retFind.value)
 }
 
 // 查询
@@ -489,7 +491,7 @@ const editPlace = (row) => {
   sq_name.value = row.sq_name
   jd_name.value = row.jd_name
   hylx.value = Number(row.hylx)
-  //console.log(placeInfo.value);
+  console.log(placeInfo.value);
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
