@@ -60,13 +60,13 @@
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" />
+        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
-        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
+        <el-table-column align="left" label="身份证号" min-width="170" prop="gzrysfz" />
         <el-table-column align="left" label="工作区域" min-width="150" prop="gzqy" />
         <el-table-column align="left" label="体温" min-width="150" prop="gzrtw" />
-        <el-table-column align="left" label="扫码时间" min-width="150" prop="smsj">
+        <el-table-column align="left" label="扫码时间" min-width="160" prop="smsj">
           <template #default="scope">
             {{tableData.smsj = scope.row.smsj?timestampToTime(scope.row.smsj):''}}
           </template>
@@ -119,12 +119,12 @@ const searchWorker = ref({})
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
-  getTableData()
+  getTableData(retFind.value)
 }
 
 const handleCurrentChange = (val) => {
   page.value = val
-  getTableData()
+  getTableData(retFind.value)
 }
 
 // 查询
@@ -163,11 +163,12 @@ const gzqyList = [
     }
 ]
 
+const retFind = ref({})
 // 搜索
 const onSubmit = debounce(() => {
 
-    let retFind = getRetFind()
-    getTableData(retFind)
+    retFind.value = getRetFind()
+    getTableData(retFind.value)
 })
 const getRetFind = () => {
       let retFind = toRaw(searchWorker.value)
