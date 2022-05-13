@@ -7,19 +7,18 @@
             <el-input v-model="searchInfo.name" placeholder="姓名" />
           </el-form-item>
           <el-form-item
-            label="身份证号"
+            label="证件号码"
             label-width="auto"
             prop="gzrsfz"
           >
             <el-input
               v-model="searchInfo.gzrsfz"
-              placeholder="身份证号"
+              placeholder="证件号码"
             />
           </el-form-item>
           <el-form-item label="手机号码" label-width="auto" prop="phone">
             <el-input v-model="searchInfo.phone" placeholder="手机号" />
           </el-form-item>
-         
           <el-form-item label="场所名称" label-width="auto" prop="csmc">
             <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
           </el-form-item>
@@ -28,11 +27,12 @@
             label-width="auto"
             prop="hasHsjl"
           >
-            <el-select v-model="searchInfo.hasHsjl" placeholder="请选择">
+          <el-select v-model="searchInfo.hasHsjl" placeholder="请选择">
               <el-option :value="0" label="无" />
               <el-option :value="1" label="有" />
             </el-select>
           </el-form-item>
+
           <el-form-item label="场所编号" label-width="auto" prop="csbh">
             <el-input v-model="searchInfo.csbh" placeholder="场所编号" />
           </el-form-item>
@@ -94,6 +94,7 @@
               placeholder="最低温度"
             />
           </el-form-item>
+          
 
           <el-form-item label-width="auto" prop="big_bodyTemperature">
             <el-input
@@ -393,7 +394,7 @@ const SMtimeScopeDiv = () => {
   searchInfo.end_time = Date.parse(searchInfo.end_time);
 };
 </script>
-<style scoped >
+<style scoped>
 .searchForm {
   display: inline-flex;
   vertical-align: top;

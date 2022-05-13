@@ -23,6 +23,7 @@
         <el-col :span="12">
           <el-form-item label="人员类别" label-width="140px" prop="rylb">
             <el-select
+            placement="bottom"
               v-model="form.rylb"
               class="m-2"
               placeholder="请选择"
@@ -91,17 +92,17 @@
             />
           </el-form-item>
         </el-col>
-         <!-- <el-col :span="12">
+         <el-col :span="12">
           <el-form-item label="场所编号" prop="csbh" label-width="140px">
             <el-input
-              :disabled='hasCsbh'
+              
               style="width: 100%"
               v-model="form.csbh"
-              placeholder="请输入所在的场所编号"
+              placeholder="请输入场所编号"
               autocomplete="off"
             />
           </el-form-item>
-        </el-col> -->
+        </el-col>
         <el-col :span="12">
           <el-form-item label="入境证件号码" prop="rjzjhm" label-width="140px">
             <el-input
@@ -405,11 +406,7 @@ const props = defineProps({
     default: "",
   },
 });
-// let hasCsbh = computed(()=>{
-//   console.log(csbh)
-//   return csbh?true:false
-// })
-//多选数据
+
 let roomList = ref([]);
 const rylbList = QrylbList;
 const gjList = QgjList;
@@ -422,6 +419,7 @@ const getRoom = async () => {
   roomList.value = res.data.list;
 };
 getRoom();
+
 // 禁用
 let disable = false;
 //表单
@@ -448,7 +446,7 @@ const checkTime = (rule, value, callback) => {
 };
 const rules = reactive({
   glryxm: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  // csbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  // csbh:[{ required: true, message: "必填项不能为空", trigger: "blur" }],
   rylb: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   sfffrjry: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   gj: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
@@ -501,12 +499,15 @@ const closeDialog = () => {
 };
 //表单提交
 const enterDialog = () => {
+  let result = JSON.parse(JSON.stringify(form));
+  
+  result.csbh = csbh || form.csbh;
+ 
   Form.value.validate(async (valid) => {
     if (!valid) {
       return;
     }
-    let result = JSON.parse(JSON.stringify(form));
-    result.csbh = csbh;
+    
     if (!result.gljssj || result.gljssj == "0001-01-01T00:00:00Z") {
       delete result.gljssj;
     }
@@ -578,6 +579,7 @@ const enterDialog = () => {
 };
 //回显数据
 const echoData = (data, v) => {
+
   disable = true;
   for (let key in form) {
     for (let key1 in data) if (key1 === key) form[key1] = data[key1];
@@ -593,8 +595,12 @@ const echoData = (data, v) => {
 //新增数据初始化表单
 const initForm = function (v) {
   disable = false;
+  
   for (let key in form) {
     form[key] = "";
+  }
+  if(csbh!==''){
+    form.csbh = csbh
   }
   onMounted(() => {
     console.log("挂载---refresh");
