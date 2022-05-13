@@ -15,6 +15,7 @@ export default {
 @import '@/style/main.scss';
 @import '@/style/base.scss';
 @import '@/style/mobile.scss';
+@import url('//at.alicdn.com/t/font_3149907_9g30ptkowou.css');
 #app {
   background: #eee;
   height: 100vh;
