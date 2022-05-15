@@ -9,7 +9,19 @@
     :close-on-click-modal="false"
   >
     <el-form ref="Form" :model="form" :rules="rules" label-width="140px">
+     
       <el-row>
+         <el-col :span="12">
+          <el-form-item label="场所编号" prop="csbh" label-width="140px">
+            <el-input
+              
+              style="width: 100%"
+              v-model="form.csbh"
+              placeholder="请输入场所编号"
+              autocomplete="off"
+            />
+          </el-form-item>
+        </el-col>
         <el-col :span="12">
           <el-form-item label="隔离人员姓名" prop="glryxm">
             <el-input
@@ -19,7 +31,7 @@
             />
           </el-form-item>
         </el-col>
-     
+
         <el-col :span="12">
           <el-form-item label="人员类别" label-width="140px" prop="rylb">
             <el-select
@@ -92,17 +104,7 @@
             />
           </el-form-item>
         </el-col>
-         <el-col :span="12">
-          <el-form-item label="场所编号" prop="csbh" label-width="140px">
-            <el-input
-              
-              style="width: 100%"
-              v-model="form.csbh"
-              placeholder="请输入场所编号"
-              autocomplete="off"
-            />
-          </el-form-item>
-        </el-col>
+         
         <el-col :span="12">
           <el-form-item label="入境证件号码" prop="rjzjhm" label-width="140px">
             <el-input
@@ -446,7 +448,7 @@ const checkTime = (rule, value, callback) => {
 };
 const rules = reactive({
   glryxm: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  // csbh:[{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  csbh:[{ required: true, message: "必填项不能为空", trigger: "blur" }],
   rylb: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   sfffrjry: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
   gj: [{ required: true, message: "必填项不能为空", trigger: "blur" }],

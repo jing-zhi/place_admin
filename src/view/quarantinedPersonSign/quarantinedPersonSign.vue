@@ -4,7 +4,7 @@
       <div class="gva-table-box" style="margin-bottom: 10px">
         <el-form :inline="true" ref="searchForm" :model="searchInfo">
           <el-form-item label="姓名" label-width="auto" prop="name">
-            <el-input v-model="searchInfo.name" placeholder="姓名" />
+            <el-input style="width:120px;" v-model="searchInfo.name" placeholder="姓名" />
           </el-form-item>
           <el-form-item
             label="证件号码"
@@ -22,22 +22,46 @@
           <el-form-item label="场所名称" label-width="auto" prop="csmc">
             <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
           </el-form-item>
-          <el-form-item
-            label="有无有效核酸记录"
-            label-width="auto"
-            prop="hasHsjl"
-          >
-          <el-select v-model="searchInfo.hasHsjl" placeholder="请选择">
-              <el-option :value="0" label="无" />
-              <el-option :value="1" label="有" />
-            </el-select>
-          </el-form-item>
+     
 
           <el-form-item label="场所编号" label-width="auto" prop="csbh">
             <el-input v-model="searchInfo.csbh" placeholder="场所编号" />
           </el-form-item>
-          <el-form-item label="有无核酸记录" label-width="auto" prop="hsResult">
-            <el-select v-model="searchInfo.hsResult" placeholder="请选择">
+               <el-form-item
+            label="体温范围"
+            label-width="auto"
+            prop="small_bodyTemperature"
+            
+          >
+            <el-input
+              style="width: 100px"
+              v-model="searchInfo.small_bodyTemperature"
+              placeholder="最低温度"
+            />
+            <span class="line"></span>
+            
+          </el-form-item>
+        
+          <el-form-item label-width="auto" prop="big_bodyTemperature">
+            <el-input
+              style="width: 100px"
+              v-model="searchInfo.big_bodyTemperature"
+              placeholder="最高温度"
+            />
+          </el-form-item>
+               <el-form-item
+            label="有效核酸"
+            label-width="auto"
+            prop="hasHsjl"
+          >
+          <el-select style="width:120px;" v-model="searchInfo.hasHsjl" placeholder="请选择">
+              <el-option :value="0" label="无" />
+              <el-option :value="1" label="有" />
+            </el-select>
+          </el-form-item>
+          
+          <el-form-item label="核酸结果" label-width="auto" prop="hsResult">
+            <el-select v-model="searchInfo.hsResult" placeholder="请选择" style="width:120px;">
               <el-option value="阴性" label="阴性" />
               <el-option value="阳性" label="阳性" />
             </el-select>
@@ -59,9 +83,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          
           <el-form-item label="核酸时间范围" label-width="auto" prop="Time">
             <el-date-picker
               clearable
+               :default-time="defaultTime2"
               v-model="searchInfo.Time"
               @change="timeScopeDiv"
               type="datetimerange"
@@ -76,6 +102,7 @@
               clearable
               v-model="searchInfo.SMTime"
               @change="SMtimeScopeDiv"
+              :default-time="defaultTime2"
               type="datetimerange"
               range-separator=":"
               :shortcuts="Qshortcuts"
@@ -83,26 +110,7 @@
               end-placeholder="扫码结束时间"
             />
           </el-form-item>
-          <el-form-item
-            label="体温范围"
-            label-width="auto"
-            prop="small_bodyTemperature"
-          >
-            <el-input
-              style="width: 120px"
-              v-model="searchInfo.small_bodyTemperature"
-              placeholder="最低温度"
-            />
-          </el-form-item>
-          
-
-          <el-form-item label-width="auto" prop="big_bodyTemperature">
-            <el-input
-              style="width: 120px"
-              v-model="searchInfo.big_bodyTemperature"
-              placeholder="最高温度"
-            />
-          </el-form-item>
+     
 
           <div class="searchForm">
             <el-button
@@ -159,7 +167,7 @@
       />
       <el-table-column
         align="center"
-        label="有无有效核酸记录"
+        label="有效核酸记录"
         min-width="140"
         prop="hasHsjl"
       >
@@ -290,13 +298,17 @@ import { formatDate } from "@/utils/format";
 //表单数据
 const searchInfo = reactive(QSsearchList);
 const searchForm = ref();
-
+const defaultTime2 = [
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+] // '12:00:00', '08:00:00'
 const timeScopeDiv = () => {
+  console.log(searchInfo.Time)
   searchInfo.start_hsTime = searchInfo.Time[0];
   searchInfo.end_hsTime = searchInfo.Time[1];
   // searchInfo.start_hsTime = Date.parse(searchInfo.start_hsTime)
   // searchInfo.end_hsTime = Date.parse(searchInfo.end_hsTime)
-  console.log(searchInfo);
+ 
 };
 //路由跳转拿到的数据
 const route = useRoute();
@@ -398,5 +410,11 @@ const SMtimeScopeDiv = () => {
 .searchForm {
   display: inline-flex;
   vertical-align: top;
+}
+.line{
+  background-color: black;
+  height: .9px;
+  width: 10px;
+  margin-left: 20px;
 }
 </style>
