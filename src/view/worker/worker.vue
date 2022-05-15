@@ -524,7 +524,7 @@ const enterAddDialog = async() => {
         const res = await createWorker(request)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
-          await getTableData()
+          await getTableData(find.value)
           closeAddDialog()
         }
       }
@@ -534,7 +534,7 @@ const enterAddDialog = async() => {
         const res = await setWorker(req)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
-          await getTableData()
+          await getTableData(find.value)
           closeAddDialog()
         }
       }
