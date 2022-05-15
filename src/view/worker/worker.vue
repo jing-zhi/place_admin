@@ -2,13 +2,19 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
-          <el-form-item v-show="csbh==''" label="场所编号" prop="csbh">
+          <!-- <el-form-item v-show="csbh==''" label="场所编号" prop="csbh">
             <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
           </el-form-item>
           <el-form-item v-show="csbh==''" label="场所名称" prop="csmc">
             <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
-          </el-form-item> 
+          </el-form-item>  -->
 
+          <el-form-item label="场所编号" prop="csbh">
+            <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
+          </el-form-item>
+          <el-form-item label="场所名称" prop="csmc">
+            <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
+          </el-form-item> 
           <el-form-item label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
           </el-form-item>  
@@ -30,7 +36,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="入职时间范围">
+          <!-- <el-form-item label="入职时间范围">
               <el-date-picker
                     v-model="searchWorker.rz"
                     type="daterange"
@@ -38,8 +44,19 @@
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                 />
-          </el-form-item>      
-          <el-form-item label="调离时间范围">
+          </el-form-item>       -->
+          <el-form-item label="入职时间范围" label-width="auto">
+            <el-date-picker
+              v-model="searchWorker.rz"
+              @change="changeRZTime"
+              type="datetimerange"
+              range-separator=":"
+              :default-time="defaultTime"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+            />
+          </el-form-item>
+          <!-- <el-form-item label="调离时间范围">
               <el-date-picker
                     v-model="searchWorker.dl"
                     type="daterange"
@@ -47,7 +64,18 @@
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                 />
-          </el-form-item>      
+          </el-form-item>       -->
+          <el-form-item label="扫码时间范围" label-width="auto">
+            <el-date-picker
+              v-model="searchWorker.dl"
+              @change="changeDLTime"
+              type="datetimerange"
+              range-separator=":"
+              :default-time="defaultTime"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+            />
+          </el-form-item>
           <el-form-item>
             <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
@@ -273,6 +301,8 @@ const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
 const searchWorker = ref({})
+searchWorker.value.csbh = csbh.value
+
 // 地址
 const dsList = ref([])
 const qxList = ref([])
@@ -340,12 +370,20 @@ const getFind = () => {
     if(searchWorker.value.rz) {
       retFind.start_time = searchWorker.value.rz[0]
       retFind.end_time = searchWorker.value.rz[1]
-      // delete retFind.rz
+      //delete retFind.rz
+    } else {
+      //delete retFind.rz
+      delete retFind.start_time
+      delete retFind.end_time
     }
     if(searchWorker.value.dl) {
         retFind.transfer_start_time = searchWorker.value.dl[0]
         retFind.transfer_end_time = searchWorker.value.dl[1]
-      //  delete retFind.dl
+        //delete retFind.dl
+    } else {
+      //delete retFind.dl
+      delete retFind.transfer_start_time
+      delete retFind.transfer_end_time
     }
     find.value = retFind
     return retFind

@@ -7,7 +7,7 @@
       >
         <!-- <el-table-column align="left" label="ID" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="行业名称" min-width="230" prop="Name" />
-        <el-table-column align="left" label="核酸时间" min-width="100" prop="HesuanTime" show-overflow-tooltip />
+        <el-table-column align="left" label="行业要求有效核酸时间" min-width="100" prop="HesuanTime" show-overflow-tooltip />
        
         
         <el-table-column label="操作" min-width="130" fixed="right">
@@ -38,9 +38,9 @@
         :close-on-click-modal="false"
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
-          <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="110px">
-            <el-form-item label="核酸时间" prop="HesuanTime">
-              <el-select v-model="industryInfo.HesuanTime" class="m-2" placeholder="请选择核酸时间" size="large">
+          <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="180px">
+            <el-form-item label="行业要求有效核酸时间" prop="HesuanTime">
+              <el-select v-model="industryInfo.HesuanTime" class="m-2" placeholder="请选择" size="large">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
