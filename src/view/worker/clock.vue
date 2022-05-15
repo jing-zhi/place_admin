@@ -2,14 +2,20 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
-          <el-form-item v-show="pid==null" label="场所编号" prop="csbh">
+          <!-- <el-form-item v-show="pid==null" label="场所编号" prop="csbh">
             <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
           </el-form-item>
           <el-form-item v-show="pid==null" label="场所名称" prop="csmc">
             <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
+          </el-form-item>  -->
+          <el-form-item label="场所编号" prop="csbh">
+            <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
+          </el-form-item>
+          <el-form-item label="场所名称" prop="csmc">
+            <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
           </el-form-item> 
 
-          <el-form-item v-show="pid==null" label="姓名">
+          <!-- <el-form-item v-show="pid==null" label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
           </el-form-item>  
           <el-form-item v-show="pid==null" label="手机号">
@@ -17,9 +23,19 @@
           </el-form-item>    
           <el-form-item v-show="pid==null" label="身份证">
             <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
+          </el-form-item> -->
+          <el-form-item label="姓名">
+            <el-input  style="width: 120px" v-model="searchWorker.gzryxm" placeholder="工作人员姓名" />
+          </el-form-item>  
+          <el-form-item label="手机号">
+            <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
+          </el-form-item>    
+          <el-form-item label="身份证">
+            <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
           </el-form-item>
+
           <el-form-item label="工作区域">
-            <el-select v-model="searchWorker.gzqy" class="m-2" placeholder="请选择人员状态" size="large">
+            <el-select  style="width: 120px" v-model="searchWorker.gzqy" class="m-2" placeholder="请选择" size="large">
               <el-option
                 v-for="item in gzqyList"
                 :key="item.id"
@@ -30,12 +46,11 @@
             </el-select>
           </el-form-item> 
           <el-form-item label="体温范围">
-            <el-input v-model="searchWorker.temp_min" min-width="80" placeholder="最低体温" />
+            <el-input v-model="searchWorker.temp_min" :inline="true" style="width: 80px" placeholder="最低体温" />
+            <div style="width: 20px;text-align:center;color: #606266;">-</div>
+            <el-input v-model="searchWorker.temp_max" :inline="true" style="width: 80px" placeholder="最高体温" />
           </el-form-item> 
-          <el-form-item>
-            <el-input v-model="searchWorker.temp_max" min-width="80" placeholder="最高体温" />
-          </el-form-item>   
-          <el-form-item label="扫码时间范围">
+          <!-- <el-form-item label="扫码时间范围">
               <el-date-picker
                     v-model="searchWorker.dk"
                     type="daterange"
@@ -43,8 +58,18 @@
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                 />
-          </el-form-item>   
-
+          </el-form-item>    -->
+          <el-form-item label="扫码时间范围" label-width="auto">
+            <el-date-picker
+              v-model="searchWorker.dk"
+              @change="changeTime"
+              type="datetimerange"
+              range-separator=":"
+              :default-time="defaultTime"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+            />
+          </el-form-item>
           <el-form-item>
             <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
             
@@ -115,7 +140,10 @@ const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
 const searchWorker = ref({})
-
+const defaultTime = [
+  new Date(2022,1,1,0,0,0),
+  new Date(2022,1,1,23,59,59)
+]
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -170,12 +198,19 @@ const onSubmit = debounce(() => {
     retFind.value = getRetFind()
     getTableData(retFind.value)
 })
+const changeTime = (e) => {
+  //console.log(e);
+};
 const getRetFind = () => {
       let retFind = toRaw(searchWorker.value)
     if(searchWorker.value.dk) {
       retFind.start_time = Number(searchWorker.value.dk[0])
       retFind.end_time = Number(searchWorker.value.dk[1])
-     // delete retFind.dk
+      //delete retFind.dk
+    } else {
+      //delete retFind.dk
+      delete retFind.start_time
+      delete retFind.end_time
     }
     if(retFind.temp_min) {
         retFind.temp_min = Number(retFind.temp_min)
