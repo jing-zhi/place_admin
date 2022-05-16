@@ -303,6 +303,11 @@ const tableData = ref([])
 const searchWorker = ref({})
 searchWorker.value.csbh = csbh.value
 
+const defaultTime = [
+  new Date(2022,1,1,0,0,0),
+  new Date(2022,1,1,23,59,59)
+]
+
 // 地址
 const dsList = ref([])
 const qxList = ref([])
