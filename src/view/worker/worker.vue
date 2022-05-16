@@ -302,10 +302,12 @@ const pageSize = ref(10)
 const tableData = ref([])
 const searchWorker = ref({})
 searchWorker.value.csbh = csbh.value
+
 const defaultTime = [
-  new Date(2000, 1, 1, 0, 0, 0),
-  new Date(2000, 2, 1, 23, 59, 59),
-] // '12:00:00', '08:00:00'
+  new Date(2022,1,1,0,0,0),
+  new Date(2022,1,1,23,59,59)
+]
+
 // 地址
 const dsList = ref([])
 const qxList = ref([])
