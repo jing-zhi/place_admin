@@ -4,7 +4,7 @@
       <div class="gva-table-box" style="margin-bottom: 10px">
         <el-form :inline="true" ref="searchForm" :model="searchInfo">
           <el-form-item label="姓名" label-width="auto">
-            <el-input v-model="searchInfo.glryxm" placeholder="姓名" />
+            <el-input style="width:120px;" v-model="searchInfo.glryxm" placeholder="姓名" />
           </el-form-item>
           <el-form-item label="人员类别">
             <el-select v-model="searchInfo.rylb" placeholder="请选择">
@@ -19,7 +19,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="国籍" label-width="auto">
-            <el-select v-model="searchInfo.gj" placeholder="请选择">
+            <el-select v-model="searchInfo.gj" placeholder="请选择" style="width:120px;">
               <el-option
                 v-for="(item, index) in gjList"
                 :key="index"
@@ -68,36 +68,38 @@
           </el-form-item>
 
           <el-form-item label="隔离状态" label-width="auto" prop="glzt">
-            <el-select v-model="searchInfo.glzt" placeholder="请选择">
+            <el-select v-model="searchInfo.glzt" placeholder="请选择" style="width:120px;">
               <el-option value="2" label="转运" />
               <el-option value="1" label="隔离" />
               <el-option value="3" label="结束隔离" />
             </el-select>
           </el-form-item>
-          <el-form-item label="隔离时间范围" label-width="auto" prop="glsj">
+     
+          <el-form-item label="是否接种疫苗" label-width="auto" prop="sfjzym">
+            <el-select v-model="searchInfo.sfjzym" placeholder="请选择" style="width:120px;">
+              <el-option value="2" label="未接种" />
+              <el-option value="1" label="已接种" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否阳性" label-width="auto" prop="sfyz">
+            <el-select style="width:120px;" v-model="searchInfo.sfyx" placeholder="请选择">
+              <el-option value="2" label="否" />
+              <el-option value="1" label="是" />
+            </el-select>
+          </el-form-item>
+               <el-form-item label="隔离时间范围" label-width="auto" prop="glsj">
             <el-date-picker
+             
               @change="timeScopeDiv"
               v-model="searchInfo.glsj"
               type="datetimerange"
+               :default-time="defaultTime2"
               range-separator=":"
               :shortcuts="Qshortcuts"
               start-placeholder="开始时间"
               end-placeholder="结束时间"
             />
           </el-form-item>
-          <el-form-item label="是否接种疫苗" label-width="auto" prop="sfjzym">
-            <el-select v-model="searchInfo.sfjzym" placeholder="请选择">
-              <el-option value="2" label="未接种" />
-              <el-option value="1" label="已接种" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否阳性" label-width="auto" prop="sfyz">
-            <el-select v-model="searchInfo.sfyx" placeholder="请选择">
-              <el-option value="2" label="否" />
-              <el-option value="1" label="是" />
-            </el-select>
-          </el-form-item>
-
           <div class="searchForm">
             <el-button
               size="small"
@@ -126,33 +128,33 @@
       </div>
     </div>
     <el-table :data="tableData" row-key="ID">
-      <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
+      <!-- <el-table-column align="center" label="记录ID" min-width="70" prop="cd_id" /> -->
       <el-table-column
-        align="left"
+        align="center"
         label="隔离人员姓名"
         min-width="120"
         prop="glryxm"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="场所编号"
         min-width="230"
         prop="csbh"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="场所名称"
         min-width="230"
         prop="csmc"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="人员类别"
         min-width="100"
         prop="rylb"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="是否非法入境人员"
         min-width="80"
         prop="sfffrjry"
@@ -161,33 +163,33 @@
           {{ scope.row.sfffrjry === "1" ? "是" : "否" }}
         </template>
       </el-table-column>
-      <el-table-column align="left" label="国籍" min-width="80" prop="gj" />
+      <el-table-column align="center" label="国籍" min-width="80" prop="gj" />
       <el-table-column
-        align="left"
+        align="center"
         label="证件类型"
         min-width="120"
         prop="zjlx"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="证件号码"
         min-width="120"
         prop="zjhm"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="手机号码"
         min-width="150"
         prop="sjhm"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="入境航班编号"
         min-width="170"
         prop="rjhbh"
       />
       <el-table-column
-        align="left"
+        align="center"
         label="隔离点房间编号"
         min-width="170"
         prop="gldfjbh"
@@ -197,7 +199,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="left"
+        align="center"
         label="是否接种疫苗"
         min-width="150"
         prop="sfjzym"
@@ -207,7 +209,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="left"
+        align="center"
         label="是否阳性"
         min-width="120"
         prop="sfyx"
@@ -216,8 +218,36 @@
           {{ scope.row.sfyx === "1" ? "是" : "否" }}
         </template>
       </el-table-column>
+        <el-table-column
+        align="center"
+        label="隔离开始时间"
+        min-width="160"
+        prop="glkssj"
+      >
+        <template #default="scope">
+          {{
+            scope.row.glkssj === "0001-01-01T00:00:00Z"
+              ? ""
+              : formatDate(scope.row.glkssj)
+          }}
+        </template>
+      </el-table-column>
+       <el-table-column
+        align="center"
+        label="隔离结束时间"
+        min-width="160"
+        prop="gljssj"
+      >
+        <template #default="scope">
+          {{
+            scope.row.gljssj.Time === "0001-01-01T00:00:00Z"
+              ? ""
+              : formatDate(scope.row.gljssj.Time)
+          }}
+        </template>
+      </el-table-column>
       <el-table-column
-        align="left"
+        align="center"
         label="隔离状态"
         min-width="120"
         prop="glzt"
@@ -299,6 +329,7 @@ export default {
 };
 </script>
 <script setup>
+import { formatDate } from "@/utils/format";
 import {
   Qform,
   QrylbList,
@@ -342,7 +373,10 @@ const rylbList = QrylbList;
 const searchForm = ref();
 const gjList = QgjList;
 const roomList = ref(); //房间
-
+const defaultTime2 = [
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+] // '12:00:00', '08:00:00'
 const handleSizeChange = async (val) => {
   pageSize.value = val;
   getTableData();
@@ -356,6 +390,7 @@ getRoom();
 const timeScopeDiv = () => {
   searchInfo.start_time = searchInfo.glsj[0];
   searchInfo.end_time = searchInfo.glsj[1];
+  console.log(searchInfo.end_time,'searchInfo.end_time')
 };
 const handleCurrentChange = (val) => {
   page.value = val;
