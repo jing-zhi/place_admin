@@ -87,7 +87,6 @@
               v-model="searchInfo.Time"
               clearable
               :default-time="defaultTime2"
-              clearable
               type="datetimerange"
               range-separator=":"
               :shortcuts="Qshortcuts"
@@ -105,7 +104,6 @@
               :shortcuts="Qshortcuts"
               start-placeholder="扫码开始时间"
               end-placeholder="扫码结束时间"
-              @change="SMtimeScopeDiv"
               @change="SMtimeScopeDiv"
             />
           </el-form-item>
@@ -284,14 +282,14 @@ export default {
 </script>
 <script setup>
 import { getData } from '@/api/quarantinedPersonSign'
-import { Qshortcuts } from '../../../data/quarantined'
+import { Qshortcuts } from '@/data/quarantined'
 // import addOrUpdateForm from './components/addOrUpdate.vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, unref } from '@vue/reactivity'
 import { nextTick, onMounted } from '@vue/runtime-core'
 import { provide } from 'vue'
-import { QSsearchList, QSsymptomList } from '../../data/quarantinedSign'
+import { QSsearchList, QSsymptomList } from '@/data/quarantinedSign'
 import { formatDate } from '@/utils/format'
 // 表单数据
 const searchInfo = reactive(QSsearchList)
