@@ -2,47 +2,46 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchPlace" style="margin-left:20px">
-          <el-form-item label="场所编号" prop="csbh">
-            <el-input v-model="searchPlace.csbh"   placeholder="场所编号" size="" />
-          </el-form-item>
-          <el-form-item label="场所名称" prop="csmc">
-            <el-input v-model="searchPlace.csmc"   placeholder="场所名称" />
-          </el-form-item> 
+        <el-form-item label="场所编号" prop="csbh">
+          <el-input v-model="searchPlace.csbh" placeholder="场所编号" />
+        </el-form-item>
+        <el-form-item label="场所名称" prop="csmc">
+          <el-input v-model="searchPlace.csmc" placeholder="场所名称" />
+        </el-form-item>
 
-          <el-form-item label="行业类型" prop="hylx">
-              <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
-                <el-option
-                  v-for="item in options"
-                  :key="item.code"
-                  :label="item.label"
-                  :value="item.code"
-                />
-              </el-select>
-          </el-form-item>
-          <el-form-item label="启用状态">
-            <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择启用状态" size="large">
-              <el-option label="是" :value="1" />
-              <el-option label="否" :value="0" />
-            </el-select>
-          </el-form-item> 
-          <el-form-item label="负责人姓名">
-            <el-input v-model="searchPlace.fzrxm" min-width="50" placeholder="负责人姓名" />
-          </el-form-item>  
-          <el-form-item label="负责人电话">
-            <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="负责人电话" />
-          </el-form-item>    
-          <el-form-item label="负责人身份证">
-            <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
-          </el-form-item>  
+        <el-form-item label="行业类型" prop="hylx">
+          <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
+            <el-option
+              v-for="item in options"
+              :key="item.code"
+              :label="item.label"
+              :value="item.code"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="启用状态">
+          <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择启用状态" size="large">
+            <el-option label="是" :value="1" />
+            <el-option label="否" :value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="负责人姓名">
+          <el-input v-model="searchPlace.fzrxm" min-width="50" placeholder="负责人姓名" />
+        </el-form-item>
+        <el-form-item label="负责人电话">
+          <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="负责人电话" />
+        </el-form-item>
+        <el-form-item label="负责人身份证">
+          <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
+        </el-form-item>
 
-          
-          <el-form-item>
-            <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>       
-            <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
+        <el-form-item>
+          <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
+          <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
-            <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
 
-          </el-form-item>
+        </el-form-item>
       </el-form>
     </div>
     <div class="gva-table-box">
@@ -78,8 +77,9 @@
         <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh" />
         <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz" />
         <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" show-overflow-tooltip />
-        <el-table-column align="left" label="申领时间" min-width="220" prop="slsj" />
-        
+        <el-table-column align="left" label="申领时间" min-width="220" prop="slsj">
+          <template #default="scope">{{ formatDate(scope.row.slsj) }}</template>
+        </el-table-column>
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
@@ -138,7 +138,7 @@
               <el-input v-model="placeInfo.csmc" />
             </el-form-item>
             <!-- 下拉框 -->
-            
+
             <!-- <el-form-item label="所属村" prop="jd_name">
               <el-input v-model="placeInfo.jd" />
             </el-form-item> -->
@@ -184,7 +184,16 @@
                 />
               </el-select>
             </el-form-item>
-
+            <el-form-item label="所属部门" placeholder="该项决定了场所的所属单位" prop="deptId">
+              <el-cascader
+                v-model="placeInfo.deptId"
+                style="width:100%"
+                :options="deptOptions"
+                :show-all-levels="false"
+                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+                :clearable="false"
+              />
+            </el-form-item>
             <el-form-item label="详细地址" prop="xxdz">
               <el-input v-model="placeInfo.xxdz" />
             </el-form-item>
@@ -223,7 +232,7 @@ export default {
 
 <script setup>
 
-import { 
+import {
   getPlaceList,
   setStatus,
   createPlace,
@@ -232,7 +241,8 @@ import {
   exportExcel
 } from '@/api/place.js'
 
-import { nextTick, ref, watch ,toRaw } from 'vue'
+import { formatDate } from '@/utils/format'
+import { nextTick, ref, watch, toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
 import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
@@ -256,24 +266,24 @@ const hylx = ref()
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
-  //console.log(retFind.value);
+  // console.log(retFind.value);
   getTableData(retFind.value)
 }
 
 const handleCurrentChange = (val) => {
   page.value = val
-  //console.log(val)
-  //console.log(retFind.value);
+  // console.log(val)
+  // console.log(retFind.value);
   getTableData(retFind.value)
 }
 
 // 查询
 const getTableData = async(value) => {
-    let rqt = { page: page.value, pageSize: pageSize.value }
-    if(value) {
-        rqt = { page: page.value, pageSize: pageSize.value, ...value }   
-    } 
-    //console.log(rqt);
+  let rqt = { page: page.value, pageSize: pageSize.value }
+  if (value) {
+    rqt = { page: page.value, pageSize: pageSize.value, ...value }
+  }
+  // console.log(rqt);
   const table = await getPlaceList(rqt)
   if (table.code === 0) {
     // console.log(table)
@@ -284,6 +294,32 @@ const getTableData = async(value) => {
   }
 }
 
+const deptOptions = ref([])
+const setDeptOptions = (deptData) => {
+  deptOptions.value = []
+  setDepartmentOptions(deptData, deptOptions.value)
+}
+
+const setDepartmentOptions = (DeptData, optionsData) => {
+  DeptData &&
+  DeptData.forEach(item => {
+    if (item.children && item.children.length) {
+      const option = {
+        deptId: item.deptId,
+        deptName: item.name,
+        children: [],
+      }
+      setDepartmentOptions(item.children, option.children)
+      optionsData.push(option)
+    } else {
+      const option = {
+        deptId: item.deptId,
+        deptName: item.name,
+      }
+      optionsData.push(option)
+    }
+  })
+}
 // 行业类型
 const options = [
   { label: '隔离点', code: 43 },
@@ -316,9 +352,10 @@ const options = [
   { label: '相关行政部门', code: 39 },
   { label: '药店', code: 40 },
   { label: '高速服务区等机构工作人员、生产车间', code: 41 },
-  { label: '医废运输处理公司', code: 42 },
+  { label: '医废运输处理公-司', code: 42 },
 ]
 
+// eslint-disable-next-line no-unused-vars
 const getRes = async() => {
   // console.log(json.children)
   const test = json.children
@@ -332,18 +369,18 @@ const getRes = async() => {
     children = []
   }
   res.value = ans
-  //console.log(ans)
+  // console.log(ans)
 }
 
 const retFind = ref({})
 // 搜索
 const onSubmit = debounce(() => {
-    getRetFind()
-    getTableData(retFind.value)
+  getRetFind()
+  getTableData(retFind.value)
 })
 const getRetFind = () => {
   retFind.value = toRaw(searchPlace.value)
-  console.log(retFind.value);
+  console.log(retFind.value)
 }
 const onReset = () => {
   searchPlace.value = {}
@@ -352,7 +389,10 @@ const onReset = () => {
 
 const initPage = async() => {
   getTableData()
-  //getRes()
+  // getRes()
+  const depTs = []
+  depTs.push(json)
+  setDeptOptions(depTs)
   qxList.value = json.children
 }
 
@@ -433,6 +473,7 @@ const placeInfo = ref({
   'fzrgzdw': '',
   'hylx_name': '',
   'hylx': null,
+  deptId: ''
 })
 const rules = ref({
   csmc: [
@@ -448,16 +489,16 @@ const rules = ref({
   fzrdh: [
     { required: true, message: '请输入负责人电话', trigger: 'blur' },
     // 正则
-     { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
-        message: '手机号不合法' ,
-        trigger: 'blur'}
+    { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+      message: '手机号不合法',
+      trigger: 'blur' }
   ],
   fzrsfz: [
     { required: true, message: '请输入负责人身份证', trigger: 'blur' },
     // 正则
     { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-        message: '身份证号不合法' ,
-        trigger: 'blur'}
+      message: '身份证号不合法',
+      trigger: 'blur' }
   ],
   fzrgzdw: [
     { required: true, message: '请输入申领单位', trigger: 'blur' },
@@ -466,14 +507,17 @@ const rules = ref({
   hylx_name: [
     { required: true, message: '请选择行业类型' },
   ],
-  qx:[
+  qx: [
     { required: true, message: '请选择区县' },
   ],
-  sq:[
+  sq: [
     { required: true, message: '请选择乡镇' },
   ],
-  jd:[
+  jd: [
     { required: true, message: '请选择该项' },
+  ],
+  deptId: [
+    { required: true, message: '该项决定了场所的所属单位' },
   ],
 })
 
@@ -482,16 +526,15 @@ const placeForm = ref(null)
 // 修改
 const editPlace = (row) => {
   placeInfo.value = JSON.parse(JSON.stringify(row))
-  //placeInfo.value.qx_name = row.qx_name
+  // placeInfo.value.qx_name = row.qx_name
   getXzList(row.qx)
-  //placeInfo.value.sq_name = row.sq_name
+  // placeInfo.value.sq_name = row.sq_name
   getCunList(row.sq)
-  //placeInfo.value.jd_name = row.jd_name
+  // placeInfo.value.jd_name = row.jd_name
   qx_name.value = row.qx_name
   sq_name.value = row.sq_name
   jd_name.value = row.jd_name
   hylx.value = Number(row.hylx)
-  console.log(placeInfo.value);
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
@@ -532,12 +575,12 @@ const enterAddDialog = async() => {
     if (valid) {
       const req = {
         ...placeInfo.value,
-      }     
+      }
       req.hylx = hylx.value
       req.qx_name = qx_name.value
       req.sq_name = sq_name.value
       req.jd_name = jd_name.value
-      //console.log(req)
+      // console.log(req)
       // 新增
       if (dialogFlag.value === 'add') {
         console.log('add')
@@ -558,10 +601,8 @@ const enterAddDialog = async() => {
           closeAddDialog()
         }
       }
-      
     }
   })
-
 }
 
 // 级联切换区/街道
@@ -572,7 +613,7 @@ const handleChange = (value) => {
   console.log(areaValue.value, streetValue.value)
 
   // 获取村选项列表
-  let list = []
+  const list = []
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].streetCode == streetValue.value) {
       let temp = {}
@@ -596,11 +637,11 @@ const qxSelect = (item) => {
   getXzList(item.code)
 }
 const getXzList = async(code) => {
-  let qus = json.children;
+  const qus = json.children
   for (let i = 0; i < qus.length; i++) {
     if (qus[i].code == code) {
-        xzList.value = qus[i].children 
-        //console.log(xzList.value);
+      xzList.value = qus[i].children
+      // console.log(xzList.value);
     }
   }
 }
@@ -610,7 +651,7 @@ const xzSelect = (item) => {
   getCunList(item.code)
 }
 const getCunList = async(code) => {
-  let list = []
+  const list = []
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].streetCode == code) {
       list.push(vlgs[i])
@@ -627,7 +668,7 @@ const hylxSelect = (item) => {
 }
 
 // 导出
-const handleExcelExport = debounce(()=>{
+const handleExcelExport = debounce(() => {
   getRetFind()
   getExcel('cd_export.xlsx')
 })
@@ -636,7 +677,7 @@ const getExcel = (fileName) => {
   // if (!fileName || typeof fileName !== 'string') {
   //   fileName = 'cd_export.xlsx'
   // }
-  exportExcel({fileName,...retFind.value})
+  exportExcel({ fileName, ...retFind.value })
 }
 </script>
 

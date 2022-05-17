@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'quarantineManage'
+  name: 'QuarantineManage'
 }
 </script>
 <script setup>

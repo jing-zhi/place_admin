@@ -26,7 +26,7 @@
               :options="authOptions"
               :show-all-levels="false"
               collapse-tags
-              :props="{ multiple:true,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
+              :props="{ multiple:false,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:true}"
               :clearable="false"
               @visible-change="(flag)=>{changeAuthority(scope.row,flag)}"
               @remove-tag="()=>{changeAuthority(scope.row,false)}"
@@ -119,7 +119,7 @@
               style="width:100%"
               :options="authOptions"
               :show-all-levels="false"
-              :props="{ multiple:true,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
+              :props="{ multiple:false,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:true}"
               :clearable="false"
             />
           </el-form-item>
@@ -168,7 +168,7 @@ import {
   getUserList,
   setUserAuthorities,
   register,
-  deleteUser,
+  deleteUser, setUserDept,
 } from '@/api/user'
 
 import CustomPic from '@/components/customPic/index.vue'
@@ -176,10 +176,9 @@ import { nextTick, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { getAuthorityList } from '@/api/authority'
-import { getDeptList } from '@/api/dept'
 import { setUserInfo, resetPassword } from '@/api/user.js'
 import { useUserStore } from '@/pinia/modules/user'
-import { exportExcel, loadExcelData, downloadTemplate } from '@/api/excel'
+import { exportExcel } from '@/api/excel'
 import ImageCompress from '@/utils/image'
 
 const userStore = useUserStore()
@@ -247,16 +246,16 @@ const setDepartmentOptions = (DeptData, optionsData) => {
   DeptData.forEach(item => {
     if (item.children && item.children.length) {
       const option = {
-        deptId: item.ID,
-        deptName: item.deptName,
+        deptId: item.deptId,
+        deptName: item.name,
         children: [],
       }
       setDepartmentOptions(item.children, option.children)
       optionsData.push(option)
     } else {
       const option = {
-        deptId: item.ID,
-        deptName: item.deptName,
+        deptId: item.deptId,
+        deptName: item.name,
       }
       optionsData.push(option)
     }
@@ -292,13 +291,15 @@ const getTableData = async() => {
 watch(tableData, () => {
   setAuthorityIds()
 })
-
+import json from '@/utils/address/xinxiang.json'
 const initPage = async() => {
   getTableData()
   const authorities = await getAuthorityList({ page: 1, pageSize: 999 })
   setAuthOptions(authorities.data.list)
-  const depTs = await getDeptList({ page: 1, pageSize: 999 })
-  setDeptOptions(depTs.data.list)
+  // const depTs = await getDeptList({ page: 1, pageSize: 999 })
+  const depTs = []
+  depTs.push(json)
+  setDeptOptions(depTs)
 }
 
 initPage()
@@ -382,7 +383,7 @@ const rules = ref({
   nickName: [
     { required: true, message: '请输入用户昵称', trigger: 'blur' },
   ],
-  authorityIds: [
+  authorityId: [
     { required: true, message: '请选择用户角色', trigger: 'blur' },
   ],
   deptId: [
@@ -454,9 +455,10 @@ const changeDept = async(row, flag) => {
   }
 
   await nextTick()
-  const res = await setUserInfo({
+  const res = await setUserDept({
     ID: row.ID,
     deptId: row.deptId,
+    uuid: row.uuid
   })
   if (res.code === 0) {
     ElMessage({ type: 'success', message: '部门设置成功' })
