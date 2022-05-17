@@ -9,14 +9,14 @@
     :close-on-click-modal="false"
   >
     <el-form ref="Form" :model="form" :rules="rules" label-width="140px">
-     
+
       <el-row>
-         <el-col :span="12">
+        <el-col :span="12">
           <el-form-item label="场所编号" prop="csbh" label-width="140px">
             <el-input
-              
-              style="width: 100%"
+
               v-model="form.csbh"
+              style="width: 100%"
               placeholder="请输入场所编号"
               autocomplete="off"
             />
@@ -35,8 +35,8 @@
         <el-col :span="12">
           <el-form-item label="人员类别" label-width="140px" prop="rylb">
             <el-select
-            placement="bottom"
               v-model="form.rylb"
+              placement="bottom"
               class="m-2"
               placeholder="请选择"
               size="large"
@@ -79,16 +79,15 @@
                 :key="index"
                 :label="item.value"
                 :value="item.value"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="入境航班号" prop="rjhbh" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.rjhbh"
+              style="width: 100%"
               placeholder="请输入入境航班号"
               autocomplete="off"
             />
@@ -97,19 +96,29 @@
         <el-col :span="12">
           <el-form-item label="入境证件类型" prop="rjzjlx" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.rjzjlx"
+              style="width: 100%"
               placeholder="请输入入境证件类型"
               autocomplete="off"
             />
           </el-form-item>
         </el-col>
-         
+        <el-col :span="12">
+          <el-form-item label="场所编号" prop="csbh" label-width="140px">
+            <el-input
+
+              v-model="form.csbh"
+              style="width: 100%"
+              placeholder="请输入场所编号"
+              autocomplete="off"
+            />
+          </el-form-item>
+        </el-col>
         <el-col :span="12">
           <el-form-item label="入境证件号码" prop="rjzjhm" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.rjzjhm"
+              style="width: 100%"
               placeholder="请输入入境证件号码"
               autocomplete="off"
             />
@@ -118,26 +127,25 @@
         <el-col :span="12">
           <el-form-item label="证件类型" prop="zjlx" label-width="140px">
             <el-select
-              @change="selectClickHandler(form.zjlx)"
               v-model="form.zjlx"
               placeholder="请选择"
               style="width: 100%"
+              @change="selectClickHandler(form.zjlx)"
             >
               <el-option
                 v-for="(item, index) in zjlxList"
                 :key="index"
                 :label="item.value"
                 :value="item.value"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="证件号码" prop="zjhm" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.zjhm"
+              style="width: 100%"
               placeholder="请输入证件号码"
               autocomplete="off"
             />
@@ -146,8 +154,8 @@
         <el-col :span="12">
           <el-form-item label="手机号码" prop="sjhm" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.sjhm"
+              style="width: 100%"
               placeholder="请输入手机号码"
               autocomplete="off"
             />
@@ -161,8 +169,8 @@
             label-width="140px"
           >
             <el-select
-              :style="{ width: '100%' }"
               v-model="form.gldfjbh"
+              :style="{ width: '100%' }"
               placeholder="请选择"
             >
               <el-option
@@ -170,23 +178,22 @@
                 :key="item.ID"
                 :label="
                   item.BuildingNumber +
-                  '栋' +
-                  item.FloorNumber +
-                  '层' +
-                  item.RoomNumber +
-                  '房间'
+                    '栋' +
+                    item.FloorNumber +
+                    '层' +
+                    item.RoomNumber +
+                    '房间'
                 "
                 :value="item.ID"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="同住人姓名" prop="tzrxm" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.tzrxm"
+              style="width: 100%"
               placeholder="请输入同住人姓名"
               autocomplete="off"
             />
@@ -195,8 +202,8 @@
         <el-col :span="12">
           <el-form-item label="隔离开始时间" prop="glkssj" label-width="140px">
             <el-date-picker
-              style="width: 100%"
               v-model="form.glkssj"
+              style="width: 100%"
               type="date"
               placeholder="隔离开始时间"
               :disable="disable"
@@ -210,8 +217,8 @@
             label-width="140px"
           >
             <el-date-picker
-              style="width: 100%"
               v-model="form.yjjcglrq"
+              style="width: 100%"
               type="date"
               placeholder="预计解除隔离时间"
               :disable="disable"
@@ -221,8 +228,8 @@
         <el-col :span="12">
           <el-form-item label="隔离结束时间" prop="gljssj" label-width="140px">
             <el-date-picker
-              style="width: 100%"
               v-model="form.gljssj"
+              style="width: 100%"
               type="date"
               placeholder="隔离结束时间"
             />
@@ -255,8 +262,8 @@
         <el-col :span="12">
           <el-form-item label="意向去向城市" prop="yxqxcs" label-width="140px">
             <el-select
-              filterable
               v-model="form.yxqxcs"
+              filterable
               placeholder="请选择"
               style="width: 100%"
             >
@@ -265,8 +272,7 @@
                 :key="item.value"
                 :label="item.lable"
                 :value="item.value"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -274,8 +280,8 @@
         <el-col :span="12">
           <el-form-item label="意向去向县区" prop="yxqxxq" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.yxqxxq"
+              style="width: 100%"
               placeholder="请输入意向去向县区"
               autocomplete="off"
             />
@@ -284,8 +290,8 @@
         <el-col :span="12">
           <el-form-item label="意向去向地址" prop="yxqxdz" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.yxqxdz"
+              style="width: 100%"
               placeholder="请输意向去向地址"
               autocomplete="off"
             />
@@ -294,8 +300,8 @@
         <el-col :span="12">
           <el-form-item label="隔离状态" prop="glzt" label-width="140px">
             <el-select
-              filterable
               v-model="form.glzt"
+              filterable
               placeholder="请选择"
               style="width: 100%"
             >
@@ -304,16 +310,15 @@
                 :key="item.value"
                 :label="item.lable"
                 :value="item.value"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="转出时间" prop="zcsj" label-width="140px">
             <el-date-picker
-              style="width: 100%"
               v-model="form.zcsj"
+              style="width: 100%"
               type="date"
               placeholder="转出时间"
             />
@@ -322,8 +327,8 @@
         <el-col :span="12">
           <el-form-item label="转出地点" prop="zcdd" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.zcdd"
+              style="width: 100%"
               placeholder="请输入转出地点"
               autocomplete="off"
             />
@@ -332,8 +337,8 @@
         <el-col :span="12">
           <el-form-item label="接收人员姓名" prop="jsryxm" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.jsryxm"
+              style="width: 100%"
               placeholder="请输入接收人员姓名"
               autocomplete="off"
             />
@@ -342,8 +347,8 @@
         <el-col :span="12">
           <el-form-item label="转出原因" prop="zcyy" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.zcyy"
+              style="width: 100%"
               placeholder="请输入转出原因"
               autocomplete="off"
             />
@@ -352,8 +357,8 @@
         <el-col :span="24">
           <el-form-item label="备注" prop="bz" label-width="140px">
             <el-input
-              style="width: 100%"
               v-model="form.bz"
+              style="width: 100%"
               placeholder="备注信息"
               autocomplete="off"
             />
@@ -364,9 +369,11 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button size="small" @click="closeDialog">取 消</el-button>
-        <el-button size="small" type="primary" @click="enterDialog"
-          >确 定</el-button
-        >
+        <el-button
+          size="small"
+          type="primary"
+          @click="enterDialog"
+        >确 定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -378,9 +385,9 @@ import {
   singleDelete,
   updateData,
   getRoomList,
-} from "@/api/quarantinedPersonManag";
-import { defineProps, ref, reactive, inject, nextTick, onMounted, computed } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+} from '@/api/quarantinedPersonManag'
+import { defineProps, ref, reactive, inject, nextTick, onMounted, computed } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Qform,
   QrylbList,
@@ -388,12 +395,12 @@ import {
   QzjlxList,
   QcityList,
   QglztList,
-} from "../../../data/quarantined";
+} from '../../../../data/quarantined'
 
-//父组件方法
-const dialogFormVisibleShow = inject("dialogFormVisibleShow");
-const reGetData = inject("reGetData");
-//参数
+// 父组件方法
+const dialogFormVisibleShow = inject('dialogFormVisibleShow')
+const reGetData = inject('reGetData')
+// 参数
 const props = defineProps({
   dialogFormVisible: {
     type: Boolean,
@@ -401,218 +408,215 @@ const props = defineProps({
   },
   dialogTitle: {
     type: String,
-    default: "",
+    default: '',
   },
   csbh: {
     type: String,
-    default: "",
+    default: '',
   },
-});
+})
 
-let roomList = ref([]);
-const rylbList = QrylbList;
-const gjList = QgjList;
-const zjlxList = QzjlxList;
-const cityList = QcityList;
-const csbh = props.csbh;
-const getRoom = async () => {
-  let res = await getRoomList({ PlaceID: csbh, page: 1, pageSize: 999 });
-  console.log(res);
-  roomList.value = res.data.list;
-};
-getRoom();
+const roomList = ref([])
+const rylbList = QrylbList
+const gjList = QgjList
+const zjlxList = QzjlxList
+const cityList = QcityList
+const csbh = props.csbh
+const getRoom = async() => {
+  const res = await getRoomList({ PlaceID: csbh, page: 1, pageSize: 999 })
+  console.log(res)
+  roomList.value = res.data.list
+}
+getRoom()
 
 // 禁用
-let disable = false;
-//表单
-const Form = ref();
-let form = reactive(JSON.parse(JSON.stringify(Qform)));
-//校验
+let disable = false
+// 表单
+const Form = ref()
+const form = reactive(JSON.parse(JSON.stringify(Qform)))
+// 校验
 const checkTime = (rule, value, callback) => {
-  let start;
-  let end;
-  if (value != "") {
-    end = value.replace(/\-/g, "");
-    console.log(end, ",end");
+  let start
+  let end
+  if (value != '') {
+    end = value.replace(/\-/g, '')
+    console.log(end, ',end')
   }
   if (form.glkssj) {
-    start = form.glkssj.replace(/\-/g, "");
-    console.log(start, "start");
+    start = form.glkssj.replace(/\-/g, '')
+    console.log(start, 'start')
   }
   if (!start) {
-    callback(new Error("请输入隔离开始时间"));
+    callback(new Error('请输入隔离开始时间'))
   }
   if (end - start <= 0) {
-    callback(new Error("隔离结束时间必须大于隔离开始时间"));
+    callback(new Error('隔离结束时间必须大于隔离开始时间'))
   }
-};
+}
 const rules = reactive({
-  glryxm: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  csbh:[{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  rylb: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  sfffrjry: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  gj: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  zjlx: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
-  zjhm: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  glryxm: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  csbh: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  rylb: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  sfffrjry: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  gj: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  zjlx: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  zjhm: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   sjhm: [
-    { required: true, message: "必填项不能为空", trigger: "blur" },
+    { required: true, message: '必填项不能为空', trigger: 'blur' },
     {
       pattern: /^1(3|4|5|7|8|9)\d{9}$/,
-      message: "手机号格式错误",
-      trigger: "blur",
+      message: '手机号格式错误',
+      trigger: 'blur',
     },
   ],
-  gldfjbh: [{ required: true, message: "必填项不能为空", trigger: "blur" }],
+  gldfjbh: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   //   gljssj: [{ validator: checkTime, trigger: "blur" }],
-});
+})
 
-//身份证更改校验
+// 身份证更改校验
 const selectClickHandler = (v) => {
-  form.zjhm = "";
-  if (v == "身份证") {
+  form.zjhm = ''
+  if (v == '身份证') {
     rules.zjhm = [
       {
         required: true,
-        message: "请输入身份证号",
-        trigger: "blur",
+        message: '请输入身份证号',
+        trigger: 'blur',
       },
       {
         pattern:
           /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-        message: "身份证号码格式错误",
-        trigger: "blur",
+        message: '身份证号码格式错误',
+        trigger: 'blur',
       },
-    ];
+    ]
   } else {
     rules.zjhm = [
       {
         required: true,
-        message: "请输入证件号码",
-        trigger: "blur",
+        message: '请输入证件号码',
+        trigger: 'blur',
       },
-    ];
+    ]
   }
-};
+}
 
-//点击取消
+// 点击取消
 const closeDialog = () => {
-  Form.value.resetFields();
-  dialogFormVisibleShow();
-};
-//表单提交
+  Form.value.resetFields()
+  dialogFormVisibleShow()
+}
+// 表单提交
 const enterDialog = () => {
-  let result = JSON.parse(JSON.stringify(form));
-  
-  result.csbh = csbh || form.csbh;
- 
-  Form.value.validate(async (valid) => {
+  const result = JSON.parse(JSON.stringify(form))
+
+  result.csbh = csbh || form.csbh
+
+  Form.value.validate(async(valid) => {
     if (!valid) {
-      return;
+      return
     }
-    
-    if (!result.gljssj || result.gljssj == "0001-01-01T00:00:00Z") {
-      delete result.gljssj;
+
+    if (!result.gljssj || result.gljssj == '0001-01-01T00:00:00Z') {
+      delete result.gljssj
     }
-    if (!result.glkssj || result.glkssj == "0001-01-01T00:00:00Z") {
-      delete result.glkssj;
+    if (!result.glkssj || result.glkssj == '0001-01-01T00:00:00Z') {
+      delete result.glkssj
     }
-    if (!result.zcsj || result.zcsj == "0001-01-01T00:00:00Z") {
-      delete result.zcsj;
+    if (!result.zcsj || result.zcsj == '0001-01-01T00:00:00Z') {
+      delete result.zcsj
     }
-    if (props.dialogTitle.includes("新增")) {
+    if (props.dialogTitle.includes('新增')) {
       try {
-        console.log("新增");
-        form.gldfjbh = 2;
-        form.csbh = "084107030070091651747871";
-        let res = await addData({ ...result });
-        reGetData();
-        console.log(res, "这是新增是否成功的数据");
+        console.log('新增')
+        form.gldfjbh = 2
+        form.csbh = '084107030070091651747871'
+        const res = await addData({ ...result })
+        reGetData()
+        console.log(res, '这是新增是否成功的数据')
         if (res.code !== 0) {
-          throw new Error(res.msg);
+          throw new Error(res.msg)
         }
         ElMessage({
           showClose: true,
           message: res.msg,
-          type: "success",
+          type: 'success',
           duration: 3000,
-        });
+        })
       } catch (error) {
         ElMessage({
           showClose: true,
           message: error,
-          type: "error",
+          type: 'error',
           duration: 0,
-        });
+        })
       }
-      //新增逻辑处理
-
-     
+      // 新增逻辑处理
     } else {
-      //修改逻辑处理
+      // 修改逻辑处理
       try {
-        console.log("修改");
-        form.gldfjbh = 2;
-        let res = await updateData({ ...result });
-        reGetData();
-        console.log(res, "这是修改是否成功的数据");
+        console.log('修改')
+        form.gldfjbh = 2
+        const res = await updateData({ ...result })
+        reGetData()
+        console.log(res, '这是修改是否成功的数据')
         if (res.code !== 0) {
-          throw new Error(res.msg);
+          throw new Error(res.msg)
         }
         ElMessage({
           showClose: true,
           message: res.msg,
-          type: "success",
+          type: 'success',
           duration: 3000,
-        });
+        })
       } catch (error) {
         ElMessage({
           showClose: true,
           message: error,
-          type: "error",
+          type: 'error',
           duration: 0,
-        });
+        })
       }
     }
-    for (let key in form) {
-      form[key] = "";
+    for (const key in form) {
+      form[key] = ''
     }
-    dialogFormVisibleShow();
-  });
-};
-//回显数据
+    dialogFormVisibleShow()
+  })
+}
+// 回显数据
 const echoData = (data, v) => {
+  disable = true
+  for (const key in form) {
+    for (const key1 in data) if (key1 === key) form[key1] = data[key1]
+  }
+  if (data.gljssj.Time) form.gljssj = data.gljssj.Time == '0001-01-01T00:00:00Z' ? '' : data.gljssj.Time
 
-  disable = true;
-  for (let key in form) {
-    for (let key1 in data) if (key1 === key) form[key1] = data[key1];
+  if (data.yjjcglrq.Time) form.yjjcglrq = data.yjjcglrq.Time == '0001-01-01T00:00:00Z' ? '' : data.yjjcglrq.Time
+
+  if (data.zcsj.Time) form.zcsj = data.zcsj.Time == '0001-01-01T00:00:00Z' ? '' : data.zcsj.Time
+
+  form.old_gldfjbh = JSON.parse(JSON.stringify(form.gldfjbh)) // 保存旧编号
+}
+// 新增数据初始化表单
+const initForm = function(v) {
+  disable = false
+
+  for (const key in form) {
+    form[key] = ''
   }
-  if (data.gljssj.Time) form.gljssj = data.gljssj.Time == "0001-01-01T00:00:00Z" ? "" : data.gljssj.Time;
-  
-  if (data.yjjcglrq.Time) form.yjjcglrq = data.yjjcglrq.Time == "0001-01-01T00:00:00Z" ? "" : data.yjjcglrq.Time;
-  
-  if (data.zcsj.Time) form.zcsj = data.zcsj.Time == "0001-01-01T00:00:00Z" ? "" : data.zcsj.Time;
-  
-  form.old_gldfjbh = JSON.parse(JSON.stringify(form.gldfjbh)); //保存旧编号
-};
-//新增数据初始化表单
-const initForm = function (v) {
-  disable = false;
-  
-  for (let key in form) {
-    form[key] = "";
-  }
-  if(csbh!==''){
+  if (csbh !== '') {
     form.csbh = csbh
   }
   onMounted(() => {
-    console.log("挂载---refresh");
-    Form.value.resetFields();
-  });
-};
+    console.log('挂载---refresh')
+    Form.value.resetFields()
+  })
+}
 defineExpose({
   echoData,
   initForm,
-});
+})
 </script>
 <style>
 </style>

@@ -11,6 +11,20 @@
       >
         <el-table-column label="角色ID" min-width="160" prop="authorityId" />
         <el-table-column align="left" label="角色名称" min-width="150" prop="authorityName" />
+        <el-table-column align="left" label="角色行业" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.industryId"
+              :options="industryOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:true,checkStrictly: true,label:'name',value:'id',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDataScope(scope.row,flag)}"
+              @remove-tag="()=>{changeDataScope(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="数据范围" min-width="200">
           <template #default="scope">
             <el-cascader
@@ -25,21 +39,21 @@
             />
           </template>
         </el-table-column>
-        <el-table-column align="left" label="数据权限" min-width="200">
-          <template #default="scope">
-            <el-cascader
-              v-model="scope.row.deptId"
-              :options="deptOptions"
-              :show-all-levels="false"
-              :disabled="scope.row.dataScope !=='自定义'"
-              collapse-tags
-              :props="{ multiple:true,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
-              :clearable="false"
-              @visible-change="(flag)=>{changeDataScope(scope.row,flag)}"
-              @remove-tag="()=>{changeDataScope(scope.row,false)}"
-            />
-          </template>
-        </el-table-column>
+        <!--                <el-table-column align="left" label="数据权限" min-width="200">-->
+        <!--                  <template #default="scope">-->
+        <!--                    <el-cascader-->
+        <!--                      v-model="scope.row.deptId"-->
+        <!--                      :options="deptOptions"-->
+        <!--                      :show-all-levels="false"-->
+        <!--                      :disabled="scope.row.dataScope !=='自定义'"-->
+        <!--                      collapse-tags-->
+        <!--                      :props="{ multiple:true,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"-->
+        <!--                      :clearable="false"-->
+        <!--                      @visible-change="(flag)=>{changeDataScope(scope.row,flag)}"-->
+        <!--                      @remove-tag="()=>{changeDataScope(scope.row,false)}"-->
+        <!--                    />-->
+        <!--                  </template>-->
+        <!--        </el-table-column>-->
         <el-table-column align="left" label="操作" width="300">
           <template #default="scope">
             <el-button
@@ -76,6 +90,17 @@
         <el-form-item label="角色级别" prop="level">
           <el-input v-model="form.level" type="number" placeholder="请输入一个正整数作为角色级别,0为最高级" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="角色行业" prop="industryId">
+          <el-cascader
+            v-model="form.industryId"
+            style="width:100%"
+            :options="industryOptions"
+            :show-all-levels="false"
+            collapse-tags
+            :props="{ multiple:true,checkStrictly: true,label:'name',value:'id',disabled:'disabled',emitPath:false}"
+            :clearable="false"
+          />
+        </el-form-item>
         <el-form-item label="数据范围" prop="dataScope">
           <el-cascader
             v-model="form.dataScope"
@@ -86,16 +111,16 @@
             :clearable="false"
           />
         </el-form-item>
-        <el-form-item :hidden="form.dataScope !== '自定义'" label="数据权限" prop="deptId">
-          <el-cascader
-            v-model="form.deptId"
-            style="width:100%"
-            :options="deptOptions"
-            :show-all-levels="false"
-            :props="{ multiple:true,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
-            :clearable="false"
-          />
-        </el-form-item>
+        <!--        <el-form-item :hidden="form.dataScope !== '自定义'" label="数据权限" prop="deptId">-->
+        <!--          <el-cascader-->
+        <!--            v-model="form.deptId"-->
+        <!--            style="width:100%"-->
+        <!--            :options="deptOptions"-->
+        <!--            :show-all-levels="false"-->
+        <!--            :props="{ multiple:true,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"-->
+        <!--            :clearable="false"-->
+        <!--          />-->
+        <!--        </el-form-item>-->
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -131,7 +156,7 @@ import Apis from '@/view/superAdmin/authority/components/apis.vue'
 
 import { ref, watch, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getDeptList } from '@/api/dept'
+import { getIndustryList } from '@/api/industry'
 
 const mustUint = (rule, value, callback) => {
   if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
@@ -147,9 +172,9 @@ const dataScopeOption = ref([
   {
     dataScope: '本级',
   },
-  {
-    dataScope: '自定义',
-  },
+  // {
+  //   dataScope: '自定义',
+  // },
 ])
 const drawer = ref(false)
 const dialogType = ref('add')
@@ -165,6 +190,7 @@ const form = ref({
   level: '',
   dataScope: '',
   deptId: [],
+  industryId: []
 })
 
 const rules = ref({
@@ -177,6 +203,9 @@ const rules = ref({
   ],
   dataScope: [
     { required: true, message: '请选择角色数据权限', trigger: 'blur' },
+  ],
+  industryId: [
+    { required: true, message: '请选择角色行业', trigger: 'blur' },
   ],
 })
 
@@ -198,13 +227,16 @@ const getTableData = async() => {
 }
 
 watch(tableData, () => {
-  setDeptIds()
+  // setDeptIds()
+  setIndustryIds()
 })
 
 const initPage = async() => {
   getTableData()
-  const depTs = await getDeptList({ page: 1, pageSize: 999 })
-  setDeptOptions(depTs.data.list)
+  // const depTs = await getDeptList({ page: 1, pageSize: 999 })
+  // setDeptOptions(depTs.data.list)
+  const industryOpts = await getIndustryList({ page: 1, pageSize: 999 })
+  setIndustryTOptions(industryOpts.data.list)
   setDataScopeOptions()
 }
 
@@ -237,7 +269,8 @@ const changeDataScope = async(row, flag) => {
     level: row.level,
     authorityName: row.authorityName,
     dataScope: row.dataScope,
-    deptId: row.deptId,
+    industryId: row.industryId,
+    // deptId: row.deptId,
   })
   if (res.code === 0) {
     ElMessage({ type: 'success', message: '角色设置成功' })
@@ -341,14 +374,23 @@ const enterDialog = () => {
   })
 }
 
-const setDeptIds = () => {
+const setIndustryIds = () => {
   tableData.value && tableData.value.forEach((auth) => {
-    const deptIds = auth.depts && auth.depts.map(i => {
+    const industryIds = auth.industries && auth.industries.map(i => {
       return i.ID
     })
-    auth.deptId = deptIds
+    auth.industryId = industryIds
   })
 }
+
+// const setDeptIds = () => {
+//   tableData.value && tableData.value.forEach((auth) => {
+//     const deptIds = auth.depts && auth.depts.map(i => {
+//       return i.ID
+//     })
+//     auth.deptId = deptIds
+//   })
+// }
 
 const setDataScopeOptions = () => {
   dataScopeOption.value = [
@@ -358,38 +400,56 @@ const setDataScopeOptions = () => {
     {
       dataScope: '本级',
     },
-    {
-      dataScope: '自定义',
-    },
+    // {
+    //   dataScope: '自定义',
+    // },
   ]
 }
 
-const deptOptions = ref([])
-const setDeptOptions = (deptData) => {
-  deptOptions.value = []
-  setDepartmentOptions(deptData, deptOptions.value)
+const industryOptions = ref([])
+
+const setIndustryTOptions = (industryData) => {
+  industryOptions.value = []
+  setIndustryOptions(industryData, industryOptions.value)
 }
 
-const setDepartmentOptions = (DeptData, optionsData) => {
-  DeptData &&
-  DeptData.forEach(item => {
-    if (item.children && item.children.length) {
-      const option = {
-        deptId: item.ID,
-        deptName: item.deptName,
-        children: []
-      }
-      setDepartmentOptions(item.children, option.children)
-      optionsData.push(option)
-    } else {
-      const option = {
-        deptId: item.ID,
-        deptName: item.deptName
-      }
-      optionsData.push(option)
+const setIndustryOptions = (industryData, optionsData) => {
+  industryData &&
+  industryData.forEach(item => {
+    const option = {
+      name: item.Name,
+      id: item.ID,
     }
+    optionsData.push(option)
   })
 }
+
+// const deptOptions = ref([])
+// const setDeptOptions = (deptData) => {
+//   deptOptions.value = []
+//   setDepartmentOptions(deptData, deptOptions.value)
+// }
+
+// const setDepartmentOptions = (DeptData, optionsData) => {
+//   DeptData &&
+//   DeptData.forEach(item => {
+//     if (item.children && item.children.length) {
+//       const option = {
+//         deptId: item.ID,
+//         deptName: item.deptName,
+//         children: []
+//       }
+//       setDepartmentOptions(item.children, option.children)
+//       optionsData.push(option)
+//     } else {
+//       const option = {
+//         deptId: item.ID,
+//         deptName: item.deptName
+//       }
+//       optionsData.push(option)
+//     }
+//   })
+// }
 
 // const setOptions = () => {
 //   AuthorityOption.value = [

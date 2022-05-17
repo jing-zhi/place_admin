@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'workerManage'
+  name: 'WorkerManage'
 }
 </script>
 <script setup>
