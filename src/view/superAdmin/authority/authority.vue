@@ -204,9 +204,6 @@ const rules = ref({
   dataScope: [
     { required: true, message: '请选择角色数据权限', trigger: 'blur' },
   ],
-  industryId: [
-    { required: true, message: '请选择角色行业', trigger: 'blur' },
-  ],
 })
 
 const page = ref(1)

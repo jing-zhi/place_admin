@@ -57,15 +57,24 @@ export const setStatus = (data) => {
   })
 }
 
+// @Summary 启用场合
+export const assignMannger = (data) => {
+  return service({
+    url: '/cd/assignAdmin',
+    method: 'put',
+    data: data
+  })
+}
+
 // 场所导出Excel
 export const exportExcel = data => {
   return service({
     url: '/cd/exportExcel',
     method: 'post',
     data,
-    responseType:'blob'
+    responseType: 'blob'
   }).then(res => {
-      handleFileError(res,data.fileName)
+    handleFileError(res, data.fileName)
   })
 }
 
@@ -93,3 +102,4 @@ const handleFileError = (res, fileName) => {
     a.dispatchEvent(event)
   }
 }
+
