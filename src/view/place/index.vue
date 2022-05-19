@@ -96,8 +96,8 @@
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>
             <el-button type="text" icon="edit" size="small" @click="assignAdmin(scope.row)">分配管理员</el-button>
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
-            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
-            <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
+            <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
+            <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
           </template>
         </el-table-column>
 
@@ -602,6 +602,7 @@ const placeForm = ref(null)
 // 修改
 const editPlace = (row) => {
   placeInfo.value = JSON.parse(JSON.stringify(row))
+  placeInfo.value.hylx_name = row.industry.Name
   // placeInfo.value.qx_name = row.qx_name
   getXzList(row.qx)
   // placeInfo.value.sq_name = row.sq_name
