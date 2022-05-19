@@ -383,11 +383,11 @@ const rules = ref({
   nickName: [
     { required: true, message: '请输入用户昵称', trigger: 'blur' },
   ],
-  authorityId: [
+  authorityIds: [
     { required: true, message: '请选择用户角色', trigger: 'blur' },
   ],
   deptId: [
-    { required: true, message: '请选择用户角色', trigger: 'blur' },
+    { required: true, message: '请选择用户部门', trigger: 'blur' },
   ],
 })
 const userForm = ref(null)
