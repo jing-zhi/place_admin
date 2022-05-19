@@ -55,7 +55,8 @@
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
         <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" show-overflow-tooltip />
-        <el-table-column align="left" label="行业类型" min-width="120" prop="hylx_name" />
+        <el-table-column align="left" label="管理员账号" min-width="150" prop="user.userName" show-overflow-tooltip />
+        <el-table-column align="left" label="行业类型" min-width="120" prop="industry.Name" />
         <el-table-column align="left" label="所属区县" min-width="80" prop="qx_name" show-overflow-tooltip />
         <el-table-column align="left" label="所属乡镇" min-width="90" prop="sq_name" show-overflow-tooltip />
         <el-table-column align="left" label="所属村" min-width="120" prop="jd_name" show-overflow-tooltip />
@@ -82,7 +83,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
-            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+            <el-popover v-model:visible="scope.row.visible" trigger="click" placement="top" width="160">
               <p>确定要删除吗</p>
               <div style="text-align: right; margin-top: 8px;">
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
@@ -93,6 +94,7 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>
+            <el-button type="text" icon="edit" size="small" @click="assignAdmin(scope.row)">分配管理员</el-button>
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
             <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.hylx_name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
@@ -219,6 +221,41 @@
           </div>
         </template>
       </el-dialog>
+      <el-dialog
+        v-model="adminDialog"
+        title="场所分配管理员"
+        :show-close="false"
+        :close-on-press-escape="false"
+        :close-on-click-modal="false"
+      >
+        <div style="height:40vh;overflow:auto;padding:0 10px;">
+          <warning-bar title="可选择分配已有账户，或者新增账户" />
+          <el-form ref="placeAdminForm" :rules="placeAdminRules" :model="placeAdmin" label-width="110px">
+            <el-form-item label="账户类型" prop="placeAdminType">
+              <el-select v-model="placeAdmin.placeAdminType" placeholder="请选择" prop="placeAdminType">
+                <el-option
+                  v-for="item in placeAdminOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="管理员账号" prop="username">
+              <el-input v-model="placeAdmin.username" />
+            </el-form-item>
+            <el-form-item v-if="placeAdmin.placeAdminType === '1'" label="管理员密码" prop="password">
+              <el-input v-model="placeAdmin.password" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button size="small" @click="closeAdminDialog">取 消</el-button>
+            <el-button size="small" type="primary" @click="enterAdminDialog">确 定</el-button>
+          </div>
+        </template>
+      </el-dialog>
 
     </div>
   </div>
@@ -238,11 +275,12 @@ import {
   createPlace,
   setPlace,
   deletePlace,
-  exportExcel
+  exportExcel, assignMannger,
 } from '@/api/place.js'
 
 import { formatDate } from '@/utils/format'
-import { nextTick, ref, watch, toRaw } from 'vue'
+import warningBar from '@/components/warningBar/warningBar.vue'
+import { ref, toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
 import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
@@ -320,6 +358,12 @@ const setDepartmentOptions = (DeptData, optionsData) => {
     }
   })
 }
+
+// 分派管理类型
+const placeAdminOptions = [
+  { label: '使用已有账户', value: '0' },
+  { label: '新增账户', value: '1' }
+]
 // 行业类型
 const options = [
   { label: '隔离点', code: 43 },
@@ -380,7 +424,6 @@ const onSubmit = debounce(() => {
 })
 const getRetFind = () => {
   retFind.value = toRaw(searchPlace.value)
-  console.log(retFind.value)
 }
 const onReset = () => {
   searchPlace.value = {}
@@ -412,6 +455,15 @@ const closeAddDialog = () => {
   // 置空
   clearForm()
   addDialog.value = false
+}
+const placeAdminForm = ref(null)
+const adminDialog = ref(false)
+const closeAdminDialog = () => {
+  // 置空
+  placeAdminForm.value.resetFields()
+  placeAdmin.value.username = ''
+  placeAdmin.value.placeId = ''
+  adminDialog.value = false
 }
 const clearForm = () => {
   placeForm.value.resetFields()
@@ -475,6 +527,30 @@ const placeInfo = ref({
   'hylx': null,
   deptId: ''
 })
+
+// 分配管理员弹窗
+const placeAdmin = ref({
+  username: '',
+  placeId: '',
+  password: '',
+  placeAdminType: '0'
+})
+
+const placeAdminRules = ref({
+  username: [
+    { required: true, message: '请输入管理员账号', trigger: 'blur' },
+  ],
+  placeId: [
+    { required: true, message: '请传输场所id', trigger: 'blur' },
+  ],
+  password: [
+    { required: true, message: '请输入管理员密码', trigger: 'blur' },
+  ],
+  placeAdminType: [
+    { required: true, message: '请选择分配方式', trigger: 'blur' },
+  ]
+})
+
 const rules = ref({
   csmc: [
     { required: true, message: '请输入场合名称', trigger: 'blur' },
@@ -539,6 +615,13 @@ const editPlace = (row) => {
   addDialog.value = true
 }
 
+// 修改
+const assignAdmin = (row) => {
+  adminDialog.value = true
+  placeAdmin.value.placeId = row.id
+  placeAdmin.value.username = row.user.userName
+}
+
 const router = useRouter()
 // 跳转工作人员管理
 const enterWorker = (row) => {
@@ -600,6 +683,22 @@ const enterAddDialog = async() => {
           await getTableData(retFind.value)
           closeAddDialog()
         }
+      }
+    }
+  })
+}
+
+const enterAdminDialog = async() => {
+  placeAdminForm.value.validate(async valid => {
+    if (valid) {
+      const req = {
+        ...placeAdmin.value,
+      }
+      const res = await assignMannger(req)
+      if (res.code === 0) {
+        ElMessage({ type: 'success', message: '创建成功' })
+        await getTableData(retFind.value)
+        closeAdminDialog()
       }
     }
   })
