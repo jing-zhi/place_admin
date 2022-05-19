@@ -12,10 +12,10 @@
         <el-form-item label="行业类型" prop="hylx">
           <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
             <el-option
-              v-for="item in options"
-              :key="item.code"
-              :label="item.label"
-              :value="item.code"
+                v-for="item in options"
+              :key="item.ID"
+              :label="item.Name"
+              :value="item.ID"
             />
           </el-select>
         </el-form-item>
@@ -128,9 +128,9 @@
               <el-select v-model="placeInfo.hylx_name" class="m-2" placeholder="请选择行业类型" size="large">
                 <el-option
                   v-for="item in options"
-                  :key="item.code"
-                  :label="item.label"
-                  :value="item.label"
+                  :key="item.ID"
+                  :label="item.Name"
+                  :value="item.ID"
                   @click="hylxSelect(item)"
                 />
               </el-select>
@@ -140,11 +140,9 @@
               <el-input v-model="placeInfo.csmc" />
             </el-form-item>
             <!-- 下拉框 -->
-
             <!-- <el-form-item label="所属村" prop="jd_name">
               <el-input v-model="placeInfo.jd" />
             </el-form-item> -->
-
             <!-- <el-form-item label="区/街道">
               <el-cascader
                 ref="qx"
@@ -276,6 +274,7 @@ import {
   setPlace,
   deletePlace,
   exportExcel, assignMannger,
+   getBusinessMang
 } from '@/api/place.js'
 
 import { formatDate } from '@/utils/format'
@@ -364,41 +363,16 @@ const placeAdminOptions = [
   { label: '使用已有账户', value: '0' },
   { label: '新增账户', value: '1' }
 ]
-// 行业类型
-const options = [
-  { label: '隔离点', code: 43 },
-  { label: '体育场馆', code: 8 },
-  { label: '奶茶店', code: 9 },
-  { label: '居家', code: 10 },
-  { label: '写字楼，办公场所', code: 11 },
-  { label: '宾馆', code: 12 },
-  { label: '商场和超市', code: 13 },
-  { label: '银行', code: 14 },
-  { label: '餐厅', code: 15 },
-  { label: '理发店', code: 16 },
-  { label: '农集贸市场', code: 17 },
-  { label: '公园', code: 18 },
-  { label: '旅游景点', code: 19 },
-  { label: '健身场所', code: 20 },
-  { label: '咖啡吧、酒吧、茶座', code: 21 },
-  { label: '影剧院', code: 22 },
-  { label: '游泳场所', code: 23 },
-  { label: '会展中心', code: 24 },
-  { label: '游艺游乐场所和上网服务场所', code: 25 },
-  { label: '展览馆、博物馆、美术馆', code: 26 },
-  { label: '图书馆', code: 27 },
-  { label: '歌舞娱乐场所', code: 28 },
-  { label: '公共浴室', code: 29 },
-  { label: '医疗机构', code: 30 },
-  { label: '道路客运', code: 32 },
-  { label: '城市公共汽电车', code: 35 },
-  { label: '出租汽车', code: 37 },
-  { label: '相关行政部门', code: 39 },
-  { label: '药店', code: 40 },
-  { label: '高速服务区等机构工作人员、生产车间', code: 41 },
-  { label: '医废运输处理公-司', code: 42 },
-]
 
+
+// 行业类型
+let options = ref([])
+const getBusinessList = async ()=>{
+  let {data} = await getBusinessMang({page:1,pageSize:200})
+
+  options.value = data.list
+}
+getBusinessList()
 // eslint-disable-next-line no-unused-vars
 const getRes = async() => {
   // console.log(json.children)
