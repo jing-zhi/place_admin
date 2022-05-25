@@ -104,25 +104,25 @@
         <el-table-column align="left" label="所在县区" min-width="100" prop="gzrqxname" />
         <el-table-column align="left" label="所在乡" min-width="100" prop="gzrxzname" />
         <el-table-column align="left" label="原工作单位" min-width="100" prop="ydw" show-overflow-tooltip />
-        <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" />
+        <!-- <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" /> -->
         <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
-        <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq">
+        <!-- <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq">
           <template #default="scope">
             {{
               formatDate(scope.row.rzrq, 'yyyy-MM-dd')
             }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column align="left" label="人员状态" min-width="80" prop="zt" />
         <!-- <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time" /> -->
-        <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time">
+        <!-- <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time">
           <template #default="scope">
             {{
               tableData.sj = scope.row.sj.Valid ? formatDate(scope.row.sj.Time, 'yyyy-MM-dd') : ''
             }}
           </template>
-        </el-table-column>
-        <el-table-column align="left" label="调离隔离点编号" min-width="150" prop="dlgldbh" />
+        </el-table-column> -->
+        <!-- <el-table-column align="left" label="调离隔离点编号" min-width="150" prop="dlgldbh" /> -->
         <el-table-column label="操作" min-width="150" fixed="right">
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="100">
@@ -252,12 +252,12 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="调离时间" prop="sj">
+            <!-- <el-form-item label="调离时间" prop="sj">
               <el-date-picker v-model="workerInfo.sj" type="date" placeholder="请选择" />
             </el-form-item>
             <el-form-item label="调离隔离点编号" prop="dlgldbh">
               <el-input v-model="workerInfo.dlgldbh" />
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
 
         </div>
