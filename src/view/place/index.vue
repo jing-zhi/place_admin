@@ -12,7 +12,7 @@
         <el-form-item label="行业类型" prop="hylx">
           <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
             <el-option
-                v-for="item in options"
+              v-for="item in options"
               :key="item.ID"
               :label="item.Name"
               :value="item.ID"
@@ -98,6 +98,7 @@
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
+            <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
           </template>
         </el-table-column>
 
@@ -113,7 +114,16 @@
           @size-change="handleSizeChange"
         />
       </div>
+      <el-dialog
+        v-model="showCode"
+        title="物联码"
+        width="30%"
+      >
+        <div class="codeDiv" style="padding-left: 13px;">
+          <img :src="code.value ">
+        </div>
 
+      </el-dialog>
       <el-dialog
         v-model="addDialog"
         custom-class="user-dialog"
@@ -261,7 +271,7 @@
 
 <script>
 export default {
-  name: 'Place',
+  name: 'Place'
 }
 </script>
 
@@ -274,7 +284,7 @@ import {
   setPlace,
   deletePlace,
   exportExcel, assignMannger,
-   getBusinessMang
+  getBusinessMang
 } from '@/api/place.js'
 
 import { formatDate } from '@/utils/format'
@@ -364,11 +374,10 @@ const placeAdminOptions = [
   { label: '新增账户', value: '1' }
 ]
 
-
 // 行业类型
-let options = ref([])
-const getBusinessList = async ()=>{
-  let {data} = await getBusinessMang({page:1,pageSize:200})
+const options = ref([])
+const getBusinessList = async() => {
+  const { data } = await getBusinessMang({ page: 1, pageSize: 200 })
 
   options.value = data.list
 }
@@ -607,6 +616,14 @@ const enterWorker = (row) => {
     }
   })
 }
+const showCode = ref(false)
+const code = {}
+const open = (row) => {
+  console.log(row.csbh)
+  console.log(import.meta.env.VITE_BASE_API)
+  showCode.value = !showCode.value
+  code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
+}
 // 跳转隔离人员管理
 const enterPeople = (row) => {
   router.push({
@@ -759,5 +776,4 @@ const getExcel = (fileName) => {
 .excel-btn + .excel-btn {
   margin-left: 10px;
 }
-
 </style>
