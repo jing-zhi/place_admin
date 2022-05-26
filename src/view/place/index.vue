@@ -120,7 +120,7 @@
         width="30%"
       >
         <div class="codeDiv" style="padding-left: 13px;">
-          <img :src="code.value ">
+          <img style="width:100%;height:90%" :src="code.value ">
         </div>
 
       </el-dialog>
