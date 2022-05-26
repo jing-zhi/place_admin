@@ -145,7 +145,7 @@
       />
       <el-table-column
         align="center"
-        label="场所码编号"
+        label="物联码编号"
         min-width="120"
         prop="placeNumber"
       />
