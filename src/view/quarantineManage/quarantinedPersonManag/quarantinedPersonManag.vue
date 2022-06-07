@@ -85,7 +85,6 @@
           </el-form-item>
           <el-form-item label="隔离时间范围" label-width="auto" prop="glsj">
             <el-date-picker
-
               v-model="searchInfo.glsj"
               type="datetimerange"
               :default-time="defaultTime2"
@@ -443,7 +442,6 @@ getTableData()
 
 const exportData = debounce(() => {
   // 导出
-
   const searchList = JSON.parse(JSON.stringify(searchInfo))
   let Scsbh = ''
   if (searchInfo) {

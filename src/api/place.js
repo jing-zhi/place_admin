@@ -41,7 +41,13 @@ export const setPlace = (data) => {
     data: data
   })
 }
-
+export const getBusinessMang = (data) => {
+  return service({
+    url: "cdIndustry/pageIndustryList",
+    method: 'POST',
+    data
+  })
+}
 // @Summary 启用场合
 export const setStatus = (data) => {
   return service({

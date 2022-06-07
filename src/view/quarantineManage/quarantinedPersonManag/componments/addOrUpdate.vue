@@ -14,7 +14,6 @@
         <el-col :span="12">
           <el-form-item label="场所编号" prop="csbh" label-width="140px">
             <el-input
-
               v-model="form.csbh"
               style="width: 100%"
               placeholder="请输入场所编号"
@@ -103,17 +102,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="场所编号" prop="csbh" label-width="140px">
-            <el-input
-
-              v-model="form.csbh"
-              style="width: 100%"
-              placeholder="请输入场所编号"
-              autocomplete="off"
-            />
-          </el-form-item>
-        </el-col>
+    
         <el-col :span="12">
           <el-form-item label="入境证件号码" prop="rjzjhm" label-width="140px">
             <el-input
