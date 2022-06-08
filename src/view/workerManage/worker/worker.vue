@@ -24,7 +24,26 @@
         <el-form-item label="身份证">
           <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
         </el-form-item>
-
+        <el-form-item label="核酸信息">
+          <el-select v-model="searchWorker.heSuanInfo" class="m-2" placeholder="核酸信息" size="large">
+            <el-option
+              v-for="item in heSuanList"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="健康码信息">
+          <el-select v-model="searchWorker.healthCode" class="m-2" placeholder="健康码信息" size="large">
+            <el-option
+              v-for="item in healthCode"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
             <el-option
@@ -100,6 +119,8 @@
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
+        <el-table-column align="left" label="核酸信息" min-width="150" prop="heSuanInfo" />
+        <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />
         <el-table-column align="left" label="所在地市" min-width="100" prop="gzrdsname" />
         <el-table-column align="left" label="所在县区" min-width="100" prop="gzrqxname" />
         <el-table-column align="left" label="所在乡" min-width="100" prop="gzrxzname" />
@@ -345,6 +366,18 @@ const ztList = [
   { id: 3, name: '调离' },
   { id: 4, name: '正常隔离' },
 ] // 1在岗 2离岗 3调离  4 正常隔离
+
+const heSuanList = [
+  { name: '阴性' },
+  { name: '阳性' },
+  { name: '无48小时核酸' },
+]
+
+const healthCode = [
+  { name: '绿码' },
+  { name: '黄码' },
+  { name: '红码' },
+]
 
 // 分页
 const handleSizeChange = (val) => {
@@ -669,7 +702,6 @@ const ztSelect = (item) => {
 }
 
 const ztSearch = (item) => {
-  console.log('搜索' + item.name)
   searchWorker.value.ztid = item.id
   // console.log(searchWorker);
 }
