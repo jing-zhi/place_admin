@@ -6,7 +6,7 @@
         <div class="title">
             管理区域状况统计
         </div>
-        <div class="dot">
+        <div class="info">
             详情见工作人员管理界面
         </div>
       </el-card>
@@ -171,7 +171,7 @@ export default {
     font-size: 22px;
     color: #343844;
 }
-.dot {
+.info {
     font-size: 14px;
     color: #6B7687;
     margin-top: 24px;
