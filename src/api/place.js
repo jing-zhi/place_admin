@@ -103,3 +103,11 @@ const handleFileError = (res, fileName) => {
   }
 }
 
+// 场所人员信息导入
+export const loadExcelData = (data) => {
+  return service({
+    url: '/cdworker/ExcelImport',
+    method: 'post',
+    data:data
+  })
+}
