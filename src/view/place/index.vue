@@ -99,6 +99,19 @@
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
             <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
+            <!-- <el-button type="text" icon="edit" size="small"  @click="importExcel(scope.row)">导入</el-button> -->
+            <el-upload
+              class="excel-btn"
+              v-model="excelUplod"
+              :action="`${path}/file/upload`" 
+              :headers="{'x-token':userStore.token}"
+              :on-change="(response,file,fileList)=> importExcel(response,scope.row, file,fileList)"  
+              :on-success="importApi2"
+              :show-file-list="true"
+            >
+              <el-button type="text" icon="edit" size="small">导入</el-button>
+            </el-upload>
+
           </template>
         </el-table-column>
 
@@ -284,8 +297,12 @@ import {
   setPlace,
   deletePlace,
   exportExcel, assignMannger,
-  getBusinessMang
+  getBusinessMang,
+  loadExcelData
 } from '@/api/place.js'
+
+const path = ref(import.meta.env.VITE_BASE_API)
+import { useUserStore } from '@/pinia/modules/user'
 
 import { formatDate } from '@/utils/format'
 import warningBar from '@/components/warningBar/warningBar.vue'
@@ -624,6 +641,30 @@ const open = (row) => {
   showCode.value = !showCode.value
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
 }
+
+const userStore = useUserStore()
+// 导入
+const reqFileId = {}
+const importExcel = async(file,row, other,fileList) => {
+   reqFileId.value = {
+       file_name:file.name,
+       place_id:row.csbh
+   }
+}
+
+const importApi2 = async(res) => {
+  console.log(res);
+  let key = res.data.file.key
+  if(res.code === 0 ){
+    console.log(key);
+    reqFileId.value.file_name=key
+    const res = await loadExcelData(reqFileId.value)
+  }else if(res.code === 7 ){
+    ElMessage({ type: 'err', message: '导入失败' })
+  }
+  
+}
+
 // 跳转隔离人员管理
 const enterPeople = (row) => {
   router.push({
@@ -734,6 +775,8 @@ const getXzList = async(code) => {
       xzList.value = qus[i].children
       // console.log(xzList.value);
     }
+
+
   }
 }
 const xzSelect = (item) => {
@@ -771,6 +814,7 @@ const getExcel = (fileName) => {
   exportExcel({ fileName, ...retFind.value })
 }
 </script>
+
 
 <style lang="scss">
 .excel-btn + .excel-btn {
