@@ -258,7 +258,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="入职隔离点日期" prop="rzrq">
+            <el-form-item label="入职日期" prop="rzrq">
               <!-- <el-input v-model="workerInfo.rzrq" /> -->
               <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择" />
             </el-form-item>
