@@ -9,14 +9,22 @@ export const getCategory = () => {
 }
 
 // 增加
-
+export const createExaCustomer = (data) => {
+  return service({
+    url: 'cdPersonnelCategory/createdPersonnelCategory',
+    method: 'post',
+    data
+  })
+}
 // 修改
+
+
 
 // 删除
 export const deletePlaceRoom = (data) => {
   return service({
-    url: '/placeRoom/deletePlaceRoom',
-    method: 'delete',
+    url: '/cdPersonnelCategory/deletePersonnelCategory',
+    method: 'post',
     data
   })
 }

@@ -60,6 +60,7 @@
               @click="editIndustry(scope.row)"
               >编辑</el-button
             >
+            
             <el-button
               type="text"
               icon="Share"
@@ -113,21 +114,16 @@
 
 <script setup>
 import { nextTick, ref, watch ,toRaw } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getCategory } from '@/api/Category.js'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getCategory, createExaCustomer,deletePlaceRoom} from '@/api/Category.js'
 const tableData = ref([])
 const searchInfo = ref({})
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
 const apiForm =ref([])
-tableData.value = [
-    { hy_name: "卫滨区", rylb_name: "41",hesuan_time:"2022"},
-   { hy_name: "卫滨区", rylb_name: "41",hesuan_time:"2022"}
-]
-apiForm.value=[
- 
-]
+tableData.value = []
+
 
 // 重置按钮
 const onReset = () => {
