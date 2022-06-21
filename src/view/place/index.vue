@@ -40,14 +40,27 @@
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
           <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+          <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx">
+             <el-button class="btn" size="small" type="primary" icon="download">导入信息模板</el-button>
+         </a>
+          
+          
+          
+          
 
         </el-form-item>
+       
       </el-form>
+    
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
+
+
       </div>
+
+
       <el-table
         :data="tableData"
         row-key="ID"
@@ -318,6 +331,7 @@ const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
 const searchPlace = ref({})
+
 
 // 区和街道
 const res = ref([])
@@ -819,6 +833,9 @@ const getExcel = (fileName) => {
   // }
   exportExcel({ fileName, ...retFind.value })
 }
+
+
+
 </script>
 
 
