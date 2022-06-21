@@ -40,14 +40,27 @@
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
           <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+          <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx">
+             <el-button class="btn" size="small" type="primary" icon="download">导入信息模板</el-button>
+         </a>
+          
+          
+          
+          
 
         </el-form-item>
+       
       </el-form>
+    
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
+
+
       </div>
+
+
       <el-table
         :data="tableData"
         row-key="ID"
@@ -153,7 +166,7 @@
                   v-for="item in options"
                   :key="item.ID"
                   :label="item.Name"
-                  :value="item.ID"
+                  :value="item.Name"
                   @click="hylxSelect(item)"
                 />
               </el-select>
@@ -319,6 +332,7 @@ const pageSize = ref(10)
 const tableData = ref([])
 const searchPlace = ref({})
 
+
 // 区和街道
 const res = ref([])
 const areaValue = ref()
@@ -397,6 +411,7 @@ const getBusinessList = async() => {
   const { data } = await getBusinessMang({ page: 1, pageSize: 200 })
 
   options.value = data.list
+  console.log(options.value);
 }
 getBusinessList()
 // eslint-disable-next-line no-unused-vars
@@ -633,6 +648,8 @@ const enterWorker = (row) => {
     }
   })
 }
+
+// 物联码
 const showCode = ref(false)
 const code = {}
 const open = (row) => {
@@ -642,8 +659,9 @@ const open = (row) => {
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
 }
 
-const userStore = useUserStore()
+
 // 导入
+const userStore = useUserStore()
 const reqFileId = {}
 const importExcel = async(file,row, other,fileList) => {
    reqFileId.value = {
@@ -696,7 +714,7 @@ const enterAddDialog = async() => {
       req.qx_name = qx_name.value
       req.sq_name = sq_name.value
       req.jd_name = jd_name.value
-      // console.log(req)
+      console.log(req)
       // 新增
       if (dialogFlag.value === 'add') {
         console.log('add')
@@ -718,6 +736,7 @@ const enterAddDialog = async() => {
         }
       }
     }
+
   })
 }
 
@@ -798,7 +817,8 @@ const cunSelect = (item) => {
   jd_name.value = item.name
 }
 const hylxSelect = (item) => {
-  hylx.value = item.code
+  hylx.value = item.ID
+  console.log(hylx.value);
 }
 
 // 导出
@@ -813,6 +833,9 @@ const getExcel = (fileName) => {
   // }
   exportExcel({ fileName, ...retFind.value })
 }
+
+
+
 </script>
 
 
