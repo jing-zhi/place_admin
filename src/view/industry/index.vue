@@ -13,6 +13,7 @@
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-button type="text" icon="edit" size="small" @click="editIndustry(scope.row)">编辑</el-button>
+            <el-button type="text" icon="Share" size="small" @click="classifyPeople(scope.row)">删除</el-button>
            </template>
         </el-table-column>
 
@@ -201,6 +202,18 @@ const enterAddDialog = async() => {
     }
   })
 
+}
+
+// 人员类别跳转
+const router = useRouter()
+// 跳转工作人员管理
+const classifyPeople = (row) => {
+  router.push({
+    name: 'Category',
+    // params: {
+    //   'csbh': row.csbh
+    // }
+  })
 }
 
 
