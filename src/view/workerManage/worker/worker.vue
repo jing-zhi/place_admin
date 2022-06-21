@@ -258,7 +258,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="入职隔离点日期" prop="rzrq">
+            <el-form-item label="入职日期" prop="rzrq">
               <!-- <el-input v-model="workerInfo.rzrq" /> -->
               <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择" />
             </el-form-item>
@@ -558,7 +558,7 @@ const clearForm = () => {
     'gldgw': '', // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
     'rzrq': '', // rzrq入职隔离点日期
     'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
-    'sj': '', // sj 调离时间
+    //'sj': '', // sj 调离时间
     'dlgldbh': '' // dlgldbh 调离隔离点编号
   }
 }
