@@ -210,10 +210,14 @@ const router = useRouter()
 const classifyPeople = (row) => {
   router.push({
     name: 'Category',
-    // params: {
-    //   'csbh': row.csbh
-    // }
+    params: {
+      'ID': row.ID
+    }
+
   })
+  console.log(row.ID)
+
+
 }
 
 

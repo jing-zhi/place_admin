@@ -3,21 +3,29 @@
     <div class="gva-search-box">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
         <el-form-item label="所属行业">
-          <el-input v-model="searchInfo.CategoryID" placeholder="所属行业" />
+          <el-select v-model="searchInfo.hy_name" class="m-2" placeholder="所属行业" size="large">
+            <el-option
+              v-for="item in healthCode"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            />
+          </el-select>
+
         </el-form-item>
         <el-form-item label="人员类别">
-          <el-input v-model="searchInfo.CategoryName" placeholder="人员类别" />
+          <el-input v-model="searchInfo.rylb_name" placeholder="人员类别" />
         </el-form-item>
-        <el-form-item label="核酸规则">
-          <el-cascader
-            v-model="searchInfo.State"
-            style="width:100%"
-            :options="queryStateOptions"
-            :show-all-levels="false"
-            :props="{ multiple:false,checkStrictly: true,label:'state',value:'state_id',emitPath:false}"
-            :clearable="false"
-          />
-        </el-form-item>
+        <!-- <el-form-item label="核酸规则">
+          <el-select v-model="searchInfo.State" class="m-2" placeholder="核酸规则信息" size="large">
+            <el-option
+              v-for="item in healthCode"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            />
+          </el-select>
+        </el-form-item> -->
 
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
@@ -84,16 +92,23 @@
         />
       </div>
 
-      <el-dialog v-model="dialogForm" :before-close="closeDialog" :title="dialogTitle" >
-        <el-form ref="apiForm" :model="form" :rules="rules" label-width="120px" style="width:50%">
+      <el-dialog v-model="dialogForm" :before-close="closeDialog" :title="dialogTitle" width="30%">
+        <el-form ref="apiForm" :model="form" :rules="rules" label-width="120px" style="width:80%">
             <el-form-item label="所属行业" prop="hy_name">
-            <el-input   autocomplete="off" />
+            <el-input v-model="form.hy_name"  autocomplete="off" />
             </el-form-item>
             <el-form-item label="人员类别" prop="rylb_name">
-            <el-input  autocomplete="off" />
+            <el-input v-model="form.rylb_name" autocomplete="off" />
             </el-form-item>
             <el-form-item label="核酸时间" prop="hesuan_time">
-            <el-input autocomplete="off" />
+              <el-select v-model="form.hesuan_time" class="m-2" placeholder="请选择" size="large" style="width:100%">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.label"
+                />
+              </el-select>
             </el-form-item>
             
         </el-form>
@@ -115,22 +130,92 @@
 <script setup>
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getCategory, createExaCustomer,deletePlaceRoom} from '@/api/Category.js'
+import { getCategory, createPelop,deletePlaceRoom,updataPelop} from '@/api/Category.js'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+// hyid
+const ID = ref('')
+ID.value = route.params.ID ? route.params.ID : ''
+
 const tableData = ref([])
 const searchInfo = ref({})
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
-const apiForm =ref([])
-tableData.value = []
 
+const apiForm =ref(null)
+
+//tableData.value = []
+const form = ref({
+  hy_name: '',
+  rylb_name: '',
+  hesuan_time: '',
+
+})
+
+const type = ref('')
+const rules = ref({
+  hy_name: [
+    { required: true, message: '请输入所属行业', trigger: 'blur' },
+  ],
+  rylb_name: [
+    { required: true, message: '请输入人员类别', trigger: 'blur' },
+  ],
+ hesuan_time: [
+    { required: true, message: '请输入核酸时间', trigger: 'blur' },
+  ]
+
+})
+
+const healthCode = [
+  { name: '农机车辆' },
+  { name: '隔离点' },
+  { name: '医废运输处理公司' },
+  { name: '高速服务区等机构工作人员' },
+  { name: '药店' },
+  { name: '相关行政部门' },
+  { name: '出租司机' },
+  { name: '城市公共汽电车' },
+  { name: '道路客运' },
+  { name: '医疗机构' },
+  { name: '公共浴室' },
+  { name: '歌舞娱乐中心' },
+  { name: '图书馆' },
+  { name: '展览馆' },
+  { name: '游艺游乐场所和上网服务场所' },
+  { name: '会展中心' },
+  { name: '游泳场所' },
+  { name: '影剧院' },
+  { name: '咖啡吧' },
+  { name: '健身场所' },
+  { name: '旅游景点' },
+  { name: '公园' },
+  { name: '农集贸市场' },
+  { name: '理发店' },
+  { name: '餐厅（馆）' },
+  { name: '银行' },
+  { name: '商场和超市' },
+  { name: '宾馆' },
+  { name: '写字楼' },
+  { name: '居家' },
+  { name: '奶茶店' },
+  { name: '体育场馆' },
+  { name: '棋牌室（麻将馆）（取缔）' }
+
+]
+
+const options = [
+  { label: '24小时', value: 24 },
+  { label: '48小时', value: 48 },
+  { label: '72小时', value: 72 },
+]
 
 // 重置按钮
 const onReset = () => {
   searchInfo.value = {}
 }
 
-// 分页
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -141,23 +226,34 @@ const handleCurrentChange = (val) => {
   page.value = val
   getTableData()
 }
+// 搜索查询
+const onSubmit = () => {
+  page.value = 1
+  pageSize.value = 10
+  getTableData(searchInfo.value)
+}
 
 // 分页渲染
 const getTableData = async(value) => {
-    let rqt = { page: page.value, pageSize: pageSize.value }
+    let rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(ID.value) }
     if(value) {
-        rqt = { page: page.value, pageSize: pageSize.value, ...value }   
+        rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(ID.value) , ...value }   
     } 
     console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
-    // console.log(table)
-    tableData.value = table.data.list
+    console.log(table)
+    tableData.value = table.data.rylb
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
   }
 }
+const initPage = async() => {
+  getTableData()
+}
+
+initPage()
 
 // 增加弹窗
 const dialogTitle = ref('新增人员类别')
@@ -167,16 +263,16 @@ const openDialog = (key) => {
   switch (key) {
     case 'add':
         dialogFlag.value = 'add'
-  dialogForm.value = true
-      dialogTitle.value = '新增隔离点房间'
+        dialogForm.value = true
+        dialogTitle.value = '新增人员类别'
       break
     case 'edit':
-      dialogTitle.value = '编辑隔离点房间'
+      dialogTitle.value = '编辑人员类别'
       break
     default:
       break
+
   }
-  
   dialogForm.value = true
 }
 
@@ -184,40 +280,95 @@ const openDialog = (key) => {
 
 const closeDialog = () => {
   // 置空
-  //clearForm()
+  initForm()
   dialogForm.value = false
 }
+                               
+// 弹窗相关
+// const apiForm = ref(null)
+const initForm = () => {
+  apiForm.value.resetFields()
 
+}
+const editId = ref('')
 // 编辑弹窗
 const editIndustry = (row) => {
-  //industryInfo.value = JSON.parse(JSON.stringify(row))
-  
-  dialogFlag.value = 'edit'
+  form.value = JSON.parse(JSON.stringify(row)) 
+ // from.value
+  console.log(row);
+  editId.value = row.id
   openDialog('edit')
+  dialogFlag.value = 'edit'
   dialogForm.value = true
 }
 
-const enterDialog = ( ) =>{
-    dialogForm.value = false
+ 
+//  确定
+const enterDialog = async() => {
+  apiForm.value.validate(async valid => {
+    if (valid) {  
+      switch (dialogFlag.value) {
+        case 'add': {
+          console.log(ID);
+          form.value.hy_id = Number(ID.value)
+          const res = await createPelop(form.value)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '添加成功',
+              showClose: true,
+            })
+          }
+          getTableData()
+          closeDialog()
+        }
+          break
+        case 'edit': {
+          form.value.id = editId.value
+          const res = await updataPelop(form.value)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '编辑成功',
+              showClose: true,
+            })
+          }
+          getTableData()
+          closeDialog()
+        }
+          break
+        default:
+          {
+            ElMessage({
+              type: 'error',
+              message: '未知操作',
+              showClose: true,
+            })
+          }
+          break
+      }
+    }
+  })
 }
 
 //删除
 const delclassify = async(row) => {
-  ElMessageBox.confirm('此操作将永久删除该房间, 是否继续?', '提示', {
+  console.log(row,"row")
+  ElMessageBox.confirm('此操作将永久删除该信息, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   })
     .then(async() => {
-      const res = await deletePlaceRoom(row)
+      const res = await deletePlaceRoom({ id: row.id })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
           message: '删除成功!',
         })
-        if (tableData.value.length === 1 && page.value > 1) {
-          page.value--
-        }
+        // if (tableData.value.length === 1 && page.value > 1) {
+        //   page.value--
+        // }
         getTableData()
       }
     })
@@ -225,4 +376,5 @@ const delclassify = async(row) => {
 </script>
 
 <style scoped lang="scss">
+
 </style> 

@@ -701,6 +701,7 @@ const editPlaceRoome = (row) => {
       'PlaceID': row.csbh
     }
   })
+  console.log(PlaceID)
 }
 
 // 确认增加修改
