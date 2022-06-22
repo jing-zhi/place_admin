@@ -2,16 +2,17 @@
   <div>
     <div class="gva-search-box">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
-        <!-- <el-form-item label="所属行业">
+        <el-form-item label="所属行业">
           <el-select v-model="searchInfo.hy_name" class="m-2" placeholder="所属行业" size="large">
             <el-option
-              v-for="item in healthCode"
-              :key="item.name"
-              :label="item.name"
-              :value="item.name"
+              v-for="item in industryList"
+              :key="item.Name"
+              :label="item.Name"
+              :value="item.Name"
+              @click="changeId(item)"
             />
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="人员类别">
           <el-input v-model="searchInfo.rylb_name" placeholder="人员类别" />
         </el-form-item>
@@ -131,6 +132,7 @@ import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getCategory, createPelop,deletePlaceRoom,updataPelop} from '@/api/Category.js'
 import { useRoute, useRouter } from 'vue-router'
+import { getIndustryList, setIndustry } from '@/api/industry.js'
 
 const route = useRoute()
 // hyid
@@ -169,42 +171,6 @@ const rules = ref({
 
 })
 
-// const healthCode = [
-//   { name: '农机车辆' },
-//   { name: '隔离点' },
-//   { name: '医废运输处理公司' },
-//   { name: '高速服务区等机构工作人员' },
-//   { name: '药店' },
-//   { name: '相关行政部门' },
-//   { name: '出租司机' },
-//   { name: '城市公共汽电车' },
-//   { name: '道路客运' },
-//   { name: '医疗机构' },
-//   { name: '公共浴室' },
-//   { name: '歌舞娱乐中心' },
-//   { name: '图书馆' },
-//   { name: '展览馆' },
-//   { name: '游艺游乐场所和上网服务场所' },
-//   { name: '会展中心' },
-//   { name: '游泳场所' },
-//   { name: '影剧院' },
-//   { name: '咖啡吧' },
-//   { name: '健身场所' },
-//   { name: '旅游景点' },
-//   { name: '公园' },
-//   { name: '农集贸市场' },
-//   { name: '理发店' },
-//   { name: '餐厅（馆）' },
-//   { name: '银行' },
-//   { name: '商场和超市' },
-//   { name: '宾馆' },
-//   { name: '写字楼' },
-//   { name: '居家' },
-//   { name: '奶茶店' },
-//   { name: '体育场馆' },
-//   { name: '棋牌室（麻将馆）（取缔）' }
-
-// ]
 
 const options = [
   { label: '24小时', value: 24 },
@@ -234,6 +200,8 @@ const onSubmit = () => {
   getTableData(searchInfo.value)
 }
 
+
+
 // 分页渲染
 const getTableData = async(value) => {
     let rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(ID.value) }
@@ -250,11 +218,32 @@ const getTableData = async(value) => {
     pageSize.value = table.data.pageSize
   }
 }
+
+const industryList = ref([])
+const getIndustry = async() => {
+  let rqt = { page: 1, pageSize: 100 }
+    
+  console.log(rqt);
+  const table = await getIndustryList(rqt)
+  if (table.code === 0) {
+    // console.log(table)
+    industryList.value = table.data.list
+  }
+}
+
+const changeId = (item) =>{
+  ID.value = item.ID
+  console.log(ID.value);
+}
+
 const initPage = async() => {
+  getIndustry()
   getTableData()
+  searchInfo.value.hy_name = sectorName.value
 }
 
 initPage()
+
 
 // 增加弹窗
 const dialogTitle = ref('新增人员类别')
