@@ -2,7 +2,7 @@
   <div>
     <div class="gva-search-box">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
-        <el-form-item label="所属行业">
+        <!-- <el-form-item label="所属行业">
           <el-select v-model="searchInfo.hy_name" class="m-2" placeholder="所属行业" size="large">
             <el-option
               v-for="item in healthCode"
@@ -11,8 +11,7 @@
               :value="item.name"
             />
           </el-select>
-
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="人员类别">
           <el-input v-model="searchInfo.rylb_name" placeholder="人员类别" />
         </el-form-item>
@@ -95,7 +94,7 @@
       <el-dialog v-model="dialogForm" :before-close="closeDialog" :title="dialogTitle" width="30%">
         <el-form ref="apiForm" :model="form" :rules="rules" label-width="120px" style="width:80%">
             <el-form-item label="所属行业" prop="hy_name">
-            <el-input v-model="form.hy_name"  autocomplete="off" />
+            <el-input v-model="form.hy_name" disabled autocomplete="off" />
             </el-form-item>
             <el-form-item label="人员类别" prop="rylb_name">
             <el-input v-model="form.rylb_name" autocomplete="off" />
@@ -137,6 +136,8 @@ const route = useRoute()
 // hyid
 const ID = ref('')
 ID.value = route.params.ID ? route.params.ID : ''
+const sectorName = ref('')
+sectorName.value = route.params.sectorName ? route.params.sectorName : ''
 
 const tableData = ref([])
 const searchInfo = ref({})
@@ -148,7 +149,7 @@ const apiForm =ref(null)
 
 //tableData.value = []
 const form = ref({
-  hy_name: '',
+  hy_name: sectorName.value,
   rylb_name: '',
   hesuan_time: '',
 
@@ -168,42 +169,42 @@ const rules = ref({
 
 })
 
-const healthCode = [
-  { name: '农机车辆' },
-  { name: '隔离点' },
-  { name: '医废运输处理公司' },
-  { name: '高速服务区等机构工作人员' },
-  { name: '药店' },
-  { name: '相关行政部门' },
-  { name: '出租司机' },
-  { name: '城市公共汽电车' },
-  { name: '道路客运' },
-  { name: '医疗机构' },
-  { name: '公共浴室' },
-  { name: '歌舞娱乐中心' },
-  { name: '图书馆' },
-  { name: '展览馆' },
-  { name: '游艺游乐场所和上网服务场所' },
-  { name: '会展中心' },
-  { name: '游泳场所' },
-  { name: '影剧院' },
-  { name: '咖啡吧' },
-  { name: '健身场所' },
-  { name: '旅游景点' },
-  { name: '公园' },
-  { name: '农集贸市场' },
-  { name: '理发店' },
-  { name: '餐厅（馆）' },
-  { name: '银行' },
-  { name: '商场和超市' },
-  { name: '宾馆' },
-  { name: '写字楼' },
-  { name: '居家' },
-  { name: '奶茶店' },
-  { name: '体育场馆' },
-  { name: '棋牌室（麻将馆）（取缔）' }
+// const healthCode = [
+//   { name: '农机车辆' },
+//   { name: '隔离点' },
+//   { name: '医废运输处理公司' },
+//   { name: '高速服务区等机构工作人员' },
+//   { name: '药店' },
+//   { name: '相关行政部门' },
+//   { name: '出租司机' },
+//   { name: '城市公共汽电车' },
+//   { name: '道路客运' },
+//   { name: '医疗机构' },
+//   { name: '公共浴室' },
+//   { name: '歌舞娱乐中心' },
+//   { name: '图书馆' },
+//   { name: '展览馆' },
+//   { name: '游艺游乐场所和上网服务场所' },
+//   { name: '会展中心' },
+//   { name: '游泳场所' },
+//   { name: '影剧院' },
+//   { name: '咖啡吧' },
+//   { name: '健身场所' },
+//   { name: '旅游景点' },
+//   { name: '公园' },
+//   { name: '农集贸市场' },
+//   { name: '理发店' },
+//   { name: '餐厅（馆）' },
+//   { name: '银行' },
+//   { name: '商场和超市' },
+//   { name: '宾馆' },
+//   { name: '写字楼' },
+//   { name: '居家' },
+//   { name: '奶茶店' },
+//   { name: '体育场馆' },
+//   { name: '棋牌室（麻将馆）（取缔）' }
 
-]
+// ]
 
 const options = [
   { label: '24小时', value: 24 },
