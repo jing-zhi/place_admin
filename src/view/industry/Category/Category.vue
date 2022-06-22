@@ -95,7 +95,7 @@
       <el-dialog v-model="dialogForm" :before-close="closeDialog" :title="dialogTitle" width="30%">
         <el-form ref="apiForm" :model="form" :rules="rules" label-width="120px" style="width:80%">
             <el-form-item label="所属行业" prop="hy_name">
-            <el-input v-model="form.hy_name" disabled autocomplete="off" />
+            <el-input v-model="form.hy_name"  disabled autocomplete="off" />
             </el-form-item>
             <el-form-item label="人员类别" prop="rylb_name">
             <el-input v-model="form.rylb_name" autocomplete="off" />
@@ -148,10 +148,12 @@ const total = ref(0)
 const pageSize = ref(10)
 
 const apiForm =ref(null)
+// const hyName =ref('')
+// hyName = searchInfo.value.hy_name
 
 //tableData.value = []
 const form = ref({
-  hy_name: sectorName.value,
+  hy_name: '',
   rylb_name: '',
   hesuan_time: '',
 
@@ -159,9 +161,7 @@ const form = ref({
 
 const type = ref('')
 const rules = ref({
-  hy_name: [
-    { required: true, message: '请输入所属行业', trigger: 'blur' },
-  ],
+
   rylb_name: [
     { required: true, message: '请输入人员类别', trigger: 'blur' },
   ],
@@ -219,10 +219,10 @@ const getTableData = async(value) => {
   }
 }
 
+// 查询所有行业名称+id
 const industryList = ref([])
 const getIndustry = async() => {
-  let rqt = { page: 1, pageSize: 100 }
-    
+  let rqt = { page: 1, pageSize: 100 } 
   console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
@@ -233,13 +233,21 @@ const getIndustry = async() => {
 
 const changeId = (item) =>{
   ID.value = item.ID
+  form.value.hy_name = item.Name
   console.log(ID.value);
 }
 
 const initPage = async() => {
+  
   getIndustry()
+
+  // 获取行业名字+id
   getTableData()
+
+  // 下拉框数据重定向
   searchInfo.value.hy_name = sectorName.value
+  form.value.hy_name = searchInfo.value.hy_name
+  console.log(form);
 }
 
 initPage()
