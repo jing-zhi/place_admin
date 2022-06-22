@@ -211,11 +211,13 @@ const classifyPeople = (row) => {
   router.push({
     name: 'Category',
     params: {
-      'ID': row.ID
-    }
+      'ID': row.ID,
+      'sectorName': row.Name
 
+    }
   })
-  console.log(row.ID)
+  console.log(row.Name)
+
 
 
 }
