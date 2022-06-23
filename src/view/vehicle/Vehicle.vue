@@ -108,7 +108,7 @@
       <el-table-column v-if="renew" label="操作" min-width="260" fixed="right">
         <template #default="scope">
           <el-popover
-            v-model:visible="scope.row.visible"
+            :visible="scope.row.visible"
             trigger="click"
             placement="top"
             width="160"
