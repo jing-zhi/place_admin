@@ -76,6 +76,7 @@
             >
               <el-option
                 v-for="(item, index) in QSsymptomList"
+                :key="index"
                 :label="item"
                 :value="item"
               />

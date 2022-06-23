@@ -165,7 +165,6 @@ const getTableData = async(value) => {
     if(value) {
         rqt = { ...rq, ...value }   
     } 
-    console.log(rqt);
     const table = await getWorkerDetailsList(rqt)
     if (table.code === 0) {
         tableData.value = table.data.list
@@ -223,9 +222,6 @@ const getRetFind = () => {
         delete retFind.temp_max
     }
     
-    //console.log(toRaw(searchWorker.value));
-    //console.log(searchWorker.value)
-    console.log(retFind);
     return retFind
 }
 const onReset = () => {

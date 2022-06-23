@@ -8,15 +8,12 @@
         <!-- <el-table-column align="left" label="ID" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="行业名称" min-width="230" prop="Name" />
         <el-table-column align="left" label="行业要求有效核酸时间" min-width="100" prop="HesuanTime" show-overflow-tooltip />
-       
-        
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-button type="text" icon="edit" size="small" @click="editIndustry(scope.row)">编辑</el-button>
             <el-button type="text" icon="Share" size="small" @click="classifyPeople(scope.row)">人员类别</el-button>
            </template>
         </el-table-column>
-
       </el-table>
       <div class="gva-pagination">
         <el-pagination
@@ -103,7 +100,7 @@ const getTableData = async(value) => {
     if(value) {
         rqt = { page: page.value, pageSize: pageSize.value, ...value }   
     } 
-    console.log(rqt);
+    //console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
     // console.log(table)
@@ -165,7 +162,6 @@ const industryForm = ref(null)
 // 修改
 const editIndustry = (row) => {
   industryInfo.value = JSON.parse(JSON.stringify(row))
-  
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
@@ -177,20 +173,20 @@ const enterAddDialog = async() => {
       const req = {
         ...industryInfo.value,
       }     
-      console.log(req)
+      //console.log(req)
       let ret = {
           ID:req.ID,
           //Name:req.Name,
           HesuanTime:req.HesuanTime
       }
-      console.log(ret)
+      //console.log(ret)
       // 新增
       if (dialogFlag.value === 'add') {
-        console.log('add')
+        //console.log('add')
       }
       // 修改
       if (dialogFlag.value === 'edit') {
-        console.log('edit')
+        //console.log('edit')
         const res = await setIndustry(ret)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
@@ -216,8 +212,6 @@ const classifyPeople = (row) => {
 
     }
   })
-  console.log(row.Name)
-
 
 
 }
