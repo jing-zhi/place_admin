@@ -150,7 +150,6 @@ const pageSize = ref(10)
 const apiForm =ref(null)
 // const hyName =ref('')
 // hyName = searchInfo.value.hy_name
-
 //tableData.value = []
 const form = ref({
   hy_name: '',
@@ -198,6 +197,7 @@ const onSubmit = () => {
   page.value = 1
   pageSize.value = 10
   getTableData(searchInfo.value)
+  
 }
 
 
@@ -208,10 +208,10 @@ const getTableData = async(value) => {
     if(value) {
         rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(ID.value) , ...value }   
     } 
-    console.log(rqt);
+   // console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
-    console.log(table)
+   // console.log(table)
     tableData.value = table.data.rylb
     total.value = table.data.total
     page.value = table.data.page
@@ -223,7 +223,7 @@ const getTableData = async(value) => {
 const industryList = ref([])
 const getIndustry = async() => {
   let rqt = { page: 1, pageSize: 100 } 
-  console.log(rqt);
+  //console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
     // console.log(table)
@@ -234,20 +234,17 @@ const getIndustry = async() => {
 const changeId = (item) =>{
   ID.value = item.ID
   form.value.hy_name = item.Name
-  console.log(ID.value);
+  //console.log(ID.value);
 }
 
 const initPage = async() => {
-  
   getIndustry()
-
   // 获取行业名字+id
   getTableData()
-
   // 下拉框数据重定向
   searchInfo.value.hy_name = sectorName.value
   form.value.hy_name = searchInfo.value.hy_name
-  console.log(form);
+
 }
 
 initPage()
@@ -293,7 +290,7 @@ const editId = ref('')
 const editIndustry = (row) => {
   form.value = JSON.parse(JSON.stringify(row)) 
  // from.value
-  console.log(row);
+  //console.log(row);
   editId.value = row.id
   openDialog('edit')
   dialogFlag.value = 'edit'
@@ -307,7 +304,7 @@ const enterDialog = async() => {
     if (valid) {  
       switch (dialogFlag.value) {
         case 'add': {
-          console.log(ID);
+          //console.log(ID);
           form.value.hy_id = Number(ID.value)
           const res = await createPelop(form.value)
           if (res.code === 0) {
@@ -351,7 +348,7 @@ const enterDialog = async() => {
 
 //删除
 const delclassify = async(row) => {
-  console.log(row,"row")
+  //console.log(row,"row")
   ElMessageBox.confirm('此操作将永久删除该信息, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',

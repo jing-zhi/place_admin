@@ -379,14 +379,13 @@ const handleSizeChange = async(val) => {
 }
 const getRoom = async() => {
   const res = await getRoomList({ PlaceID: csbh.value, page: 1, pageSize: 999 })
-  console.log(res)
+
   roomList.value = res.data.list
 }
 getRoom()
 const timeScopeDiv = () => {
   searchInfo.start_time = searchInfo.glsj[0]
   searchInfo.end_time = searchInfo.glsj[1]
-  console.log(searchInfo.end_time, 'searchInfo.end_time')
 }
 const handleCurrentChange = (val) => {
   page.value = val
@@ -409,7 +408,6 @@ const getTableData = async() => {
     ...searchList,
     csbh: Scsbh,
   })
-  console.log(table, 'table')
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -433,7 +431,6 @@ const debounce = (fn, wait = 500) => {
     }
     timer = setTimeout(() => {
       fn.call(that, args)
-      console.log('防抖')
     }, wait)
   }
 }
@@ -462,7 +459,6 @@ const exportData = debounce(() => {
 // 页面中的操作******************************
 const deletePlaceFun = (v) => {
   // 删除
-  console.log(v.cd_id)
   ElMessageBox.confirm('确认删除？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -484,7 +480,6 @@ const cancel = (row) => {
 }
 const lookOutSign = (v) => {
   // 查看
-  console.log(v, '此人的id')
   router.push({
     name: 'quarantinedPersonSign',
     params: { zjhm: v.zjhm, csbh: v.csbh || route.params.csbh },

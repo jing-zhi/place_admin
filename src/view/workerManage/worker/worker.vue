@@ -396,7 +396,7 @@ const getTableData = async(value) => {
   if (value) {
     rqt = { csbh: csbh.value, page: page.value, pageSize: pageSize.value, ...value }
   }
-  console.log(rqt)
+
   const table = await getWorkerList(rqt)
   if (table.code === 0) {
     tableData.value = table.data.list
@@ -443,7 +443,7 @@ const onReset = () => {
 const initPage = async() => {
   getTableData()
   dsList.value = dsData
-  console.log(csbh.value)
+
 }
 
 initPage()
@@ -465,7 +465,7 @@ const addWorker = () => {
 }
 // 删除
 const deleteWorkerFun = async(row) => {
-  console.log(row.id)
+
   const res = await deleteWorker({ id: row.id })
   if (res.code === 0) {
     ElMessage.success('删除成功')
@@ -564,21 +564,11 @@ const clearForm = () => {
 }
 // 打开修改
 const openEdit = (row) => {
-  console.log(row.id)
-  // console.log(row.value);
   workerInfo.value = JSON.parse(JSON.stringify(row))
-  // workerInfo.value.gzrds = row.gzrds
   getqxList(row.gzrds)
-  // workerInfo.value.gzrqx = row.gzrqx
   getxzList(row.gzrqx)
-  // workerInfo.value.gzrxz = row.gzrxz
   workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
   if (workerInfo.value.sj == '') delete workerInfo.value.sj
-  // workerInfo.value.sj = row.sj.Time
-  console.log(workerInfo.value)
-  //   const res = await getApiById({ id: row.id })
-  //   form.value = res.data.api
-
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
@@ -590,19 +580,15 @@ const enterAddDialog = async() => {
       const req = {
         ...workerInfo.value,
       }
-      // console.log(req)
       const request = req
       request.gldzwid = zwid.value
       request.gldgwid = gwid.value
       request.ztid = ztid.value
-      // tableData.sj = scope.row.sj.Valid?tableData.sj.Time:'';
-      console.log(request)
+
 
       // 新增
       if (dialogFlag.value === 'add') {
-        console.log('add')
         request.csbh = csbh.value
-        console.log(request)
         const res = await createWorker(request)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
@@ -612,7 +598,6 @@ const enterAddDialog = async() => {
       }
       // 修改
       if (dialogFlag.value === 'edit') {
-        console.log('edit')
         const res = await setWorker(req)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
@@ -627,7 +612,6 @@ const enterAddDialog = async() => {
 // 跳转详情
 const router = useRouter()
 const openDetails = (row) => {
-  console.log(row.id)
   router.push({
     name: 'workerclock',
     params: {
@@ -641,7 +625,6 @@ const openDetails = (row) => {
 // const qxname = ref("")
 // const xzname = ref("")
 const dsSelect = (item) => {
-  console.log(item.code)
   workerInfo.value.gzrdsname = item.name
   // dsname.value = item.name
   // 获取区县列表
@@ -653,12 +636,10 @@ const getqxList = async(code) => {
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].code == code) {
       qxList.value = vlgs[i].children
-      console.log(qxList.value)
     }
   }
 }
 const qxSelect = (item) => {
-  console.log(item.code)
   // qxname.value = item.name
   workerInfo.value.gzrqxname = item.name
   // 获取乡镇列表
@@ -670,14 +651,12 @@ const getxzList = async(code) => {
     if (qxList.value[i].code == code) {
       // let list = toRaw(qxList.value[i].children)
       const list = qxList.value[i].children
-      console.log(list)
       xzList.value = list
       // return list;
     }
   }
 }
 const xzSelect = (item) => {
-  console.log(item)
   // xzname.value = item.name
   workerInfo.value.gzrxzname = item.name
 }
@@ -687,23 +666,19 @@ const gwid = ref(1)
 const ztid = ref(1)
 // 职位
 const zwSelect = (item) => {
-  console.log(item)
   zwid.value = item.id
 }
 // 岗位
 const gwSelect = (item) => {
-  console.log(item)
   gwid.value = item.id
 }
 // 状态
 const ztSelect = (item) => {
-  // console.log(item);
   ztid.value = item.id
 }
 
 const ztSearch = (item) => {
   searchWorker.value.ztid = item.id
-  // console.log(searchWorker);
 }
 
 // 导出
@@ -716,7 +691,6 @@ const getExcel = (fileName) => {
   // if (!fileName || typeof fileName !== 'string') {
   //   fileName = 'cdWorker_export.xlsx'
   // }
-  console.log(find.value)
   exportExcel({ fileName, csbh: csbh.value, ...find.value })
 }
 </script>
