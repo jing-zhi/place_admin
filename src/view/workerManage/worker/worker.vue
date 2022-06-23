@@ -121,6 +121,13 @@
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
         <el-table-column align="left" label="核酸信息" min-width="150" prop="heSuanInfo" />
         <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />
+        <!-- 新增 -->
+        <el-table-column align="left" label="是否14天内入豫" min-width="150" prop="wtnhn">
+          <template #default="scope">
+            {{scope.row.wtnhn === "1" ? "是" : "否"}}
+          </template>
+        </el-table-column>
+
         <el-table-column align="left" label="所在地市" min-width="100" prop="gzrdsname" />
         <el-table-column align="left" label="所在县区" min-width="100" prop="gzrqxname" />
         <el-table-column align="left" label="所在乡" min-width="100" prop="gzrxzname" />
@@ -256,6 +263,12 @@
                   :value="item.name"
                   @click="gwSelect(item)"
                 />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否14天内入豫" prop="wtnhn">
+              <el-select v-model="workerInfo.wtnhn" placeholder="请选择">
+                <el-option value="1" label="是" />
+                <el-option value="2" label="否"/>
               </el-select>
             </el-form-item>
             <el-form-item label="入职隔离点日期" prop="rzrq">
@@ -492,6 +505,7 @@ const workerInfo = ref({
   // "sj": "",    //sj 调离时间
   // "sj": new Date(),
   'dlgldbh': '', // dlgldbh 调离隔离点编号
+  'wtnhn':0 //是否十四天内入豫
 })
 // const rules = ref({})
 
@@ -559,7 +573,8 @@ const clearForm = () => {
     'rzrq': '', // rzrq入职隔离点日期
     'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
     'sj': '', // sj 调离时间
-    'dlgldbh': '' // dlgldbh 调离隔离点编号
+    'dlgldbh': '' ,// dlgldbh 调离隔离点编号
+    'wtnhn':0   //是否十四天内入豫
   }
 }
 // 打开修改
