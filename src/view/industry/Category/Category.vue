@@ -3,21 +3,29 @@
     <div class="gva-search-box">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
         <el-form-item label="所属行业">
-          <el-input v-model="searchInfo.CategoryID" placeholder="所属行业" />
+          <el-select v-model="searchInfo.hy_name" class="m-2" placeholder="所属行业" size="large">
+            <el-option
+              v-for="item in industryList"
+              :key="item.Name"
+              :label="item.Name"
+              :value="item.Name"
+              @click="changeId(item)"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="人员类别">
-          <el-input v-model="searchInfo.CategoryName" placeholder="人员类别" />
+          <el-input v-model="searchInfo.rylb_name" placeholder="人员类别" />
         </el-form-item>
-        <el-form-item label="核酸规则">
-          <el-cascader
-            v-model="searchInfo.State"
-            style="width:100%"
-            :options="queryStateOptions"
-            :show-all-levels="false"
-            :props="{ multiple:false,checkStrictly: true,label:'state',value:'state_id',emitPath:false}"
-            :clearable="false"
-          />
-        </el-form-item>
+        <!-- <el-form-item label="核酸规则">
+          <el-select v-model="searchInfo.State" class="m-2" placeholder="核酸规则信息" size="large">
+            <el-option
+              v-for="item in healthCode"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            />
+          </el-select>
+        </el-form-item> -->
 
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
@@ -60,6 +68,7 @@
               @click="editIndustry(scope.row)"
               >编辑</el-button
             >
+            
             <el-button
               type="text"
               icon="Share"
@@ -83,16 +92,23 @@
         />
       </div>
 
-      <el-dialog v-model="dialogForm" :before-close="closeDialog" :title="dialogTitle" >
-        <el-form ref="apiForm" :model="form" :rules="rules" label-width="120px" style="width:50%">
+      <el-dialog v-model="dialogForm" :before-close="closeDialog" :title="dialogTitle" width="30%">
+        <el-form ref="apiForm" :model="form" :rules="rules" label-width="120px" style="width:80%">
             <el-form-item label="所属行业" prop="hy_name">
-            <el-input   autocomplete="off" />
+            <el-input v-model="form.hy_name"  disabled autocomplete="off" />
             </el-form-item>
             <el-form-item label="人员类别" prop="rylb_name">
-            <el-input  autocomplete="off" />
+            <el-input v-model="form.rylb_name" autocomplete="off" />
             </el-form-item>
             <el-form-item label="核酸时间" prop="hesuan_time">
-            <el-input autocomplete="off" />
+              <el-select v-model="form.hesuan_time" class="m-2" placeholder="请选择" size="large" style="width:100%">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.label"
+                />
+              </el-select>
             </el-form-item>
             
         </el-form>
@@ -113,20 +129,53 @@
 
 <script setup>
 import { nextTick, ref, watch ,toRaw } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getCategory } from '@/api/Category.js'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getCategory, createPelop,deletePlaceRoom,updataPelop} from '@/api/Category.js'
+import { useRoute, useRouter } from 'vue-router'
+import { getIndustryList, setIndustry } from '@/api/industry.js'
+
+const route = useRoute()
+// hyid
+const ID = ref('')
+ID.value = route.params.ID ? route.params.ID : ''
+const sectorName = ref('')
+sectorName.value = route.params.sectorName ? route.params.sectorName : ''
+
 const tableData = ref([])
 const searchInfo = ref({})
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
-const apiForm =ref([])
-tableData.value = [
-    { hy_name: "卫滨区", rylb_name: "41",hesuan_time:"2022"},
-   { hy_name: "卫滨区", rylb_name: "41",hesuan_time:"2022"}
-]
-apiForm.value=[
- 
+
+const apiForm =ref(null)
+// const hyName =ref('')
+// hyName = searchInfo.value.hy_name
+
+//tableData.value = []
+const form = ref({
+  hy_name: '',
+  rylb_name: '',
+  hesuan_time: '',
+
+})
+
+const type = ref('')
+const rules = ref({
+
+  rylb_name: [
+    { required: true, message: '请输入人员类别', trigger: 'blur' },
+  ],
+ hesuan_time: [
+    { required: true, message: '请输入核酸时间', trigger: 'blur' },
+  ]
+
+})
+
+
+const options = [
+  { label: '24小时', value: 24 },
+  { label: '48小时', value: 48 },
+  { label: '72小时', value: 72 },
 ]
 
 // 重置按钮
@@ -134,7 +183,6 @@ const onReset = () => {
   searchInfo.value = {}
 }
 
-// 分页
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -145,23 +193,65 @@ const handleCurrentChange = (val) => {
   page.value = val
   getTableData()
 }
+// 搜索查询
+const onSubmit = () => {
+  page.value = 1
+  pageSize.value = 10
+  getTableData(searchInfo.value)
+}
+
+
 
 // 分页渲染
 const getTableData = async(value) => {
-    let rqt = { page: page.value, pageSize: pageSize.value }
+    let rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(ID.value) }
     if(value) {
-        rqt = { page: page.value, pageSize: pageSize.value, ...value }   
+        rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(ID.value) , ...value }   
     } 
     console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
-    // console.log(table)
-    tableData.value = table.data.list
+    console.log(table)
+    tableData.value = table.data.rylb
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
   }
 }
+
+// 查询所有行业名称+id
+const industryList = ref([])
+const getIndustry = async() => {
+  let rqt = { page: 1, pageSize: 100 } 
+  console.log(rqt);
+  const table = await getIndustryList(rqt)
+  if (table.code === 0) {
+    // console.log(table)
+    industryList.value = table.data.list
+  }
+}
+
+const changeId = (item) =>{
+  ID.value = item.ID
+  form.value.hy_name = item.Name
+  console.log(ID.value);
+}
+
+const initPage = async() => {
+  
+  getIndustry()
+
+  // 获取行业名字+id
+  getTableData()
+
+  // 下拉框数据重定向
+  searchInfo.value.hy_name = sectorName.value
+  form.value.hy_name = searchInfo.value.hy_name
+  console.log(form);
+}
+
+initPage()
+
 
 // 增加弹窗
 const dialogTitle = ref('新增人员类别')
@@ -171,16 +261,16 @@ const openDialog = (key) => {
   switch (key) {
     case 'add':
         dialogFlag.value = 'add'
-  dialogForm.value = true
-      dialogTitle.value = '新增隔离点房间'
+        dialogForm.value = true
+        dialogTitle.value = '新增人员类别'
       break
     case 'edit':
-      dialogTitle.value = '编辑隔离点房间'
+      dialogTitle.value = '编辑人员类别'
       break
     default:
       break
+
   }
-  
   dialogForm.value = true
 }
 
@@ -188,40 +278,95 @@ const openDialog = (key) => {
 
 const closeDialog = () => {
   // 置空
-  //clearForm()
+  initForm()
   dialogForm.value = false
 }
+                               
+// 弹窗相关
+// const apiForm = ref(null)
+const initForm = () => {
+  apiForm.value.resetFields()
 
+}
+const editId = ref('')
 // 编辑弹窗
 const editIndustry = (row) => {
-  //industryInfo.value = JSON.parse(JSON.stringify(row))
-  
-  dialogFlag.value = 'edit'
+  form.value = JSON.parse(JSON.stringify(row)) 
+ // from.value
+  console.log(row);
+  editId.value = row.id
   openDialog('edit')
+  dialogFlag.value = 'edit'
   dialogForm.value = true
 }
 
-const enterDialog = ( ) =>{
-    dialogForm.value = false
+ 
+//  确定
+const enterDialog = async() => {
+  apiForm.value.validate(async valid => {
+    if (valid) {  
+      switch (dialogFlag.value) {
+        case 'add': {
+          console.log(ID);
+          form.value.hy_id = Number(ID.value)
+          const res = await createPelop(form.value)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '添加成功',
+              showClose: true,
+            })
+          }
+          getTableData()
+          closeDialog()
+        }
+          break
+        case 'edit': {
+          form.value.id = editId.value
+          const res = await updataPelop(form.value)
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: '编辑成功',
+              showClose: true,
+            })
+          }
+          getTableData()
+          closeDialog()
+        }
+          break
+        default:
+          {
+            ElMessage({
+              type: 'error',
+              message: '未知操作',
+              showClose: true,
+            })
+          }
+          break
+      }
+    }
+  })
 }
 
 //删除
 const delclassify = async(row) => {
-  ElMessageBox.confirm('此操作将永久删除该房间, 是否继续?', '提示', {
+  console.log(row,"row")
+  ElMessageBox.confirm('此操作将永久删除该信息, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   })
     .then(async() => {
-      const res = await deletePlaceRoom(row)
+      const res = await deletePlaceRoom({ id: row.id })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
           message: '删除成功!',
         })
-        if (tableData.value.length === 1 && page.value > 1) {
-          page.value--
-        }
+        // if (tableData.value.length === 1 && page.value > 1) {
+        //   page.value--
+        // }
         getTableData()
       }
     })
@@ -229,4 +374,5 @@ const delclassify = async(row) => {
 </script>
 
 <style scoped lang="scss">
+
 </style> 

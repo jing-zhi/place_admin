@@ -13,7 +13,7 @@
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-button type="text" icon="edit" size="small" @click="editIndustry(scope.row)">编辑</el-button>
-            <el-button type="text" icon="Share" size="small" @click="classifyPeople(scope.row)">删除</el-button>
+            <el-button type="text" icon="Share" size="small" @click="classifyPeople(scope.row)">人员类别</el-button>
            </template>
         </el-table-column>
 
@@ -210,10 +210,16 @@ const router = useRouter()
 const classifyPeople = (row) => {
   router.push({
     name: 'Category',
-    // params: {
-    //   'csbh': row.csbh
-    // }
+    params: {
+      'ID': row.ID,
+      'sectorName': row.Name
+
+    }
   })
+  console.log(row.Name)
+
+
+
 }
 
 
