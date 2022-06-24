@@ -111,6 +111,7 @@
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
+            <el-button :hidden="scope.row.industry.Name !== '工地'" type="text" icon="documentCopy" size="small" @click="copyAddress(scope.row)">报备地址复制</el-button>
             <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
             <!-- <el-button type="text" icon="edit" size="small"  @click="importExcel(scope.row)">导入</el-button> -->
             <el-upload
@@ -326,6 +327,9 @@ import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
 
+import { defineComponent } from "vue";
+import useClipboard from "vue-clipboard3";
+
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
@@ -411,7 +415,7 @@ const getBusinessList = async() => {
   const { data } = await getBusinessMang({ page: 1, pageSize: 200 })
 
   options.value = data.list
-  console.log(options.value);
+  //console.log(options.value);
 }
 getBusinessList()
 // eslint-disable-next-line no-unused-vars
@@ -457,10 +461,9 @@ const initPage = async() => {
 initPage()
 
 const switchChange = async(row) => {
-  console.log({ id: row.id, status: row.qyzt })
+  //console.log({ id: row.id, status: row.qyzt })
   const resStatus = await setStatus({ id: row.id, status: row.qyzt })
   if (resStatus.code === 0) {
-    console.log(resStatus)
     ElMessage.success('修改成功')
   }
 }
@@ -512,7 +515,6 @@ const addPlace = () => {
 }
 // 删除
 const deletePlaceFun = async(row) => {
-  console.log(row.id)
   const res = await deletePlace({ id: row.id })
   if (res.code === 0) {
     ElMessage.success('删除成功')
@@ -649,12 +651,25 @@ const enterWorker = (row) => {
   })
 }
 
+// 报备地址复制
+ const { toClipboard } = useClipboard()
+const copyAddress=async (row)=>{
+  placeInfo.value = JSON.parse(JSON.stringify(row))
+try {
+  await toClipboard( 'http://117.159.44.7:18801/#/farmMidPage?csbh='+ placeInfo.value.csbh)
+  ElMessage({ type: 'success', message: '复制成功' })
+} catch (e) {
+  ElMessage.error('复制失败')
+}
+  
+  return {copyAddress}
+}
+
 // 物联码
 const showCode = ref(false)
 const code = {}
 const open = (row) => {
-  console.log(row.csbh)
-  console.log(import.meta.env.VITE_BASE_API)
+
   showCode.value = !showCode.value
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
 }
@@ -671,10 +686,8 @@ const importExcel = async(file,row, other,fileList) => {
 }
 
 const importApi2 = async(res) => {
-  console.log(res);
   let key = res.data.file.key
   if(res.code === 0 ){
-    console.log(key);
     reqFileId.value.file_name=key
     const res = await loadExcelData(reqFileId.value)
   }else if(res.code === 7 ){
@@ -701,7 +714,6 @@ const editPlaceRoome = (row) => {
       'PlaceID': row.csbh
     }
   })
-  console.log(PlaceID)
 }
 
 // 确认增加修改
@@ -715,10 +727,8 @@ const enterAddDialog = async() => {
       req.qx_name = qx_name.value
       req.sq_name = sq_name.value
       req.jd_name = jd_name.value
-      console.log(req)
       // 新增
       if (dialogFlag.value === 'add') {
-        console.log('add')
         const res = await createPlace(req)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
@@ -728,7 +738,6 @@ const enterAddDialog = async() => {
       }
       // 修改
       if (dialogFlag.value === 'edit') {
-        console.log('edit')
         const res = await setPlace(req)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
@@ -759,10 +768,8 @@ const enterAdminDialog = async() => {
 
 // 级联切换区/街道
 const handleChange = (value) => {
-  console.log(value)
   areaValue.value = value[0]
   streetValue.value = value[1]
-  console.log(areaValue.value, streetValue.value)
 
   // 获取村选项列表
   const list = []
@@ -776,15 +783,12 @@ const handleChange = (value) => {
   cunList.value = list
 }
 
-// const handleSelect = (item) => {
-//   console.log(item)
-// }
+
 
 const qx_name = ref('')
 const sq_name = ref('')
 const jd_name = ref('')
 const qxSelect = (item) => {
-  console.log(item)
   qx_name.value = item.name
   getXzList(item.code)
 }
@@ -793,14 +797,12 @@ const getXzList = async(code) => {
   for (let i = 0; i < qus.length; i++) {
     if (qus[i].code == code) {
       xzList.value = qus[i].children
-      // console.log(xzList.value);
     }
 
 
   }
 }
 const xzSelect = (item) => {
-  console.log(item)
   sq_name.value = item.name
   getCunList(item.code)
 }
@@ -814,12 +816,10 @@ const getCunList = async(code) => {
   cunList.value = list
 }
 const cunSelect = (item) => {
-  console.log(item)
   jd_name.value = item.name
 }
 const hylxSelect = (item) => {
   hylx.value = item.ID
-  console.log(hylx.value);
 }
 
 // 导出
