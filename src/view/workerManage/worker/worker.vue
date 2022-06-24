@@ -183,7 +183,7 @@
         :close-on-press-escape="false"
         :close-on-click-modal="false"
       >
-        <div style="height:60vh;overflow:auto;padding:0 10px;">
+        <div style="height:65vh;overflow:auto;padding:0 10px;">
           <el-form ref="workerForm" :rules="rules" :model="workerInfo" label-width="130px">
             <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
               <el-input v-model="csbh" placeholder="场所编号" />
@@ -247,13 +247,24 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="类别" prop="gldgw">
+            <el-form-item label="所属行业" prop="sshy">
+              <el-select v-model="workerInfo.sshy" class="m-2" placeholder="请选择" size="large">
+                <el-option
+                  v-for="item in industryList"
+                  :key="item.ID"
+                  :label="item.Name"
+                  :value="item.Name"
+                  @click="changeId(item)"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="人员类别" prop="gldgw">
               <el-select v-model="workerInfo.gldgw" class="m-2" placeholder="请选择" size="large">
                 <el-option
                   v-for="item in gwList"
                   :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
+                  :label="item.rylb_name"
+                  :value="item.rylb_name"
                   @click="gwSelect(item)"
                 />
               </el-select>
@@ -322,6 +333,10 @@ import { formatTimeToStr } from '@/utils/date.js'
 import { useRoute, useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
 
+import { getIndustryList} from '@/api/industry.js'
+import { getCategory} from '@/api/Category.js'
+
+
 const route = useRoute()
 const csbh = ref('')
 csbh.value = route.params.csbh ? route.params.csbh : ''
@@ -350,16 +365,19 @@ const zwList = [
   { id: 5, name: '感控人员' },
   { id: 6, name: '医务人员' },
 ] // 1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员
-const gwList = [
-  { id: 1, name: '负责人' },
-  { id: 2, name: '医务人员' },
-  { id: 3, name: '信息联络员' },
-  { id: 4, name: '清洁消毒员' },
-  { id: 5, name: '安全保障员' },
-  { id: 6, name: '后勤保障员' },
-  { id: 7, name: '心理辅导员' },
-  { id: 8, name: '污水处理设施管理员' },
-] // 负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员
+
+const gwList = ref([])
+// const gwList = [
+//   { id: 1, name: '负责人' },
+//   { id: 2, name: '医务人员' },
+//   { id: 3, name: '信息联络员' },
+//   { id: 4, name: '清洁消毒员' },
+//   { id: 5, name: '安全保障员' },
+//   { id: 6, name: '后勤保障员' },
+//   { id: 7, name: '心理辅导员' },
+//   { id: 8, name: '污水处理设施管理员' },
+// ] // 负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员
+
 const ztList = [
   { id: 1, name: '在岗' },
   { id: 2, name: '离岗' },
@@ -440,9 +458,47 @@ const onReset = () => {
   getTableData()
 }
 
+//
+
+
+const hy_id = ref('')
+// 查询所有行业名称+id
+const industryList = ref([])
+const getIndustry = async() => {
+  let rqt = { page: 1, pageSize: 100 } 
+  //console.log(rqt);
+  const table = await getIndustryList(rqt)
+  if (table.code === 0) {
+    console.log(table)
+    industryList.value = table.data.list
+  }
+}
+
+const changeId = (item) =>{
+  hy_id.value = item.ID
+  //console.log(hy_id);
+  workerInfo.value.gldgw = ''
+  getLB(hy_id.value)
+}
+
+const getLB = async(hyId) => {
+  let rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(hyId) }
+  console.log(rqt);
+  const table = await getCategory(rqt)
+  if (table.code === 0) {
+    
+    gwList.value = table.data.rylb
+    console.log(gwList.value)
+  }
+}
+
+
+
+// 初始化
 const initPage = async() => {
   getTableData()
   dsList.value = dsData
+  getIndustry()
 
 }
 
@@ -486,6 +542,7 @@ const workerInfo = ref({
   'gzrxz': null, // gzrxz人员所在乡编码
   'ydw': '', // ydw原工作单位
   'gldzw': '', // gldzw隔离点职务（1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员）
+  'sshy':'',//sshy所属行业
   'gldgw': '', // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
   'rzrq': '', // rzrq入职隔离点日期
   'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
@@ -530,6 +587,9 @@ const rules = ref({
     { min: 2, message: '最低2位字符', trigger: 'blur' },
   ],
   // zw gw
+  sshy : [
+    { required: true, message: '请选择所属行业' },
+  ],
 
   gldgw: [
     { required: true, message: '请选择人员类别' },
@@ -671,6 +731,7 @@ const zwSelect = (item) => {
 // 岗位
 const gwSelect = (item) => {
   gwid.value = item.id
+  console.log(item.id);
 }
 // 状态
 const ztSelect = (item) => {
@@ -693,6 +754,8 @@ const getExcel = (fileName) => {
   // }
   exportExcel({ fileName, csbh: csbh.value, ...find.value })
 }
+
+
 </script>
 
 <style lang="scss">
