@@ -3,6 +3,7 @@ export const vehicleList={
   mobile:'',
   idNum:'',
   carNum:'',
+  csbh:'',
   csmc:'',
   enterDate:'',
 }
