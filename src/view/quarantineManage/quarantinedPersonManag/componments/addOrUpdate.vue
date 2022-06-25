@@ -42,7 +42,7 @@
               style="width: 100%"
             >
               <el-option
-                v-for="(item, index) in rylbList"
+                v-for="item in rylbList"
                 :key="item.index"
                 :label="item.value"
                 :value="item.value"
@@ -163,7 +163,7 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="(item, index) in roomList"
+                v-for="item in roomList"
                 :key="item.ID"
                 :label="
                   item.BuildingNumber +

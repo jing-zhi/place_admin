@@ -284,7 +284,6 @@ const deleteParameter = (parameters, index) => {
 
 // 新增可控按钮
 const addBtn = (form) => {
-  console.log(form)
   if (!form.menuBtn) {
     form.menuBtn = []
   }
