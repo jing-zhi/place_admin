@@ -6,9 +6,9 @@
           <el-select placeholder="请选择" size="large" v-model="searchInfo.industry">
             <el-option
               v-for="(item,index) in industryCate"
-              :key="index"
-              :label="item"
-              :value="item"
+              :key="item.ID"
+              :label="item.Name"
+              :value="item.ID"
             />
           </el-select>
         </el-form-item>
@@ -20,12 +20,12 @@
 
     <div class="gva-table-box">
       <el-table :data="tableData">
-        <el-table-column align="left" label="所属行业" min-width="120" prop="industry" />
-        <el-table-column align="left" label="人员类别" min-width="120" prop="PerCate" />
-        <el-table-column align="left" label="姓名" min-width="120" prop="EHPname" />
-        <el-table-column align="left" label="手机号" min-width="120" prop="EHPphone" />
-        <el-table-column align="left" label="核酸信息" min-width="120" prop="NacidInfo" />
-        <el-table-column align="left" label="健康码信息" min-width="120" prop="HcodeInfo" />
+        <el-table-column align="center" label="所属行业" min-width="120" prop="hy_name" />
+        <el-table-column align="center" label="人员类别" min-width="120" prop="gldgw" />
+        <el-table-column align="center" label="姓名" min-width="120" prop="gzryxm" />
+        <el-table-column align="center" label="手机号" min-width="120" prop="gzrysjh" />
+        <el-table-column align="center" label="核酸信息" min-width="120" prop="heSuanInfo" />
+        <el-table-column align="center" label="健康码信息" min-width="120" prop="healthCode" />
       </el-table>
       
       <div class="gva-pagination">
@@ -44,84 +44,104 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs ,watch} from "vue";
-import { exportExcel } from "../../../api/enterHenan";
-
+import { ref,watch,toRaw} from "vue";
+import {getBusinessMang} from "../../../api/place"
+import { getTableList,getWorkerList ,exportExcel,getFindList} from "../../../api/enterHenan"
+import { debounce } from '@/utils/debounce.js'
 
 // 分页
-const page = ref(5)
-const pageSize = ref(100)
-const total = ref(400)
+const page = ref(1)
+const pageSize = ref(10)
+const total = ref()
 const handleSizeChange = (val) => {
   pageSize.value = val
+  // getTableData(searchInfo.value)
 
 }
 const handleCurrentChange = (val) => {
 page.value = val
+// getTableData(searchInfo.value)
 }
 
-const isSearch = ref(false)
-const searchInfo = ref({})
-const industryCate = ref([
-  '农机车辆','隔离点','医废运输处理公司','高速服务区等机构工作人员','药店','相关行政部门','出租汽车'
-])
-// 搜索
-const getTableData = async(value) => {
-console.log(111);
-console.log(value);
+const searchInfo = ref({
+  industry:''
+})
+
+// 行业类型
+const industryCate = ref([])
+
+// 获取行业列表
+const getBusinessList = async() => {
+  const { data } = await getBusinessMang({ page:1,pageSize:34 })
+  industryCate.value = data.list
 }
+getBusinessList()
+
+ let is_14rhn = ref(null)
+
+// 获取工作人员管理 中的 is_14rhn
+const is_14rhnData = async(value) => {
+  const rhnData = await getWorkerList({page:page.value, pageSize:pageSize.value})
+  let data = rhnData.data.list
+  for(let i = 0; i < data.length; i++){
+    if(data[i].is_14rhn == true) {
+      is_14rhn.value = data[i].is_14rhn
+      //  getExcel()
+      // handleExcelExport()
+    }
+  
+  //  getTableData()
+ }
+}
+
+is_14rhnData()
+
+let tableData = ref([])
+
+// 获取表格数据
+const getTableData = async(value) => {
+   let query = { page:page.value, pageSize:pageSize.value}
+  if(value){
+    query = { page:page.value, pageSize:pageSize.value, hy_id:searchInfo.value.industry}
+  }
+  const table = await getTableList(query)
+  if(table.code === 0){
+    tableData.value = table.data.cdIs14Rhn
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
+    console.log(total.value,page.value,pageSize.value);
+    console.log(table.data.total, table.data.page, table.data.pageSize);
+  }
+}
+getTableData()
+
+// 获取搜索列表
+const getFind = () => {
+  // find.value = toRaw(searchInfo.value.industry)
+  getTableData(searchInfo.value.industry)
+}
+// console.log("find.value:",find.value);
+getFind()
 
 watch(searchInfo.value,(newVal,oldVal) => {
-  console.log("watch:",searchInfo.value);
-  getTableData(searchInfo.value)
+   console.log("searchInfo.value:",searchInfo.value.industry);
+   getFind()
+  // getExcel()
+  // getTableData(searchInfo.value.industry)
 },{immediate:true})
 
-/* 
-const tableData = [
-  {
-    industry: "教育",
-    PerCate: "学生",
-    EHPname: "叮叮",
-    EHPphone: "13526224242",
-    NacidInfo: "正常",
-    HcodeInfo: "绿码"
-  },
-  {
-    industry: "教育",
-    PerCate: "学生",
-    EHPname: "叮叮",
-    EHPphone: "13526224242",
-    NacidInfo: "正常",
-    HcodeInfo: "绿码"
-  }
-]; */
-
-
- const tableData = ref([
-    {
-      industry:'教育',  
-      PerCate:'学生',   
-      EHPname:'叮叮',  
-      EHPphone:'13526224242', 
-      NacidInfo:'正常', 
-      HcodeInfo:'绿码'  
-    },
-    {
-      industry:'教育',  
-      PerCate:'学生',   
-      EHPname:'叮叮',  
-      EHPphone:'13526224242', 
-      NacidInfo:'正常', 
-      HcodeInfo:'绿码'  
-    }
-  ])
-
   // 导出
-// 导出数据有问题 ！！
-const handleExcelExport = () => {
-  const titleArr = ['所属行业','人员类别','姓名','手机号','核酸信息','健康码信息']//表头中文名
-exportExcel(tableData.value, '14天内入豫人员信息', titleArr, 'sheetName');
+const handleExcelExport = debounce(() => {
+    // getFind()
+    // getExcel()
+    exportExcel({ file_name:'ehPerson_export.xlsx', is_14rhn:is_14rhn.value, hy_id:Number(searchInfo.value.industry)})
+})
+
+const getExcel = () => {
 }
+
+
 </script>
 
 <style scoped>

@@ -122,9 +122,10 @@
         <el-table-column align="left" label="核酸信息" min-width="150" prop="heSuanInfo" />
         <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />
         <!-- 新增 -->
-        <el-table-column align="left" label="是否14天内入豫" min-width="150" prop="wtnhn">
+        <el-table-column align="center" label="是否14天内入豫" min-width="150" prop="is_14rhn">
           <template #default="scope">
-            {{scope.row.wtnhn === "1" ? "是" : "否"}}
+            {{scope.row.is_14rhn}}
+            {{scope.row.is_14rhn === true ? "是" : "否"}}
           </template>
         </el-table-column>
 
@@ -193,7 +194,7 @@
         <div style="height:60vh;overflow:auto;padding:0 10px;">
           <el-form ref="workerForm" :rules="rules" :model="workerInfo" label-width="130px">
             <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
-              <el-input v-model="csbh" placeholder="场所编号" />
+              <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
             </el-form-item>
             <el-form-item v-else label="场所编号" prop="csbh">
               <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
@@ -265,10 +266,10 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="是否14天内入豫" prop="wtnhn">
-              <el-select v-model="workerInfo.wtnhn" placeholder="请选择">
-                <el-option value="1" label="是" />
-                <el-option value="2" label="否"/>
+            <el-form-item label="是否14天内入豫" prop="is_14rhn">
+              <el-select v-model="workerInfo.is_14rhn" placeholder="请选择">
+                <el-option value="true" label="是" />
+                <el-option value="false" label="否"/> 
               </el-select>
             </el-form-item>
             <el-form-item label="入职隔离点日期" prop="rzrq">
@@ -409,8 +410,9 @@ const getTableData = async(value) => {
   if (value) {
     rqt = { csbh: csbh.value, page: page.value, pageSize: pageSize.value, ...value }
   }
-  console.log(rqt)
+
   const table = await getWorkerList(rqt)
+  console.log("table:",table);
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -456,7 +458,7 @@ const onReset = () => {
 const initPage = async() => {
   getTableData()
   dsList.value = dsData
-  console.log(csbh.value)
+
 }
 
 initPage()
@@ -478,7 +480,7 @@ const addWorker = () => {
 }
 // 删除
 const deleteWorkerFun = async(row) => {
-  console.log(row.id)
+
   const res = await deleteWorker({ id: row.id })
   if (res.code === 0) {
     ElMessage.success('删除成功')
@@ -490,7 +492,7 @@ const deleteWorkerFun = async(row) => {
 // 弹窗
 const workerInfo = ref({
   // "id":1,//id主键id
-  // "csbh":"",//csbh隔离点编号
+  "csbh":"",//csbh隔离点编号
   'gzryxm': '', // gzryxm工作人员姓名
   'gzrysjh': '', // gzrysjh工作人员手机号
   'gzrysfz': '', // gzrysfz身份证号
@@ -505,10 +507,9 @@ const workerInfo = ref({
   // "sj": "",    //sj 调离时间
   // "sj": new Date(),
   'dlgldbh': '', // dlgldbh 调离隔离点编号
-  'wtnhn':0 //是否十四天内入豫
+  'is_14rhn':null //是否十四天内入豫
 })
 // const rules = ref({})
-
 const rules = ref({
   gzryxm: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -553,6 +554,9 @@ const rules = ref({
   ],
   zt: [
     { required: true, message: '请选择人员状态' }
+  ],
+  is_14rhn:[
+    {required: true, message: '请选择是否入豫'}
   ]
 })
 
@@ -560,7 +564,7 @@ const workerForm = ref(null)
 const clearForm = () => {
   workerForm.value.resetFields()
   workerInfo.value = {
-    // "csbh":"",//csbh隔离点编号
+    "csbh":"",//csbh隔离点编号
     'gzryxm': '', // gzryxm工作人员姓名
     'gzrysjh': '', // gzrysjh工作人员手机号
     'gzrysfz': '', // gzrysfz身份证号
@@ -574,51 +578,42 @@ const clearForm = () => {
     'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
     'sj': '', // sj 调离时间
     'dlgldbh': '' ,// dlgldbh 调离隔离点编号
-    'wtnhn':0   //是否十四天内入豫
+    'is_14rhn':null   //是否十四天内入豫
   }
 }
 // 打开修改
 const openEdit = (row) => {
-  console.log(row.id)
-  // console.log(row.value);
   workerInfo.value = JSON.parse(JSON.stringify(row))
-  // workerInfo.value.gzrds = row.gzrds
   getqxList(row.gzrds)
-  // workerInfo.value.gzrqx = row.gzrqx
   getxzList(row.gzrqx)
-  // workerInfo.value.gzrxz = row.gzrxz
   workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
   if (workerInfo.value.sj == '') delete workerInfo.value.sj
-  // workerInfo.value.sj = row.sj.Time
-  console.log(workerInfo.value)
-  //   const res = await getApiById({ id: row.id })
-  //   form.value = res.data.api
-
+  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? '否' : '是'
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
 
 // 确认增加修改
 const enterAddDialog = async() => {
+
   workerForm.value.validate(async valid => {
     if (valid) {
       const req = {
         ...workerInfo.value,
       }
-      // console.log(req)
       const request = req
       request.gldzwid = zwid.value
       request.gldgwid = gwid.value
       request.ztid = ztid.value
-      // tableData.sj = scope.row.sj.Valid?tableData.sj.Time:'';
-      console.log(request)
+      
 
       // 新增
       if (dialogFlag.value === 'add') {
-        console.log('add')
-        request.csbh = csbh.value
-        console.log(request)
+        console.log("request.is_14rhn11",request.is_14rhn);
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        console.log("request.is_14rhn22",request.is_14rhn);
         const res = await createWorker(request)
+        console.log("resadd:",res);
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
           await getTableData(find.value)
@@ -627,8 +622,18 @@ const enterAddDialog = async() => {
       }
       // 修改
       if (dialogFlag.value === 'edit') {
-        console.log('edit')
-        const res = await setWorker(req)
+        // request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        // request.is_14rhn = request.is_14rhn ==='false' ? false : true
+        if(request.is_14rhn == 'true'){
+          request.is_14rhn = true
+        } else if(request.is_14rhn == 'false'){
+          request.is_14rhn = false
+        }
+        console.log("request.is_14rhn44",typeof request.is_14rhn,request.is_14rhn);
+        
+        const res = await setWorker(request)
+        console.log("req:",request);
+        console.log("resedit:",res);
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
           await getTableData(find.value)
@@ -642,7 +647,6 @@ const enterAddDialog = async() => {
 // 跳转详情
 const router = useRouter()
 const openDetails = (row) => {
-  console.log(row.id)
   router.push({
     name: 'workerclock',
     params: {
@@ -656,7 +660,6 @@ const openDetails = (row) => {
 // const qxname = ref("")
 // const xzname = ref("")
 const dsSelect = (item) => {
-  console.log(item.code)
   workerInfo.value.gzrdsname = item.name
   // dsname.value = item.name
   // 获取区县列表
@@ -668,12 +671,10 @@ const getqxList = async(code) => {
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].code == code) {
       qxList.value = vlgs[i].children
-      console.log(qxList.value)
     }
   }
 }
 const qxSelect = (item) => {
-  console.log(item.code)
   // qxname.value = item.name
   workerInfo.value.gzrqxname = item.name
   // 获取乡镇列表
@@ -685,14 +686,12 @@ const getxzList = async(code) => {
     if (qxList.value[i].code == code) {
       // let list = toRaw(qxList.value[i].children)
       const list = qxList.value[i].children
-      console.log(list)
       xzList.value = list
       // return list;
     }
   }
 }
 const xzSelect = (item) => {
-  console.log(item)
   // xzname.value = item.name
   workerInfo.value.gzrxzname = item.name
 }
@@ -702,23 +701,19 @@ const gwid = ref(1)
 const ztid = ref(1)
 // 职位
 const zwSelect = (item) => {
-  console.log(item)
   zwid.value = item.id
 }
 // 岗位
 const gwSelect = (item) => {
-  console.log(item)
   gwid.value = item.id
 }
 // 状态
 const ztSelect = (item) => {
-  // console.log(item);
   ztid.value = item.id
 }
 
 const ztSearch = (item) => {
   searchWorker.value.ztid = item.id
-  // console.log(searchWorker);
 }
 
 // 导出
@@ -731,7 +726,6 @@ const getExcel = (fileName) => {
   // if (!fileName || typeof fileName !== 'string') {
   //   fileName = 'cdWorker_export.xlsx'
   // }
-  console.log(find.value)
   exportExcel({ fileName, csbh: csbh.value, ...find.value })
 }
 </script>
