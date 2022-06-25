@@ -40,14 +40,10 @@
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
           <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
-          <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx">
+          <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/工作人员信息模板.xlsx">
              <el-button class="btn" size="small" type="primary" icon="download">导入信息模板</el-button>
          </a>
           
-          
-          
-          
-
         </el-form-item>
        
       </el-form>
@@ -111,6 +107,7 @@
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
+            <el-button :hidden="scope.row.industry.Name !== '工地'" type="text" icon="documentCopy" size="small" @click="copyAddress(scope.row)">报备地址复制</el-button>
             <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
             <!-- <el-button type="text" icon="edit" size="small"  @click="importExcel(scope.row)">导入</el-button> -->
             <el-upload
@@ -325,6 +322,9 @@ import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
+
+import { defineComponent } from "vue";
+import useClipboard from "vue-clipboard3";
 
 const page = ref(1)
 const total = ref(0)
@@ -645,6 +645,20 @@ const enterWorker = (row) => {
       'csbh': row.csbh
     }
   })
+}
+
+// 报备地址复制
+ const { toClipboard } = useClipboard()
+const copyAddress=async (row)=>{
+  placeInfo.value = JSON.parse(JSON.stringify(row))
+try {
+  await toClipboard( 'http://117.159.44.7:18801/#/farmMidPage?csbh='+ placeInfo.value.csbh)
+  ElMessage({ type: 'success', message: '复制成功' })
+} catch (e) {
+  ElMessage.error('复制失败')
+}
+  
+  return {copyAddress}
 }
 
 // 物联码
