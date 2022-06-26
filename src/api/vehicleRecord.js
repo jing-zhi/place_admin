@@ -1,10 +1,9 @@
 import service from '@/utils/request'
 
-import service from '@/utils/request'
 //单个删除的接口
 export const singleDelete = data => {
     return service({
-        url: '/cdglry/de',
+        url: '/api/car/getRecordList',
         method:'POST',
         data
     })
@@ -13,7 +12,7 @@ export const singleDelete = data => {
 export const addData = data => {
     return service({
        
-        url: '/cdglry/ad',
+        url: '/api/car/getRecordList',
         method: 'POST',
         data
     })
@@ -22,7 +21,7 @@ export const addData = data => {
 export const updateData = data => {
     return service({
        
-        url: '/cdglry/updat',
+        url: '/api/car/getRecordList',
         method: 'POST',
         data
     })
@@ -30,19 +29,12 @@ export const updateData = data => {
 //分页
 export const getData = data => {
     return service({
-        url: '/cdglry/lst',
+        url: '/api/car/getRecordList',
         method: 'POST',
         data
     })
 }
-//房间编号
-export const getRoomList = data => {
-    return service({
-        url: '/placeRoom/getPlaceRoomLit',
-        method: "POST",
-        data
-    })
-}
+
 export const exportApi = data => {
     return service({
         url: '/cdglry/exportxcel',
