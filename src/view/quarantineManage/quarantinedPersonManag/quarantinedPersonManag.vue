@@ -472,8 +472,7 @@ const deletePlaceFun = (v) => {
   })
 }
 const cancel = (row) => {
-    console.log("----------"+JSON.parse(JSON.stringify(row)));
-
+    // console.log("----------"+JSON.parse(JSON.stringify(row)));
   row.visible = false
   renew.value = false
   nextTick(() => {

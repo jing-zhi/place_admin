@@ -20,8 +20,8 @@
           </el-form-item>
           <el-form-item label="预计进入日期" label-width="auto" prop="enterDate">
             <el-date-picker v-model="searchInfo.enterDate" type="datetimerange" :default-time="defaultTime2"
-              range-separator=":" :shortcuts="Qshortcuts" start-placeholder="开始时间" end-placeholder="结束时间" />
-            <!-- @change="timeScopeDiv" -->
+              range-separator=":" :shortcuts="Qshortcuts" start-placeholder="开始时间" end-placeholder="结束时间" @change="timeScopeDiv"/>
+            
           </el-form-item>
           <div class="searchForm">
             <el-button size="small" type="primary" icon="search" @click="searchHandler">查询</el-button>
@@ -51,8 +51,8 @@
           <el-popover :visible="scope.row.visible" trigger="click" placement="top" width="160">
             <p>确定要删除吗</p>
             <div style="text-align: right; margin-top: 8px">
-              <el-button size="small" type="text">取消</el-button>
-              <el-button type="primary" size="small">确定</el-button>
+              <el-button size="small" type="text" @click="cancel(scope.row)">取消</el-button>
+              <el-button type="primary" size="small" @click="deletePlaceFun(scope.row)">确定</el-button>
             </div>
             <template #reference>
               <el-button type="text" icon="delete" size="small">删除</el-button>
@@ -76,6 +76,12 @@
       current-change	currentPage 改变时会触发
       size-change	pageSize 改变时会触发
        -->
+      <!-- <addOrUpdateForm
+      ref="addOrUpdateFormRef"
+      :dialog-form-visible="dialogFormVisible"
+      :dialog-title="dialogTitle"
+      :csbh="csbh"
+    /> -->
   </div>
 </template>
 <script>
@@ -86,22 +92,45 @@ export default {
 <script setup>
 import { ref, reactive } from 'vue'
 import { vehicleList } from "@/data/vehicle.js"
+import {
+  addData,
+  getData,
+  singleDelete,
+  updateData,
+  getRoomList,
+  exportApi,
+} from '@/api/vehicleRecord'
+import addOrUpdateForm from './componments/addOrUpdate.vue'
+
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(2)
 const csbh = ref('')
 const searchInfo = reactive(vehicleList)
+const tableData = ref([
+    {
+      name: '孙荐玺',
+      mobile: '17639331603',
+      idNum: '411536200112053026',
+      carNum: '豫S123456',
+      csmc: '新乡市红旗区',
+      enterDate: '2000/12/02',
+      bbsj: '2000/12/02/12:36'
+    },
+    {
+      name: '孙荐玺',
+      mobile: '17639331603',
+      idNum: '411536200112053026',
+      carNum: '豫S123456',
+      csmc: '新乡市红旗区',
+      enterDate: '2000/12/02',
+      bbsj: '2000/12/02/12:36'
+    },
+])
 
-// 重置
-const onReset = () => {
-  for (const key in searchInfo) {
-    searchInfo[key] = ''
-  }
-}
 //获取表格数据
-const getTableData = async () => {
+const getTableData = async() => {
   const searchList = JSON.parse(JSON.stringify(searchInfo))
-  //如果查询信息里面有scbh，用他查的，没有的话默认为“”
   let Scsbh = ''
   if (searchInfo) {
     if (searchInfo.csbh !== '') {
@@ -117,7 +146,6 @@ const getTableData = async () => {
     ...searchList,
     csbh: Scsbh,
   })
-  console.log(table, 'table')
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -125,55 +153,115 @@ const getTableData = async () => {
     pageSize.value = table.data.pageSize
   }
 }
-//查询
-const searchHandler = () => {
-
+//防抖函数
+const debounce = (fn, wait = 500) => {
+  let timer = null
+  const that = this
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn.call(that, args)
+    }, wait)
+  }
 }
-// 新增或更改
-const addOrUpdate = (v, data) => {
-  // if (v == 0) {
-  //   // 新增操作
-  //   dialogTitle.value = '新增隔离人员信息'
-  //   addOrUpdateFormRef.value.initForm(unref(roomList))
-  //   dialogFormVisible.value = true
-  // } else {
-  //   // 修改操作
-  //   dialogTitle.value = '修改隔离人员信息'
-  //   addOrUpdateFormRef.value.echoData(data, roomList)
-  //   dialogFormVisible.value = true
-  // }
+//时间范围挑选
+const timeScopeDiv = () => {
+  searchInfo.start_time = searchInfo.glsj[0]
+  searchInfo.end_time = searchInfo.glsj[1]
 }
-// 操作按钮刷新
-const renew = ref(true)
 
-const tableData = ref([
-  {
-    name: '孙荐玺',
-    mobile: '17639331603',
-    idNum: '411536200112053026',
-    carNum: '豫S123456',
-    csmc: '新乡市红旗区',
-    enterDate: '2000/12/02',
-    bbsj: '2000/12/02/12:36'
-  },
-  {
-    name: '孙荐玺',
-    mobile: '17639331603',
-    idNum: '411536200112053026',
-    carNum: '豫S123456',
-    csmc: '新乡市红旗区',
-    enterDate: '2000/12/02',
-    bbsj: '2000/12/02/12:36'
-  },
-])
+
+//页面上方与下方的查询与分页 -------------------------------------
+// 重置
+const onReset = () => {
+  for (const key in searchInfo) {
+    searchInfo[key] = ''
+  }
+}
+// 分页方法
 const handleCurrentChange = (val) => {
-  // page.value = val
-  // getTableData()
+  page.value = val
+  getTableData()
 }
-const handleSizeChange = async (val) => {
+const handleSizeChange = async(val) => {
   pageSize.value = val
   getTableData()
 }
+// 查询
+const searchHandler = debounce(getTableData)
+// 获取渲染表格数据
+getTableData()
+// 导出数据
+const exportData = debounce(() => {
+  const searchList = JSON.parse(JSON.stringify(searchInfo))
+  let Scsbh = ''
+  if (searchInfo) {
+    if (searchInfo.csbh !== '') {
+      Scsbh = searchInfo.csbh
+    } else {
+      Scsbh = csbh.value
+    }
+  }
+  if (searchList.start_time === '') delete searchList.start_time
+  if (searchList.end_time === '') delete searchList.end_time
+  delete searchList.csbh
+  exportApi({
+    fileName: 'glry_export.xlsx',
+    ...searchList
+  })
+})
+
+// 表格中的数据操作---------------------------------------
+// 删除车辆信息记录
+const deletePlaceFun = (v) => {
+  ElMessageBox.confirm('确认删除？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(async() => {
+    const res = await singleDelete({ id: v.cd_id })
+    if (tableData.length > 1 && page.value > 1) {
+      page.value--
+    }
+    getTableData()
+  })
+}
+const cancel = (row) => {
+    // console.log("----------"+JSON.parse(JSON.stringify(row)));
+  row.visible = false
+  renew.value = false
+  nextTick(() => {
+    renew.value = true
+  })
+}
+
+// 弹框******************************
+// 新增或更改
+// const dialogFormVisible = ref(false)
+// const dialogTitle = ref('')
+// const addOrUpdate = (v, data) => {
+//   if (v == 0) {
+//     // 新增操作
+//     dialogTitle.value = '新增隔离人员信息'
+//     addOrUpdateFormRef.value.initForm(unref(roomList))
+//     dialogFormVisible.value = true
+//   } else {
+//     // 修改操作
+//     dialogTitle.value = '修改隔离人员信息'
+//     addOrUpdateFormRef.value.echoData(data, roomList)
+//     dialogFormVisible.value = true
+//   }
+// }
+// const dialogFormVisibleShow = () => {
+//   dialogFormVisible.value = false
+// }
+// const reGetData = () => {
+//   getTableData()
+// }
+// provide('dialogFormVisibleShow', dialogFormVisibleShow)
+// provide('reGetData', reGetData)
 </script>
 
 <style scoped>
