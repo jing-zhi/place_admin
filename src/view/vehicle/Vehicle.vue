@@ -164,8 +164,8 @@ getTableData()
 const exportData = debounce(() => {
   const searchList = JSON.parse(JSON.stringify(searchInfo))
   
-  if (searchList.start_time === '') delete searchList.start_time
-  if (searchList.end_time === '') delete searchList.end_time
+  if (searchList.expected_enter_day_start === '') delete searchList.expected_enter_day_start
+  if (searchList.expected_enter_day_end === '') delete searchList.expected_enter_day_end
   delete searchList.csbh
   exportApi({
     fileName: 'glry_export.xlsx',
