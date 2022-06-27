@@ -311,7 +311,6 @@ import {
   loadExcelData
 } from '@/api/place.js'
 
-const path = ref(import.meta.env.VITE_BASE_API)
 import { useUserStore } from '@/pinia/modules/user'
 
 import { formatDate } from '@/utils/format'
@@ -322,9 +321,10 @@ import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
-
 import { defineComponent } from "vue";
 import useClipboard from "vue-clipboard3";
+const path = ref(import.meta.env.VITE_BASE_API)
+
 
 const page = ref(1)
 const total = ref(0)

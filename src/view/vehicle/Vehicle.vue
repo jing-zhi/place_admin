@@ -2,251 +2,179 @@
   <div>
     <div>
       <div class="gva-table-box" style="margin-bottom: 10px">
-      <el-form ref="searchForm" :inline="true" :model="searchInfo">
-        <el-form-item label="姓名" label-width="auto">
-          <el-input v-model="searchInfo.name" style="width:120px;" placeholder="姓名" prop="name"/>
-        </el-form-item>
-        <el-form-item label="手机号码" label-width="auto" prop="mobile">
-          <el-input v-model="searchInfo.mobile" placeholder="手机号码" />
-        </el-form-item>
-        <el-form-item label="身份证号" label-width="auto" prop="idNum">
-          <el-input v-model="searchInfo.idNum" placeholder="身份证号" />
-        </el-form-item>
-        <el-form-item label="车牌号" label-width="auto" prop="carNum">
-          <el-input v-model="searchInfo.carNum" placeholder="车牌号" />
-        </el-form-item>
-        <el-form-item label="场所名称" label-width="auto" prop="csmc">
-          <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
-        </el-form-item>
-        <el-form-item label="预计进入日期" label-width="auto" prop="enterDate">
-            <el-date-picker
-              v-model="searchInfo.enterDate"
-              type="datetimerange"
-              :default-time="defaultTime2"
-              range-separator=":"
-              :shortcuts="Qshortcuts"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-            />
-              <!-- @change="timeScopeDiv" -->
+        <el-form ref="searchForm" :inline="true" :model="searchInfo">
+          <el-form-item label="姓名" label-width="auto">
+            <el-input v-model="searchInfo.people_name" style="width:120px;" placeholder="姓名" prop="people_name" />
           </el-form-item>
-        <div class="searchForm">
-            <el-button
-              size="small"
-              type="primary"
-              icon="search"
-              @click="searchHandler"
-            >查询</el-button>
-            <el-button
-              size="small"
-              icon="refresh"
-              @click="onReset"
-            >重置</el-button>
+          <el-form-item label="手机号码" label-width="auto" prop="phone_number">
+            <el-input v-model="searchInfo.phone_number" placeholder="手机号码" />
+          </el-form-item>
+          <el-form-item label="身份证号" label-width="auto" prop="id_card">
+            <el-input v-model="searchInfo.id_card" placeholder="身份证号" />
+          </el-form-item>
+          <el-form-item label="车牌号" label-width="auto" prop="plate_number">
+            <el-input v-model="searchInfo.plate_number" placeholder="车牌号" />
+          </el-form-item>
+          <el-form-item label="场所名称" label-width="auto" prop="place_name">
+            <el-input v-model="searchInfo.place_name" placeholder="场所名称" />
+          </el-form-item>
+          <el-form-item label="预计进入日期" label-width="auto" prop="glsj">
+            <el-date-picker v-model="searchInfo.glsj" type="datetimerange" :default-time="defaultTime2"
+              range-separator=":" :shortcuts="Qshortcuts" start-placeholder="开始时间" end-placeholder="结束时间" @change="timeScopeDiv"/>           
+          </el-form-item>
+          <div class="searchForm">
+            <el-button size="small" type="primary" icon="search" @click="searchHandler">查询</el-button>
+            <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
           </div>
-      </el-form>
+        </el-form>
       </div>
       <div class="gva-table-box" style="margin-bottom: 10px">
-      <el-button
-          size="small"
-          type="primary"
-          icon="plus"
-          @click="addOrUpdate('0')"
-        >新增隔离人员</el-button>
-        <el-button
-          size="small"
-          type="primary"
-          @click="exportData"
-        >
-        <span class="iconfont icon-shangchuan" /> 导出</el-button>
+        <el-button size="small" type="primary" @click="exportData">
+          <span class="iconfont icon-shangchuan" /> 导出
+        </el-button>
       </div>
     </div>
     <el-table :data="tableData" row-key="ID">
       <!-- <el-table-column align="center" label="记录ID" min-width="70" prop="cd_id" /> -->
-      <el-table-column
-        align="center"
-        label="姓名"
-        min-width="120"
-        prop="name"
-      />
-      <el-table-column
-        align="center"
-        label="手机号码"
-        min-width="120"
-        prop="mobile"
-      />
-      <el-table-column
-        align="center"
-        label="身份证号码"
-        min-width="230"
-        prop="idNum"
-      />
-      <el-table-column
-        align="center"
-        label="车牌号"
-        min-width="120"
-        prop="carNum"
-      />
-      <el-table-column
-        align="center"
-        label="场所名称"
-        min-width="120"
-        prop="csmc"
-      />
-      <el-table-column
-        align="center"
-        label="预计进入日期"
-        min-width="120"
-        prop="enterDate"
-      />
-      <el-table-column
-        align="center"
-        label="报备时间"
-        min-width="180"
-        prop="bbsj"
-      />
-      
-      <el-table-column v-if="renew" label="操作" min-width="260" fixed="right">
-        <template #default="scope">
-          <el-popover
-            :visible="scope.row.visible"
-            trigger="click"
-            placement="top"
-            width="160"
-          >
-            <p>确定要删除吗</p>
-            <div style="text-align: right; margin-top: 8px">
-              <el-button
-                size="small"
-                type="text"
-              >取消</el-button>
-              <el-button
-                type="primary"
-                size="small"
-              >确定</el-button>
-            </div>
-            <template #reference>
-              <el-button type="text" icon="delete" size="small">删除</el-button>
-            </template>
-          </el-popover>
-          <el-button
-            type="text"
-            icon="edit"
-            size="small"
-          >编辑</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="姓名" min-width="120" prop="people_name" />
+      <el-table-column align="center" label="手机号码" min-width="120" prop="phone_number" />
+      <el-table-column align="center" label="身份证号码" min-width="230" prop="id_card" />
+      <el-table-column align="center" label="车牌号" min-width="120" prop="plate_number" />
+      <el-table-column align="center" label="场所名称" min-width="120" prop="place_name" />
+      <el-table-column align="center" label="预计进入日期" min-width="120" prop="expected_enter_day_fmt" />
+      <el-table-column align="center" label="报备时间" min-width="180" prop="record_time" />
     </el-table>
     <div class="gva-pagination">
-      <el-pagination
-        :current-page="page"
-        :page-size="pageSize"
-        :page-sizes="[10, 30, 50, 100]"
-        :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+      <el-pagination :current-page="page" :page-size="pageSize" :page-sizes="[10, 30, 50, 100]" :total="total"
+        layout="total, sizes, prev, pager, next, jumper" @current-change="handleCurrentChange"
+        @size-change="handleSizeChange" />
     </div>
-        <!-- @current-change="handleCurrentChange"
-        @size-change="handleSizeChange" -->
-      <!-- page-size	每页显示条目个数，
-      page-sizes	每页显示个数选择器的选项设置
-      current-page	当前页数，支持 .sync 修饰符
-      layout	组件布局，子组件名用逗号分隔
-      current-change	currentPage 改变时会触发
-      size-change	pageSize 改变时会触发
-       -->
   </div>
 </template>
 <script>
 export default {
-  name:'test'
+  name: 'test'
 }
 </script>
 <script setup>
-import { ref,reactive } from 'vue'
-import { vehicleList } from "@/data/vehicle.js"
+import { ref, reactive } from '@vue/reactivity'
+import { vehicleList} from "@/data/vehicle.js"
+import {
+  getData,
+  exportApi,
+} from '@/api/vehicleRecord'
+
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(2)
-const searchInfo=reactive(vehicleList)
+const searchInfo = reactive(vehicleList)
+const tableData = ref([
+    {
+      people_name: '孙荐玺',
+      phone_number: '17639331603',
+      id_card: '411536200112053026',
+      plate_number: '豫S123456',
+      place_name: '新乡市红旗区',
+      expected_enter_day_fmt: '2000/12/02',
+      record_time: '2000/12/02/12:36'
+    },
+    {
+      people_name: '孙荐玺',
+      phone_number: '17639331603',
+      id_card: '411536200112053026',
+      plate_number: '豫S123456',
+      place_name: '新乡市红旗区',
+      expected_enter_day_fmt: '2000/12/02',
+      record_time: '2000/12/02/12:36'
+    },
+    {
+      people_name: '孙荐玺',
+      phone_number: '17639331603',
+      id_card: '411536200112053026',
+      plate_number: '豫S123456',
+      place_name: '新乡市红旗区',
+      expected_enter_day_fmt: '2000/12/02',
+      record_time: '2000/12/02/12:36'
+    },
+    
+])
 
-  // 重置
+//获取表格数据
+const getTableData = async() => {
+  const searchList = JSON.parse(JSON.stringify(searchInfo))
+  console.log(searchList);
+  console.log(page.value);
+  console.log(pageSize.value);
+  const table = await getData({
+    page: page.value,
+    pageSize: pageSize.value,
+    ...searchList,
+  })
+  console.log(table);
+  if (table.code == 0) {
+    tableData.value = table.data.list
+    total.value = table.data.total
+    // page.value = table.data.page
+    // pageSize.value = table.data.pageSize
+  }else{
+    console.log("请求失败");
+  }
+}
+//防抖函数
+const debounce = (fn, wait = 500) => {
+  let timer = null
+  const that = this
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn.call(that, args)
+    }, wait)
+  }
+}
+//时间范围挑选
+const timeScopeDiv = () => {
+  searchInfo.expected_enter_day_start = searchInfo.glsj[0]
+  searchInfo.expected_enter_day_end = searchInfo.glsj[1]
+}
+
+
+//页面上方与下方的查询与分页 -------------------------------------
+// 重置
 const onReset = () => {
   for (const key in searchInfo) {
     searchInfo[key] = ''
   }
 }
-  //查询
-const searchHandler = () => {
-}
-  // 新增或更改
-const addOrUpdate = (v, data) => {
-  // if (v == 0) {
-  //   // 新增操作
-  //   dialogTitle.value = '新增隔离人员信息'
-  //   addOrUpdateFormRef.value.initForm(unref(roomList))
-  //   dialogFormVisible.value = true
-  // } else {
-  //   // 修改操作
-  //   dialogTitle.value = '修改隔离人员信息'
-  //   addOrUpdateFormRef.value.echoData(data, roomList)
-  //   dialogFormVisible.value = true
-  // }
-}
-// 操作按钮刷新
-const renew = ref(true) 
-
-const tableData = ref([
-   { name:'孙荐玺',
-  mobile:'17639331603',
-  idNum:'411536200112053026',
-  carNum:'豫S123456',
-  csmc:'新乡市红旗区',
-  enterDate:'2000/12/02',
-  bbsj:'2000/12/02/12:36'},
-     { name:'孙荐玺',
-  mobile:'17639331603',
-  idNum:'411536200112053026',
-  carNum:'豫S123456',
-  csmc:'新乡市红旗区',
-  enterDate:'2000/12/02',
-  bbsj:'2000/12/02/12:36'},
-])
-//获取表格数据
-const getTableData = async() => {
-  const searchList = JSON.parse(JSON.stringify(searchInfo))
-  let Scsbh = ''
-  if (searchInfo) {
-    if (searchInfo.csbh !== '') {
-      Scsbh = searchInfo.csbh
-    } else {
-      Scsbh = csbh.value
-    }
-  }
-  delete searchList.csbh
-  const table = await getData({
-    page: page.value,
-    pageSize: pageSize.value,
-    ...searchList,
-    csbh: Scsbh,
-  })
-  console.log(table, 'table')
-  if (table.code === 0) {
-    tableData.value = table.data.list
-    total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
-  }
-}
+// 分页方法
 const handleCurrentChange = (val) => {
-  // page.value = val
-  // getTableData()
+  page.value = val
+  getTableData()
 }
 const handleSizeChange = async(val) => {
   pageSize.value = val
   getTableData()
 }
+// 查询
+const searchHandler = debounce(getTableData)
+// 获取渲染表格数据
+getTableData()
+// 导出数据
+const exportData = debounce(() => {
+  const searchList = JSON.parse(JSON.stringify(searchInfo))
+  
+  if (searchList.expected_enter_day_start === '') delete searchList.expected_enter_day_start
+  if (searchList.expected_enter_day_end === '') delete searchList.expected_enter_day_end
+  delete searchList.csbh
+  exportApi({
+    fileName: 'glry_export.xlsx',
+    ...searchList
+  })
+})
+
+
+
 </script>
 
 <style scoped>
