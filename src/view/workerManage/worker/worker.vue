@@ -675,11 +675,6 @@ const enterAddDialog = async() => {
       // 修改
       if (dialogFlag.value === 'edit') {
         request.is_14rhn = request.is_14rhn == 'true' ? true : false
-        // if(request.is_14rhn == 'true'){
-        //   request.is_14rhn = true
-        // } else if(request.is_14rhn == 'false'){
-        //   request.is_14rhn = false
-        // }
         
         const res = await setWorker(request)
         if (res.code === 0) {
