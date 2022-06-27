@@ -124,7 +124,6 @@
         <!-- 新增 -->
         <el-table-column align="center" label="是否14天内入豫" min-width="150" prop="is_14rhn">
           <template #default="scope">
-            {{scope.row.is_14rhn}}
             {{scope.row.is_14rhn === true ? "是" : "否"}}
           </template>
         </el-table-column>
@@ -473,9 +472,6 @@ const onReset = () => {
   getTableData()
 }
 
-//
-
-
 const hy_id = ref('')
 // 查询所有行业名称+id
 const industryList = ref([])
@@ -506,8 +502,6 @@ const getLB = async(hyId) => {
     console.log(gwList.value)
   }
 }
-
-
 
 // 初始化
 const initPage = async() => {
@@ -669,13 +663,9 @@ const enterAddDialog = async() => {
 
       // 新增
       if (dialogFlag.value === 'add') {
-        console.log("request.is_14rhn11",request.is_14rhn);
         request.is_14rhn = request.is_14rhn == 'true' ? true : false
-        console.log("request.is_14rhn22",request.is_14rhn);
-
-        request.csbh = csbh.value
+        // request.csbh = csbh.value
         const res = await createWorker(request)
-        console.log("resadd:",res);
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
           await getTableData(find.value)
@@ -684,18 +674,14 @@ const enterAddDialog = async() => {
       }
       // 修改
       if (dialogFlag.value === 'edit') {
-        // request.is_14rhn = request.is_14rhn == 'true' ? true : false
-        // request.is_14rhn = request.is_14rhn ==='false' ? false : true
-        if(request.is_14rhn == 'true'){
-          request.is_14rhn = true
-        } else if(request.is_14rhn == 'false'){
-          request.is_14rhn = false
-        }
-        console.log("request.is_14rhn44",typeof request.is_14rhn,request.is_14rhn);
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        // if(request.is_14rhn == 'true'){
+        //   request.is_14rhn = true
+        // } else if(request.is_14rhn == 'false'){
+        //   request.is_14rhn = false
+        // }
         
         const res = await setWorker(request)
-        console.log("req:",request);
-        console.log("resedit:",res);
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
           await getTableData(find.value)

@@ -19,14 +19,6 @@ export const getWorkerList = (data) => {
   })
 }
 
-// 获取搜索列表数据(根据行业id)
-export const getFindList = data => {
-  return service({
-    url:'',
-    method:'POST',
-    data:data
-  })
-}
 
 // 导出文件
 export const exportExcel = data => {

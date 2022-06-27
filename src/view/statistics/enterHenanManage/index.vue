@@ -46,7 +46,7 @@
 <script setup>
 import { ref,watch,toRaw} from "vue";
 import {getBusinessMang} from "../../../api/place"
-import { getTableList,getWorkerList ,exportExcel,getFindList} from "../../../api/enterHenan"
+import { getTableList,getWorkerList ,exportExcel} from "../../../api/enterHenan"
 import { debounce } from '@/utils/debounce.js'
 
 // 分页
@@ -55,12 +55,12 @@ const pageSize = ref(10)
 const total = ref()
 const handleSizeChange = (val) => {
   pageSize.value = val
-  // getTableData(searchInfo.value)
+  // getTableData(searchInfo.value.industry)
 
 }
 const handleCurrentChange = (val) => {
-page.value = val
-// getTableData(searchInfo.value)
+  page.value = val
+  // getTableData(searchInfo.value.industry)
 }
 
 const searchInfo = ref({
@@ -72,8 +72,11 @@ const industryCate = ref([])
 
 // 获取行业列表
 const getBusinessList = async() => {
-  const { data } = await getBusinessMang({ page:1,pageSize:34 })
+  const { data } = await getBusinessMang({ page:1,pageSize:34 }) 
+  console.log(data.list);
   industryCate.value = data.list
+  industryCate.value.unshift({ID:0,Name:'全部行业'})
+
 }
 getBusinessList()
 
@@ -86,11 +89,7 @@ const is_14rhnData = async(value) => {
   for(let i = 0; i < data.length; i++){
     if(data[i].is_14rhn == true) {
       is_14rhn.value = data[i].is_14rhn
-      //  getExcel()
-      // handleExcelExport()
     }
-  
-  //  getTableData()
  }
 }
 
@@ -110,31 +109,22 @@ const getTableData = async(value) => {
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
-    console.log(total.value,page.value,pageSize.value);
-    console.log(table.data.total, table.data.page, table.data.pageSize);
   }
 }
 getTableData()
 
 // 获取搜索列表
 const getFind = () => {
-  // find.value = toRaw(searchInfo.value.industry)
   getTableData(searchInfo.value.industry)
 }
-// console.log("find.value:",find.value);
 getFind()
 
 watch(searchInfo.value,(newVal,oldVal) => {
-   console.log("searchInfo.value:",searchInfo.value.industry);
    getFind()
-  // getExcel()
-  // getTableData(searchInfo.value.industry)
 },{immediate:true})
 
   // 导出
 const handleExcelExport = debounce(() => {
-    // getFind()
-    // getExcel()
     exportExcel({ file_name:'ehPerson_export.xlsx', is_14rhn:is_14rhn.value, hy_id:Number(searchInfo.value.industry)})
 })
 
