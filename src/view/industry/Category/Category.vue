@@ -26,6 +26,7 @@
             />
           </el-select>
         </el-form-item> -->
+
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
@@ -313,6 +314,7 @@ const enterDialog = async() => {
           }
           getTableData()
           closeDialog()
+          form.value.hy_name = searchInfo.value.hy_name
         }
           break
         case 'edit': {
