@@ -43,10 +43,17 @@
       <el-table-column align="center" label="场所名称" min-width="120" prop="place_name" />
       <el-table-column align="center" label="预计进入日期" min-width="120" prop="expected_enter_day_fmt" />
       <el-table-column align="center" label="报备时间" min-width="180" prop="record_time" />
+      <el-table-column align="center" label="健康码信息" min-width="120" prop="health_code" />
+      <el-table-column align="center" label="核酸信息" min-width="120" prop="nucleic_acid" />
     </el-table>
     <div class="gva-pagination">
-      <el-pagination :current-page="page" :page-size="pageSize" :page-sizes="[10, 30, 50, 100]" :total="total"
-        layout="total, sizes, prev, pager, next, jumper" @current-change="handleCurrentChange"
+      <el-pagination 
+        :current-page="page" 
+        :page-size="pageSize" 
+        :page-sizes="[10, 30, 50, 100]" 
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper" 
+        @current-change="handleCurrentChange"
         @size-change="handleSizeChange" />
     </div>
   </div>
@@ -66,60 +73,47 @@ import {
 
 const page = ref(1)
 const pageSize = ref(10)
-const total = ref(2)
-const searchInfo = reactive(vehicleList)
-const tableData = ref([
-    {
-      people_name: '孙荐玺',
-      phone_number: '17639331603',
-      id_card: '411536200112053026',
-      plate_number: '豫S123456',
-      place_name: '新乡市红旗区',
-      expected_enter_day_fmt: '2000/12/02',
-      record_time: '2000/12/02/12:36'
-    },
-    {
-      people_name: '孙荐玺',
-      phone_number: '17639331603',
-      id_card: '411536200112053026',
-      plate_number: '豫S123456',
-      place_name: '新乡市红旗区',
-      expected_enter_day_fmt: '2000/12/02',
-      record_time: '2000/12/02/12:36'
-    },
-    {
-      people_name: '孙荐玺',
-      phone_number: '17639331603',
-      id_card: '411536200112053026',
-      plate_number: '豫S123456',
-      place_name: '新乡市红旗区',
-      expected_enter_day_fmt: '2000/12/02',
-      record_time: '2000/12/02/12:36'
-    },
-    
-])
+const total = ref(0)
+const tableData = ref([])
 
+const searchInfo = reactive(vehicleList)
+const defaultTime2 = [
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+] // '12:00:00', '08:00:00'
+
+// 分页方法
+
+const handleSizeChange = async(val) => {
+  pageSize.value = val
+  getTableData()
+}
+const handleCurrentChange = (val) => {
+  page.value = val
+  getTableData()
+}
 //获取表格数据
 const getTableData = async() => {
   const searchList = JSON.parse(JSON.stringify(searchInfo))
-  console.log(searchList);
-  console.log(page.value);
-  console.log(pageSize.value);
+  // console.log(searchList);
   const table = await getData({
     page: page.value,
     pageSize: pageSize.value,
     ...searchList,
   })
-  console.log(table);
   if (table.code == 0) {
+    // console.log(table);
     tableData.value = table.data.list
     total.value = table.data.total
     // page.value = table.data.page
     // pageSize.value = table.data.pageSize
+  
   }else{
     console.log("请求失败");
   }
 }
+getTableData()
+
 //防抖函数
 const debounce = (fn, wait = 500) => {
   let timer = null
@@ -147,28 +141,22 @@ const onReset = () => {
     searchInfo[key] = ''
   }
 }
-// 分页方法
-const handleCurrentChange = (val) => {
-  page.value = val
-  getTableData()
-}
-const handleSizeChange = async(val) => {
-  pageSize.value = val
-  getTableData()
-}
+
 // 查询
 const searchHandler = debounce(getTableData)
 // 获取渲染表格数据
-getTableData()
+
+
+
 // 导出数据
 const exportData = debounce(() => {
   const searchList = JSON.parse(JSON.stringify(searchInfo))
-  
-  if (searchList.expected_enter_day_start === '') delete searchList.expected_enter_day_start
-  if (searchList.expected_enter_day_end === '') delete searchList.expected_enter_day_end
-  delete searchList.csbh
-  exportApi({
-    fileName: 'glry_export.xlsx',
+  // console.log(searchList);
+  // if (searchList.expected_enter_day_start === '') delete searchList.expected_enter_day_start
+  // if (searchList.expected_enter_day_end === '') delete searchList.expected_enter_day_end
+
+exportApi({
+    file_name: 'vehicle_record.xlsx',
     ...searchList
   })
 })

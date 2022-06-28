@@ -385,7 +385,7 @@ const getRoom = async() => {
 getRoom()
 const timeScopeDiv = () => {
   searchInfo.start_time = searchInfo.glsj[0]
-  searchInfo.end_time = searchInfo.glsj[1]
+  searchInfo.end_time = searchInfo.glsj[1] 
 }
 const handleCurrentChange = (val) => {
   page.value = val

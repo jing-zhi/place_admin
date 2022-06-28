@@ -417,6 +417,7 @@ const handleSizeChange = (val) => {
 }
 
 const handleCurrentChange = (val) => {
+  console.log(val);
   page.value = val
   getTableData(find.value)
 }
@@ -429,12 +430,12 @@ const getTableData = async(value) => {
   }
 
   const table = await getWorkerList(rqt)
-  console.log("table:",table);
+  // console.log("table:",table);
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
+    // page.value = table.data.page
+    // pageSize.value = table.data.pageSize
   }
 }
 
