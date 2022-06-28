@@ -39,7 +39,8 @@
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
-          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+         <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+         
           <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/工作人员信息模板.xlsx">
              <el-button class="btn" size="small" type="primary" icon="download">导入信息模板</el-button>
          </a>
