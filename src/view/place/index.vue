@@ -653,7 +653,7 @@ const enterWorker = (row) => {
 const copyAddress=async (row)=>{
   placeInfo.value = JSON.parse(JSON.stringify(row))
 try {
-  await toClipboard( 'http://117.159.44.7:18801/#/farmMidPage?csbh='+ placeInfo.value.csbh)
+  await toClipboard( 'http://117.159.44.7:18801/#/vehicleMidPage?csbh='+ placeInfo.value.csbh)
   ElMessage({ type: 'success', message: '复制成功' })
 } catch (e) {
   ElMessage.error('复制失败')
