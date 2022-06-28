@@ -25,14 +25,18 @@
           <div class="searchForm">
             <el-button size="small" type="primary" icon="search" @click="searchHandler">查询</el-button>
             <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
+            <el-button size="small" type="primary" @click="exportData" icon="download">
+              导出
+             </el-button>
+
           </div>
         </el-form>
       </div>
-      <div class="gva-table-box" style="margin-bottom: 10px">
+      <!-- <div class="gva-table-box" style="margin-bottom: 10px">
         <el-button size="small" type="primary" @click="exportData">
           <span class="iconfont icon-shangchuan" /> 导出
         </el-button>
-      </div>
+      </div> -->
     </div>
     <el-table :data="tableData" row-key="ID">
       <!-- <el-table-column align="center" label="记录ID" min-width="70" prop="cd_id" /> -->
