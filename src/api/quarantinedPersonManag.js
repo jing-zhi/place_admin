@@ -48,6 +48,8 @@ export const exportApi = data => {
         data,
         responseType:'blob'
     }).then(res => {
+            console.log(res);
+
         handleFileError(res,"glry_export.xlsx")
     })
 }
