@@ -5,7 +5,7 @@
         <el-form-item label="行业类别" prop>
           <el-select placeholder="请选择" size="large" v-model="searchInfo.industry">
             <el-option
-              v-for="(item,index) in industryCate"
+              v-for="item in industryCate"
               :key="item.ID"
               :label="item.Name"
               :value="item.ID"

@@ -314,6 +314,7 @@ const enterDialog = async() => {
           }
           getTableData()
           closeDialog()
+          form.value.hy_name = searchInfo.value.hy_name
         }
           break
         case 'edit': {
