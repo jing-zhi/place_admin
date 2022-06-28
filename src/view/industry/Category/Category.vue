@@ -130,9 +130,9 @@
 <script setup>
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getCategory, createPelop,deletePlaceRoom,updataPelop} from '@/api/Category.js'
+import { getCategory, createPelop,deleteCategory,updataPelop} from '@/api/Category.js'
 import { useRoute, useRouter } from 'vue-router'
-import { getIndustryList, setIndustry } from '@/api/industry.js'
+import { getIndustryList} from '@/api/industry.js'
 
 const route = useRoute()
 // hyid
@@ -192,6 +192,7 @@ const handleCurrentChange = (val) => {
   page.value = val
   getTableData()
 }
+
 // 搜索查询
 const onSubmit = () => {
   page.value = 1
@@ -280,7 +281,6 @@ const closeDialog = () => {
 }
                                
 // 弹窗相关
-// const apiForm = ref(null)
 const initForm = () => {
   apiForm.value.resetFields()
 
@@ -289,8 +289,6 @@ const editId = ref('')
 // 编辑弹窗
 const editIndustry = (row) => {
   form.value = JSON.parse(JSON.stringify(row)) 
- // from.value
-  //console.log(row);
   editId.value = row.id
   openDialog('edit')
   dialogFlag.value = 'edit'
@@ -355,15 +353,12 @@ const delclassify = async(row) => {
     type: 'warning',
   })
     .then(async() => {
-      const res = await deletePlaceRoom({ id: row.id })
+      const res = await deleteCategory({ id: row.id })
       if (res.code === 0) {
         ElMessage({
           type: 'success',
           message: '删除成功!',
         })
-        // if (tableData.value.length === 1 && page.value > 1) {
-        //   page.value--
-        // }
         getTableData()
       }
     })
