@@ -52,9 +52,8 @@
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-
-
+        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace"
+       :hidden="userStore.userInfo.authorities[0].level === 9999 " >新增</el-button>
       </div>
 
 
@@ -323,7 +322,7 @@ import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
 import { defineComponent } from "vue";
-import useClipboard from "vue-clipboard3";
+import useClipboard from "vue-clipboard3"
 const path = ref(import.meta.env.VITE_BASE_API)
 
 
