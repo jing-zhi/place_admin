@@ -71,7 +71,7 @@
             
             <el-button
               type="text"
-              icon="Share"
+              icon="Delete"
               size="small"
               @click="delclassify(scope.row)"
               >删除</el-button

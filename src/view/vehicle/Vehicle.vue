@@ -29,8 +29,8 @@
         </el-form>
       </div>
       <div class="gva-table-box" style="margin-bottom: 10px">
-        <el-button size="small" type="primary" @click="exportData">
-          <span class="iconfont icon-shangchuan" /> 导出
+        <el-button size="small" type="primary" @click="exportData" icon="download">
+          <!-- <span class="iconfont icon-shangchuan" />  -->导出
         </el-button>
       </div>
     </div>
