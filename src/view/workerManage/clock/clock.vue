@@ -84,11 +84,30 @@
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
-        <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
-        <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
-        <el-table-column align="left" label="身份证号" min-width="170" prop="gzrysfz" />
+        <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
+        <el-table-column align="left" label="场所名称" min-width="150" prop="CdJoin.csmc" show-overflow-tooltip />
+        <el-table-column align="left" label="工作人员姓名" min-width="150" prop="gzryxm" />
+
+        <el-table-column align="left" label="手机号码" min-width="150" prop="gzrysjh">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysjh,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="身份证号码" min-width="170" prop="gzrysfz">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.gzrysfz }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysfz,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="工作区域" min-width="150" prop="gzqy" />
         <el-table-column align="left" label="体温" min-width="150" prop="gzrtw" />
         <el-table-column align="left" label="扫码时间" min-width="160" prop="smsj">
@@ -126,6 +145,7 @@ import {
 // 查询搜索
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { formatDate,formatter } from '@/utils/format'
 
 import {formatTimeToStr} from '@/utils/date.js'
 import { useRoute } from 'vue-router'
