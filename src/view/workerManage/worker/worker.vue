@@ -423,7 +423,9 @@ const ztList = [
 const heSuanList = [
   { name: '阴性' },
   { name: '阳性' },
+  { name: '无24小时核酸' },
   { name: '无48小时核酸' },
+  { name: '无72小时核酸' },
 ]
 
 const healthCode = [
