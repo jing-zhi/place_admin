@@ -15,9 +15,9 @@
         <!-- 列表数据 -->
         <div class="list">
             <el-table :data="tableData" style="width: 100%; margin-top: 20px">
-                <el-table-column prop="hy_name" label="所属行业" width="110" />
-                <el-table-column prop="rylb_name" label="人员类别" width="160" />
-                <el-table-column prop="not_time_hesuan" label="未按时核酸人员" class-name="hello" />
+                <el-table-column prop="hy_name" label="所属行业" wsidth="240"  align="center"/>
+                <el-table-column prop="rylb_name" label="人员类别" width="240" align="center"/>
+                <el-table-column prop="not_time_hesuan" label="未按时核酸人员" class-name="hello" align="center" />
                 <el-table-column prop="green_health_code" label="核酸阴性人数" align="center" />
             </el-table>
         </div>
