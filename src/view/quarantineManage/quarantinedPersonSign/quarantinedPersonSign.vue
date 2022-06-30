@@ -132,22 +132,30 @@
         min-width="120"
         prop="name"
       />
-      <el-table-column
-        align="center"
-        label="扫码人身份证号"
-        min-width="180"
-        prop="documentNumber"
-      />
-      <el-table-column
-        align="center"
-        label="手机号"
-        min-width="100"
-        prop="phone"
-      />
+              <el-table-column align="left" label="手机号" min-width="120" prop="phone">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.phone }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.phone,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="扫码人身份证号" min-width="170" prop="documentNumber">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.documentNumber }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.documentNumber,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
       <el-table-column
         align="center"
         label="物联码编号"
-        min-width="120"
+        min-width="230"
         prop="placeNumber"
       />
       <el-table-column
@@ -291,7 +299,8 @@ import { ref, reactive, unref } from '@vue/reactivity'
 import { nextTick, onMounted } from '@vue/runtime-core'
 import { provide } from 'vue'
 import { QSsearchList, QSsymptomList } from '@/data/quarantinedSign'
-import { formatDate } from '@/utils/format'
+import { formatDate,formatter } from '@/utils/format'
+
 // 表单数据
 const searchInfo = reactive(QSsearchList)
 const searchForm = ref()

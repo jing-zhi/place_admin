@@ -160,6 +160,7 @@ import {
   updatePlaceRoomState,
 } from '@/api/place_room'
 import { formatDate } from '@/utils/format'
+import { useRoute } from 'vue-router'
 
 const form = ref({
   PlaceID: '',
@@ -192,7 +193,6 @@ const rules = ref({
     { required: true, message: '请输入房间新编号', trigger: 'blur' },
   ]
 })
-import { useRoute } from 'vue-router'
 const router = useRoute()
 const placeID = ref('')
 placeID.value = router.params.PlaceID ? router.params.PlaceID : ''

@@ -23,7 +23,16 @@
         <el-table-column align="center" label="所属行业" min-width="120" prop="hy_name" />
         <el-table-column align="center" label="人员类别" min-width="120" prop="gldgw" />
         <el-table-column align="center" label="姓名" min-width="120" prop="gzryxm" />
-        <el-table-column align="center" label="手机号" min-width="120" prop="gzrysjh" />
+        <el-table-column align="left" label="手机号" min-width="120" prop="gzrysjh">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysjh,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="核酸信息" min-width="120" prop="heSuanInfo" />
         <el-table-column align="center" label="健康码信息" min-width="120" prop="healthCode" />
       </el-table>
@@ -48,6 +57,7 @@ import { ref,watch,toRaw} from "vue";
 import {getBusinessMang} from "../../../api/place"
 import { getTableList,getWorkerList ,exportExcel} from "../../../api/enterHenan"
 import { debounce } from '@/utils/debounce.js'
+import { formatDate,formatter } from '@/utils/format'
 
 // 分页
 const page = ref(1)
