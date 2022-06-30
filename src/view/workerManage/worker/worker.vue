@@ -114,11 +114,32 @@
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
+        <el-table-column align="left" label="场所编号"  min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
-        <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
-        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
+        <!-- <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
+        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" /> -->
+
+        <el-table-column align="left" label="手机号码" min-width="120" prop="gzrysjh">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysjh,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="身份证号" min-width="170" prop="gzrysfz">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.gzrysfz }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysfz,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="核酸信息" min-width="150" prop="heSuanInfo" />
         <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />
         <!-- 新增 -->
@@ -128,10 +149,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="left" label="所在地市" min-width="100" prop="gzrdsname" />
-        <el-table-column align="left" label="所在县区" min-width="100" prop="gzrqxname" />
-        <el-table-column align="left" label="所在乡" min-width="100" prop="gzrxzname" />
-        <el-table-column align="left" label="原工作单位" min-width="100" prop="ydw" show-overflow-tooltip />
+        <el-table-column align="left" label="所在地市" min-width="120" prop="gzrdsname" show-overflow-tooltip />
+        <el-table-column align="left" label="所在县区" min-width="120" prop="gzrqxname" show-overflow-tooltip />
+        <el-table-column align="left" label="所在乡" min-width="120" prop="gzrxzname" show-overflow-tooltip />
+        <el-table-column align="left" label="原工作单位" min-width="120" prop="ydw" show-overflow-tooltip />
         <!-- <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" /> -->
         <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
         <!-- <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq">
@@ -333,6 +354,7 @@ import {
   setWorker,
   exportExcel
 } from '@/api/csUser/worker.js'
+import { formatter } from '@/utils/format'
 
 import { nextTick, ref, watch, toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'

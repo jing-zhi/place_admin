@@ -41,10 +41,29 @@
     <el-table :data="tableData" row-key="ID">
       <!-- <el-table-column align="center" label="记录ID" min-width="70" prop="cd_id" /> -->
       <el-table-column align="center" label="姓名" min-width="120" prop="people_name" />
-      <el-table-column align="center" label="手机号码" min-width="120" prop="phone_number" />
-      <el-table-column align="center" label="身份证号码" min-width="230" prop="id_card" />
+
+      <el-table-column align="left" label="手机号码" min-width="120" prop="phone_number">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.phone_number }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.phone_number,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="身份证号码" min-width="170" prop="id_card">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.id_card }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.id_card,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
       <el-table-column align="center" label="车牌号" min-width="120" prop="plate_number" />
-      <el-table-column align="center" label="场所名称" min-width="120" prop="place_name" />
+      <el-table-column align="center" label="场所名称" min-width="150" prop="place_name" show-overflow-tooltip/>
       <el-table-column align="center" label="预计进入日期" min-width="120" prop="expected_enter_day_fmt" />
       <el-table-column align="center" label="报备时间" min-width="180" prop="record_time" />
       <el-table-column align="center" label="健康码信息" min-width="120" prop="health_code" />
@@ -70,6 +89,8 @@ export default {
 <script setup>
 import { ref, reactive } from '@vue/reactivity'
 import { vehicleList} from "@/data/vehicle.js"
+import { formatDate,formatter } from '@/utils/format'
+
 import {
   getData,
   exportApi,

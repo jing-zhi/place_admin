@@ -61,6 +61,7 @@
         :data="tableData"
         row-key="ID"
       >
+
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
         <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" show-overflow-tooltip />
@@ -84,8 +85,26 @@
         <!-- <el-table-column align="left" label="经度" min-width="80" prop="gldjd" />
         <el-table-column align="left" label="纬度" min-width="80" prop="gldwd" /> -->
         <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
-        <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh" />
-        <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz" />
+        <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.fzrdh }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.fzrdh,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.fzrsfz }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.fzrsfz,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" show-overflow-tooltip />
         <el-table-column align="left" label="申领时间" min-width="220" prop="slsj">
           <template #default="scope">{{ formatDate(scope.row.slsj) }}</template>
@@ -142,6 +161,9 @@
         title="物联码"
         width="30%"
       >
+        
+        <div class="placeName">{{ placeInfo.csmc }}</div>
+        <div class="siteInfo">新乡市·{{ placeInfo.qx_name }}·{{ placeInfo.sq_name }}</div>
         <div class="codeDiv" style="padding-left: 13px;">
           <img style="width:100%;height:90%" :src="code.value ">
         </div>
@@ -313,7 +335,7 @@ import {
 
 import { useUserStore } from '@/pinia/modules/user'
 
-import { formatDate } from '@/utils/format'
+import { formatDate,formatter } from '@/utils/format'
 import warningBar from '@/components/warningBar/warningBar.vue'
 import { ref, toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
@@ -323,6 +345,7 @@ import { useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
 import { defineComponent } from "vue";
 import useClipboard from "vue-clipboard3"
+
 const path = ref(import.meta.env.VITE_BASE_API)
 
 
@@ -665,9 +688,13 @@ try {
 const showCode = ref(false)
 const code = {}
 const open = (row) => {
-
+    placeInfo.value = JSON.parse(JSON.stringify(row))
+console.log(placeInfo.value);
+    qx_name.value = row.qx_name
+    console.log(qx_name.value);
   showCode.value = !showCode.value
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
+  console.log(row);
 }
 
 
@@ -840,4 +867,20 @@ const getExcel = (fileName) => {
 .excel-btn + .excel-btn {
   margin-left: 10px;
 }
+
+.placeName {
+  font-size: 4vh;
+  color: rgb(198, 136, 29);
+  margin: 1vh;
+  margin-bottom: 2vh;
+  text-align: center;
+}
+/* 省市区 */
+.siteInfo {
+  color: rgb(198, 136, 29);
+  font-size: 3vh;
+  text-align: center;
+
+}
+
 </style>
