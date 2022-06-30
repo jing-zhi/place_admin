@@ -1,14 +1,153 @@
 <template>
   <div>
-    <div class="gva-table-box">
-      <div class="gva-btn-list">
+    <div class="gva-table-Title"> 
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
         <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('ExcelExport.xlsx')">导出</el-button>
+    </div>
+    <div class="gva-table-box">
+      <div class="city">
+          <div class="tableTitle">市级：</div>
+          <el-table
+           :data="tableData"
+           row-key="ID"
+      >
+
+        <el-table-column align="left" label="头像" min-width="75">
+          <template #default="scope">
+            <CustomPic style="margin-top:8px" :pic-src="scope.row.headerImg" />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="ID" min-width="50" prop="ID" />
+        <el-table-column align="left" label="用户名" min-width="150" prop="userName" />
+        <el-table-column align="left" label="昵称" min-width="150" prop="nickName" />
+        <el-table-column align="left" label="手机号" min-width="180" prop="phone" />
+        <el-table-column align="left" label="邮箱" min-width="180" prop="email" />
+        <el-table-column align="left" label="用户角色" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.authorityIds"
+              :options="authOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:true}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeAuthority(scope.row,flag)}"
+              @remove-tag="()=>{changeAuthority(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="用户部门" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.deptId"
+              :options="deptOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDept(scope.row,flag)}"
+              @remove-tag="()=>{changeDept(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="250" fixed="right">
+          <template #default="scope">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+              <p>确定要删除此用户吗</p>
+              <div style="text-align: right; margin-top: 8px;">
+                <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="deleteUserFunc(scope.row)">确定</el-button>
+              </div>
+              <template #reference>
+                <el-button type="text" icon="delete" size="small">删除</el-button>
+              </template>
+            </el-popover>
+            <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
+            <el-button type="text" icon="magic-stick" size="small" @click="resetPasswordFunc(scope.row)">重置密码
+            </el-button>
+          </template>
+        </el-table-column>
+
+          </el-table>
       </div>
-      <el-table
-        :data="tableData"
+    </div>
+
+    <div class="gva-table-box">
+      <div class="county">
+        <div class="tableTitle">区/县/县级市：</div>
+           <el-table
+        :data="countyTableData"
         row-key="ID"
       >
+
+        <el-table-column align="left" label="头像" min-width="75">
+          <template #default="scope">
+            <CustomPic style="margin-top:8px" :pic-src="scope.row.headerImg" />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="ID" min-width="50" prop="ID" />
+        <el-table-column align="left" label="用户名" min-width="150" prop="userName" />
+        <el-table-column align="left" label="昵称" min-width="150" prop="nickName" />
+        <el-table-column align="left" label="手机号" min-width="180" prop="phone" />
+        <el-table-column align="left" label="邮箱" min-width="180" prop="email" />
+        <el-table-column align="left" label="用户角色" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.authorityIds"
+              :options="authOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:true}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeAuthority(scope.row,flag)}"
+              @remove-tag="()=>{changeAuthority(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="用户部门" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.deptId"
+              :options="deptOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDept(scope.row,flag)}"
+              @remove-tag="()=>{changeDept(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="250" fixed="right">
+          <template #default="scope">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+              <p>确定要删除此用户吗</p>
+              <div style="text-align: right; margin-top: 8px;">
+                <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="deleteUserFunc(scope.row)">确定</el-button>
+              </div>
+              <template #reference>
+                <el-button type="text" icon="delete" size="small">删除</el-button>
+              </template>
+            </el-popover>
+            <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
+            <el-button type="text" icon="magic-stick" size="small" @click="resetPasswordFunc(scope.row)">重置密码
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+      </div>
+    </div>
+
+    <div class="gva-table-box">
+      <div class="town">
+        <div class="tableTitle">镇/街道/乡：</div>
+           <el-table
+        :data="townTableTitle"
+        row-key="ID"
+      >
+
         <el-table-column align="left" label="头像" min-width="75">
           <template #default="scope">
             <CustomPic style="margin-top:8px" :pic-src="scope.row.headerImg" />
@@ -76,6 +215,8 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
+      </div>
+
       </div>
     </div>
     <el-dialog
@@ -266,6 +407,9 @@ const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
 const tableData = ref([])
+const countyTableData = ref([])
+const townTableTitle = ref([])
+
 // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
@@ -281,7 +425,9 @@ const handleCurrentChange = (val) => {
 const getTableData = async() => {
   const table = await getUserList({ page: page.value, pageSize: pageSize.value })
   if (table.code === 0) {
-    tableData.value = table.data.list
+    tableData.value = table.data.list.userListCity
+    countyTableData.value = table.data.list.userListCounty
+    townTableTitle.value = table.data.list.userListTown
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
@@ -291,7 +437,15 @@ const getTableData = async() => {
 watch(tableData, () => {
   setAuthorityIds()
 })
+watch(countyTableData, () => {
+  setAuthorityIds()
+})
+watch(townTableTitle, () => {
+  setAuthorityIds()
+})
 import json from '@/utils/address/xinxiang.json'
+
+//初始化数据
 const initPage = async() => {
   getTableData()
   const authorities = await getAuthorityList({ page: 1, pageSize: 999 })
@@ -337,6 +491,19 @@ const setAuthorityIds = () => {
     })
     user.authorityIds = authorityIds
   })
+  countyTableData.value && countyTableData.value.forEach((user) => {
+    const authorityIds = user.authorities && user.authorities.map(i => {
+      return i.authorityId
+    })
+    user.authorityIds = authorityIds
+  })
+  townTableTitle.value && townTableTitle.value.forEach((user) => {
+    const authorityIds = user.authorities && user.authorities.map(i => {
+      return i.authorityId
+    })
+    user.authorityIds = authorityIds
+  })
+
 }
 
 const authOptions = ref([])
@@ -481,6 +648,23 @@ const handleExcelExport = (fileName) => {
 </script>
 
 <style lang="scss">
+.gva-table-Title{
+  margin-bottom: 13px;
+}
+.gva-table-box{
+  padding: 24px 24px 5px 24px;
+  .tableTitle{
+    font-size: 23px;
+    color: rgba(45, 44, 48, 0.786);
+    padding-bottom: 15px;
+}
+
+}
+
+.gva-pagination{
+  padding: 15px 0;
+}
+
 .user-dialog {
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
