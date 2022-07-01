@@ -31,7 +31,7 @@
     </div>
 </template>
 <script setup>
-import { onBeforeMount, reactive } from "vue-demi";
+import { onBeforeMount, reactive } from "vue";
 import { getBusinessMang } from "@/api/place.js";
 import { ref, watch } from "vue";
 import { debounce } from "@/utils/debounce.js";

@@ -26,3 +26,12 @@ export const getDictFunc = async(type) => {
   const dicts = await getDict(type)
   return dicts
 }
+//数据脱敏
+export const formatter =(field, before, after )=> {
+  if (!field) {return '';}
+  field = String(field);
+  const regItem = '[\u4e00-\u9fa5a-zA-Z0-9]';
+  const regExp = `(${regItem}{${before}})${regItem}*(${regItem}{${after}})`;
+  const reg = new RegExp(regExp);
+  return field.replace(reg, '$1*****$2');
+}

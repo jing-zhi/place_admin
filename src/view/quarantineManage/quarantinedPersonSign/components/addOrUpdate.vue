@@ -92,7 +92,7 @@ const test =  ()=>{
 //点击取消
 const closeDialog = () => {
   Form.value.resetFields();
-  dialogFormVisibleShow();
+  dialogFormVisibleShow
 };
 
 //供父组件调用***************

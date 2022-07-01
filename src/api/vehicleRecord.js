@@ -10,13 +10,13 @@ export const getData = data => {
 }
 
 export const exportApi = data => {
-    return service({
-        url: '/cdglry/exportxcel',
+    return service({ 
+        url: '/car/export',
         method: 'POST',
         data,
         responseType:'blob'
     }).then(res => {
-        handleFileError(res,"glry_export.xlsx")
+        handleFileError(res,"vehicle_record.xlsx")
     })
 }
 const handleFileError = (res, fileName) => {

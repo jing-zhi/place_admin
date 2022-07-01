@@ -148,13 +148,13 @@
       <el-table-column
         align="center"
         label="人员类别"
-        min-width="100"
+        min-width="150"
         prop="rylb"
       />
       <el-table-column
         align="center"
         label="是否非法入境人员"
-        min-width="80"
+        min-width="160"
         prop="sfffrjry"
       >
         <template #default="scope">
@@ -168,18 +168,27 @@
         min-width="120"
         prop="zjlx"
       />
-      <el-table-column
-        align="center"
-        label="证件号码"
-        min-width="120"
-        prop="zjhm"
-      />
-      <el-table-column
-        align="center"
-        label="手机号码"
-        min-width="150"
-        prop="sjhm"
-      />
+      <el-table-column align="left" label="证件号码" min-width="170" prop="zjhm">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.zjhm }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.zjhm,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+      <el-table-column align="left" label="手机号码" min-width="120" prop="sjhm">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.sjhm }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.sjhm,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+
       <el-table-column
         align="center"
         label="入境航班编号"
@@ -326,7 +335,7 @@ export default {
 }
 </script>
 <script setup>
-import { formatDate } from '@/utils/format'
+import { formatDate,formatter } from '@/utils/format'
 import {
   Qform,
   QrylbList,
@@ -386,7 +395,7 @@ const getRoom = async() => {
 getRoom()
 const timeScopeDiv = () => {
   searchInfo.start_time = searchInfo.glsj[0]
-  searchInfo.end_time = searchInfo.glsj[1]
+  searchInfo.end_time = searchInfo.glsj[1] 
 }
 const handleCurrentChange = (val) => {
   page.value = val
