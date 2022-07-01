@@ -654,8 +654,8 @@ const handleExcelExport = (fileName) => {
 .gva-table-box{
   padding: 24px 24px 5px 24px;
   .tableTitle{
-    font-size: 23px;
-    color: rgba(45, 44, 48, 0.786);
+    font-size: 18px;
+    color: rgba(80, 79, 84, 0.786);
     padding-bottom: 15px;
 }
 
