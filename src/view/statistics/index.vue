@@ -40,7 +40,7 @@
 
 <script setup>
 import { getWorkerState } from '@/api/csUser/statistics.js'
-import { onMounted ,onUnmounted, ref } from 'vue'
+import { onUnmounted, ref } from 'vue'
 import * as echarts from 'echarts'
 
 const timer = ref(null)
@@ -52,15 +52,34 @@ const reload = async() => {
 // 健康码状况统计
   var myChart = echarts.init(document.getElementById('health-code'));
   myChart.setOption({
+    tooltip:{
+      trigger:'item',
+      formatter:"{a} <br/>{b}: {c} ({d}%)"
+    },
     legend: {
         orient: 'vertical',
-        left: 'left',
+        x: 'left',
+        data:[ state.value.HealthyCode[1].healthCode,state.value.HealthyCode[0].healthCode]
     },
  series: [
     {
+      name:'健康码状况',
       type: 'pie',
+      avoidLabelOverlap: false,
       label: {
-        show: true
+        normal:{
+        show: true,
+        position:'inside',
+        formatter: '{d}%',
+
+         textStyle : {                   
+                    align : 'center',
+                    baseline : 'middle',
+                    fontFamily : '微软雅黑',
+                    fontSize : 15,
+                 }
+        }
+       
       },
       color:[
         '#dd6b66',
@@ -86,20 +105,42 @@ const reload = async() => {
 
 var hesuan  = echarts.init(document.getElementById('hesuan-info'));
 hesuan.setOption({
+    tooltip:{
+      trigger:'item',
+      formatter:"{a} <br/>{b}: {c} ({d}%)"
+    },
  color:[
   '#cc7e63',
   '#61a0a8'
  ],
  legend: {
         orient: 'vertical',
-        left: 'left',
+        x: 'left',
+        data:[state.value.HeSuanRecord[0].heSuanInfo,state.value.HeSuanRecord[1].heSuanInfo]
     },
  series: [
     {
+       name:'核酸状况',
       type: 'pie',
+      avoidLabelOverlap: false,
       // label: {
       //   show: false
       // },
+       label: {
+        normal:{
+        show: true,
+        position:'inside',
+        formatter: '{d}%',
+
+         textStyle : {                   
+                    align : 'center',
+                    baseline : 'middle',
+                    fontFamily : '微软雅黑',
+                    fontSize : 15,
+                 }
+        }
+       
+      },
       center:['50%','35%'],
       data: [
         {
