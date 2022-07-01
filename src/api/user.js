@@ -70,6 +70,14 @@ export const getUserList = (data) => {
   })
 }
 
+export const getUserIndustry = (data) => {
+  return service({
+    url: '/user/getUserIndustry',
+    method: 'post',
+    data: data
+  })
+}
+
 // @Tags User
 // @Summary 设置用户权限
 // @Security ApiKeyAuth
