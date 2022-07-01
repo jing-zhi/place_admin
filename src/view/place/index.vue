@@ -53,7 +53,7 @@
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace"
-       :hidden="userStore.userInfo.authorities[0].level === 9999 " >新增</el-button>
+       :hidden="userStore.userInfo.authorities[0].authorityName === '场所管理员' " >新增</el-button>
       </div>
 
 
@@ -126,7 +126,7 @@
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
-            <el-button :hidden="scope.row.industry.Name !== '工地'" type="text" icon="documentCopy" size="small" @click="copyAddress(scope.row)">报备地址复制</el-button>
+            <el-button :hidden="scope.row.industry.Name !== '工地'" type="text" icon="iphone" size="small" @click="scan(scope.row)">扫码报备</el-button>
             <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
             <!-- <el-button type="text" icon="edit" size="small"  @click="importExcel(scope.row)">导入</el-button> -->
             <el-upload
@@ -169,6 +169,20 @@
         </div>
 
       </el-dialog>
+
+      <!-- 扫码报备 -->
+      <el-dialog
+      v-model="scanCode"
+      title="扫码报备"
+      width="30%"
+      >
+      <div class="placeName">{{ placeInfo.csmc }}</div>
+       <div class="siteInfo">新乡市·{{ placeInfo.qx_name }}·{{ placeInfo.sq_name }}</div>
+       <div class="codeDiv" style="padding-left: 13px;">
+          <img style="width:100%;height:90%" :src="reportCode.value ">
+        </div>
+      </el-dialog>
+
       <el-dialog
         v-model="addDialog"
         custom-class="user-dialog"
@@ -671,18 +685,29 @@ const enterWorker = (row) => {
 }
 
 // 报备地址复制
- const { toClipboard } = useClipboard()
-const copyAddress=async (row)=>{
-  placeInfo.value = JSON.parse(JSON.stringify(row))
-try {
-  await toClipboard( 'http://117.159.44.7:18801/#/vehicleMidPage?csbh='+ placeInfo.value.csbh)
-  ElMessage({ type: 'success', message: '复制成功' })
-} catch (e) {
-  ElMessage.error('复制失败')
-}
+//  const { toClipboard } = useClipboard()
+// const copyAddress=async (row)=>{
+//   placeInfo.value = JSON.parse(JSON.stringify(row))
+// try {
+//   await toClipboard( 'http://117.159.44.7:18801/#/vehicleMidPage?csbh='+ placeInfo.value.csbh)
+//   ElMessage({ type: 'success', message: '复制成功' })
+// } catch (e) {
+//   ElMessage.error('复制失败')
+// }
   
-  return {copyAddress}
+//   return {copyAddress}
+// }
+
+// 扫码报备
+const scanCode=ref(false)
+const reportCode={}
+const scan=(row)=>{
+   placeInfo.value = JSON.parse(JSON.stringify(row))
+   qx_name.value = row.qx_name
+    scanCode.value = !scanCode.value
+    reportCode.value = import.meta.env.VITE_BASE_API + '/cd/reporting_Address_Code?csbh=' + row.csbh
 }
+
 
 // 物联码
 const showCode = ref(false)
