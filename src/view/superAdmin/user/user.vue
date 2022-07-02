@@ -547,6 +547,9 @@ watch(countyTableData, () => {
 watch(townTableTitle, () => {
   setAuthorityIds()
 })
+watch(locationTableTitle, () => {
+  setAuthorityIds()
+})
 import json from '@/utils/address/xinxiang.json'
 
 //初始化数据
@@ -602,6 +605,12 @@ const setAuthorityIds = () => {
     user.authorityIds = authorityIds
   })
   townTableTitle.value && townTableTitle.value.forEach((user) => {
+    const authorityIds = user.authorities && user.authorities.map(i => {
+      return i.authorityId
+    })
+    user.authorityIds = authorityIds
+  })
+    locationTableTitle.value && locationTableTitle.value.forEach((user) => {
     const authorityIds = user.authorities && user.authorities.map(i => {
       return i.authorityId
     })
