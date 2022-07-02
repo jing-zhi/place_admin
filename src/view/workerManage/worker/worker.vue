@@ -586,6 +586,9 @@ const workerInfo = ref({
 })
 // const rules = ref({})
 const rules = ref({
+  csbh: [
+    { required: true, message: '请输入场所编号', trigger: 'blur' },
+  ],
   gzryxm: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
     { min: 1, max: 5, message: '不合要求', trigger: 'blur' },
