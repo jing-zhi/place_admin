@@ -657,7 +657,7 @@ const clearForm = () => {
     'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
     // 'sj': '', // sj 调离时间
     'dlgldbh': '' ,// dlgldbh 调离隔离点编号
-    'is_14rhn':null   //是否十四天内入豫
+    'is_14rhn':null,   //是否十四天内入豫
   }
 }
 // 打开修改
