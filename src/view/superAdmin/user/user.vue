@@ -11,7 +11,6 @@
            :data="tableData"
            row-key="ID"
       >
-
         <el-table-column align="left" label="头像" min-width="75">
           <template #default="scope">
             <CustomPic style="margin-top:8px" :pic-src="scope.row.headerImg" />
@@ -219,6 +218,85 @@
 
       </div>
     </div>
+        <div class="gva-table-box">
+      <div class="location">
+        <div class="tableTitle">场所：</div>
+           <el-table
+        :data="locationTableTitle"
+        row-key="ID"
+      >
+
+        <el-table-column align="left" label="头像" min-width="75">
+          <template #default="scope">
+            <CustomPic style="margin-top:8px" :pic-src="scope.row.headerImg" />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="ID" min-width="50" prop="ID" />
+        <el-table-column align="left" label="用户名" min-width="150" prop="userName" />
+        <el-table-column align="left" label="昵称" min-width="150" prop="nickName" />
+        <el-table-column align="left" label="手机号" min-width="180" prop="phone" />
+        <el-table-column align="left" label="邮箱" min-width="180" prop="email" />
+        <el-table-column align="left" label="用户角色" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.authorityIds"
+              :options="authOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:true}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeAuthority(scope.row,flag)}"
+              @remove-tag="()=>{changeAuthority(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="用户部门" min-width="200">
+          <template #default="scope">
+            <el-cascader
+              v-model="scope.row.deptId"
+              :options="deptOptions"
+              :show-all-levels="false"
+              collapse-tags
+              :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+              :clearable="false"
+              @visible-change="(flag)=>{changeDept(scope.row,flag)}"
+              @remove-tag="()=>{changeDept(scope.row,false)}"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="250" fixed="right">
+          <template #default="scope">
+            <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
+              <p>确定要删除此用户吗</p>
+              <div style="text-align: right; margin-top: 8px;">
+                <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="deleteUserFunc(scope.row)">确定</el-button>
+              </div>
+              <template #reference>
+                <el-button type="text" icon="delete" size="small">删除</el-button>
+              </template>
+            </el-popover>
+            <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
+            <el-button type="text" icon="magic-stick" size="small" @click="resetPasswordFunc(scope.row)">重置密码
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <div class="gva-pagination">
+        <el-pagination
+          :current-page="page2"
+          :page-size="pageSize2"
+          :page-sizes="[10, 30, 50, 100]"
+          :total="total2"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange2"
+          @size-change="handleSizeChange2"
+        />
+      </div>
+
+      </div>
+    </div>
     <el-dialog
       v-model="addUserDialog"
       custom-class="user-dialog"
@@ -309,7 +387,9 @@ import {
   getUserList,
   setUserAuthorities,
   register,
-  deleteUser, setUserDept,
+  deleteUser, 
+  setUserDept,
+  getUserIndustry
 } from '@/api/user'
 
 import CustomPic from '@/components/customPic/index.vue'
@@ -409,6 +489,10 @@ const pageSize = ref(10)
 const tableData = ref([])
 const countyTableData = ref([])
 const townTableTitle = ref([])
+const locationTableTitle = ref([])
+const page2 = ref(1)
+const total2 = ref(0)
+const pageSize2 = ref(10)
 
 // 分页
 const handleSizeChange = (val) => {
@@ -418,6 +502,17 @@ const handleSizeChange = (val) => {
 
 const handleCurrentChange = (val) => {
   page.value = val
+  getTableData()
+}
+
+// 场所列表分页
+const handleSizeChange2 = (val) => {
+  pageSize2.value = val
+  getTableData()
+}
+
+const handleCurrentChange2 = (val) => {
+  page2.value = val
   getTableData()
 }
 
@@ -432,6 +527,15 @@ const getTableData = async() => {
     page.value = table.data.page
     pageSize.value = table.data.pageSize
   }
+  const table2 = await getUserIndustry({ page: page.value, pageSize: pageSize.value })
+  if(table2.code === 0){
+    locationTableTitle.value = table2.data.list
+    total2.value = table2.data.total
+    page2.value = table2.data.page
+    pageSize2.value = table2.data.pageSize
+
+  }
+  
 }
 
 watch(tableData, () => {
@@ -441,6 +545,9 @@ watch(countyTableData, () => {
   setAuthorityIds()
 })
 watch(townTableTitle, () => {
+  setAuthorityIds()
+})
+watch(locationTableTitle, () => {
   setAuthorityIds()
 })
 import json from '@/utils/address/xinxiang.json'
@@ -498,6 +605,12 @@ const setAuthorityIds = () => {
     user.authorityIds = authorityIds
   })
   townTableTitle.value && townTableTitle.value.forEach((user) => {
+    const authorityIds = user.authorities && user.authorities.map(i => {
+      return i.authorityId
+    })
+    user.authorityIds = authorityIds
+  })
+    locationTableTitle.value && locationTableTitle.value.forEach((user) => {
     const authorityIds = user.authorities && user.authorities.map(i => {
       return i.authorityId
     })
@@ -654,8 +767,8 @@ const handleExcelExport = (fileName) => {
 .gva-table-box{
   padding: 24px 24px 5px 24px;
   .tableTitle{
-    font-size: 23px;
-    color: rgba(45, 44, 48, 0.786);
+    font-size: 18px;
+    color: rgba(80, 79, 84, 0.786);
     padding-bottom: 15px;
 }
 
