@@ -615,7 +615,7 @@ const rules = ref({
   fzrdh: [
     { required: true, message: '请输入负责人电话', trigger: 'blur' },
     // 正则
-    { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+    { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
       message: '手机号不合法',
       trigger: 'blur' }
   ],
