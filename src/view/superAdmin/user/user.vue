@@ -22,6 +22,7 @@
           <el-input v-model="searchIndustry.email" />
         </el-form-item>
         <el-form-item>
+          <el-button class="excel-btn" size="small" type="primary" icon="search" @click="search">查询</el-button>
           <el-button class="excel-btn" size="small" type="primary" icon="refresh" @click="reset">重置</el-button>
           <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
           <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('ExcelExport.xlsx')">导出</el-button>
@@ -447,13 +448,27 @@ const searchIndustry = ref({
 const jibie = [{id:'0',name:'市级'},{id:'1',name:'区/县/县级市'},{id:'2',name:'镇/街道/乡'}]
 // 角色
 const juese = ref([])
-// 监听查询数据变化
-watch(searchIndustry.value,async (newVal,oldVal)=>{
-  const res = await exploreData(newVal)
-})
+// 查询
+const search = async()=>{
+  const res = await exploreData(searchIndustry.value)
+  tableData.value = [];
+  countyTableData.value = [];
+  townTableTitle.value = [];
+  if(res.data.list.userListCity){
+    tableData.value = res.data.list.userListCity
+  }
+  if(res.data.list.userListCounty){
+    countyTableData.value = res.data.list.userListCounty
+  }
+  if(res.data.list.userListTown){
+    townTableTitle.value = res.data.list.userListTown
+  }
+
+}
 // 重置搜索内容
 const reset = ()=>{
   searchIndustry.value = {}
+  getTableData()
 }
 // 上传头像相关
 
