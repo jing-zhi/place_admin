@@ -195,3 +195,12 @@ export const resetPassword = (data) => {
     data: data
   })
 }
+
+// 查询具体数据
+export const exploreData = (data) =>{
+  return service({
+    url: '/user/getUserListNew',
+    method: 'post',
+    data: data
+  })
+}
