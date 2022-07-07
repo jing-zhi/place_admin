@@ -604,7 +604,7 @@ const rules = ref({
   gzrysfz: [
     { required: true, message: '请输入身份证', trigger: 'blur' },
     // 正则
-    { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+    { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       message: '身份证号不合法',
       trigger: 'blur' }
   ],
