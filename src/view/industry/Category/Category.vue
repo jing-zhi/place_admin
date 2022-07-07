@@ -36,7 +36,7 @@
     <div class="gva-table-box">
        <div class="gva-btn-list">
         <el-button size="small" type="primary" icon="plus" @click="openDialog(add)">新增</el-button>
-      </div>
+        </div>
       <el-table :data="tableData">
         <!-- <el-table-column align="left" label="ID" min-width="70" prop="id" /> -->
         <el-table-column

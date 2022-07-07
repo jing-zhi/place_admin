@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="gva-table-box">
-      
+      <div class="gva-btn-list">
+        <el-button size="small" type="primary" icon="plus" @click="addIndustry(add)">新增</el-button>
+      </div>
       <el-table
         :data="tableData"
         row-key="ID"
@@ -37,7 +39,10 @@
         :close-on-click-modal="false"
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
-          <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="180px">
+          <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="180px" style="width:80%">
+            <el-form-item label="行业名称" prop="Name">
+              <el-input v-model="industryInfo.Name" ></el-input>
+            </el-form-item>
             <el-form-item label="行业要求有效核酸时间" prop="HesuanTime">
               <el-select v-model="industryInfo.HesuanTime" class="m-2" placeholder="请选择" size="large">
                 <el-option
@@ -71,7 +76,7 @@ export default {
 </script>
 
 <script setup>
-import { getIndustryList, setIndustry } from '@/api/industry.js'
+import { getIndustryList, setIndustry,addIndustryName } from '@/api/industry.js'
 
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
@@ -151,11 +156,15 @@ const addIndustry = () => {
 // 弹窗
 const industryInfo = ref({
   'HesuanTime': '',
+  'Name':''
 })
 const rules = ref({
   HesuanTime:[
     { required: true, message: '请选择核酸时间' },
   ],
+  Name:[
+    { required: true, message: '请输入行业名称' },
+  ]
 })
 
 const industryForm = ref(null)
@@ -174,16 +183,23 @@ const enterAddDialog = async() => {
       const req = {
         ...industryInfo.value,
       }     
-      //console.log(req)
+      // console.log("industryInfo.value:",req)
       let ret = {
           ID:req.ID,
           //Name:req.Name,
-          HesuanTime:req.HesuanTime
+          HesuanTime:req.HesuanTime,
+          Name:req.Name
       }
       //console.log(ret)
       // 新增
       if (dialogFlag.value === 'add') {
         //console.log('add')
+        const res = await addIndustryName(ret)
+        if(res.code === 0){
+          ElMessage({type:'success',message:'添加成功'})
+          await getTableData()
+          closeAddDialog()
+        }
       }
       // 修改
       if (dialogFlag.value === 'edit') {
