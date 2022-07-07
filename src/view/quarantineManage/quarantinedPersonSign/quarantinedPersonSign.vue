@@ -147,7 +147,7 @@
       <el-table-column
         align="center"
         label="物联码编号"
-        min-width="120"
+        min-width="150"
         prop="placeNumber"
       />
       <el-table-column
