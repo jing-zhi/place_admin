@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="gva-table-box">
+      
       <el-table
         :data="tableData"
         row-key="ID"
