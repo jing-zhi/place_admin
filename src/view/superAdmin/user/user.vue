@@ -1,8 +1,33 @@
 <template>
   <div>
-    <div class="gva-table-Title"> 
-        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
-        <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('ExcelExport.xlsx')">导出</el-button>
+    <div class="gva-search-box">
+      <el-form :inline="true" :model="searchIndustry" style="margin-left:20px">
+        <el-form-item label="部门级别" prop="deptName">
+          <el-select v-model="searchIndustry.parentID" >
+            <el-option v-for="(item,index) in jibie" :key="index" :value="item.id" :label="item.name"/>
+          </el-select>
+        </el-form-item>
+         <el-form-item label="用户角色" prop="authorityName">
+          <el-select v-model="searchIndustry.authorityName">
+            <el-option v-for="item in juese" :key="item.authorityId" :value="item.authorityName"/>
+          </el-select>
+        </el-form-item> 
+        <el-form-item label="昵称" prop="nickName">
+          <el-input v-model="searchIndustry.nickName" />
+        </el-form-item>     
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="searchIndustry.phone" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="searchIndustry.email" />
+        </el-form-item>
+        <el-form-item>
+          <el-button class="excel-btn" size="small" type="primary" icon="search" @click="search">查询</el-button>
+          <el-button class="excel-btn" size="small" type="primary" icon="refresh" @click="reset">重置</el-button>
+          <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
+          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('ExcelExport.xlsx')">导出</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="gva-table-box">
       <div class="city">
@@ -397,16 +422,54 @@ import { nextTick, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { getAuthorityList } from '@/api/authority'
-import { setUserInfo, resetPassword } from '@/api/user.js'
+import { setUserInfo, resetPassword, exploreData} from '@/api/user.js'
 import { useUserStore } from '@/pinia/modules/user'
 import { exportExcel } from '@/api/excel'
 import ImageCompress from '@/utils/image'
+import json from '@/utils/address/xinxiang.json'
+
 
 const userStore = useUserStore()
 const path = ref(import.meta.env.VITE_BASE_API)
 const fileSize = ''
 const maxWH = ''
 
+// 查询数据内容
+const searchIndustry = ref({
+  parentID:'',
+  authorityName:'',
+  nickName:'',
+  phone:'',
+  email:'',
+  page:1,
+  pageSize:999
+})
+// 部门级别选择
+const jibie = [{id:'0',name:'市级'},{id:'1',name:'区/县/县级市'},{id:'2',name:'镇/街道/乡'}]
+// 角色
+const juese = ref([])
+// 查询
+const search = async()=>{
+  const res = await exploreData(searchIndustry.value)
+  tableData.value = [];
+  countyTableData.value = [];
+  townTableTitle.value = [];
+  if(res.data.list.userListCity){
+    tableData.value = res.data.list.userListCity
+  }
+  if(res.data.list.userListCounty){
+    countyTableData.value = res.data.list.userListCounty
+  }
+  if(res.data.list.userListTown){
+    townTableTitle.value = res.data.list.userListTown
+  }
+
+}
+// 重置搜索内容
+const reset = ()=>{
+  searchIndustry.value = {}
+  getTableData()
+}
 // 上传头像相关
 
 const onImageProgress = (res) => {
@@ -550,7 +613,6 @@ watch(townTableTitle, () => {
 watch(locationTableTitle, () => {
   setAuthorityIds()
 })
-import json from '@/utils/address/xinxiang.json'
 
 //初始化数据
 const initPage = async() => {
@@ -623,6 +685,7 @@ const authOptions = ref([])
 const setAuthOptions = (authData) => {
   authOptions.value = []
   setAuthorityOptions(authData, authOptions.value)
+  setAuthorityOptions(authData, juese.value)
 }
 
 const deptOptions = ref([])

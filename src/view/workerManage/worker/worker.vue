@@ -518,7 +518,7 @@ const changeId = (item) =>{
 }
 
 const getLB = async(hyId) => {
-  let rqt = { page: page.value, pageSize: 999, hy_id: Number(hyId) }
+  let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) }
   console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
@@ -595,7 +595,7 @@ const rules = ref({
   ],
   gzrysjh: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+    { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
       message: '手机号不合法',
       trigger: 'blur' },
     // { type: 'number', message: 'must be a number' },
@@ -604,7 +604,7 @@ const rules = ref({
   gzrysfz: [
     { required: true, message: '请输入身份证', trigger: 'blur' },
     // 正则
-    { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+    { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       message: '身份证号不合法',
       trigger: 'blur' }
   ],
