@@ -518,7 +518,7 @@ const changeId = (item) =>{
 }
 
 const getLB = async(hyId) => {
-  let rqt = { page: page.value, pageSize: 999, hy_id: Number(hyId) }
+  let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) }
   console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
