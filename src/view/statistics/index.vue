@@ -21,38 +21,7 @@
           <template #header>
             <div>健康码状况统计</div>
           </template>
-          <div>
-            <el-row :gutter="10">
-              <el-col :span="12">
-                <!-- <el-row :gutter="10">
-                <el-col :span="12">红码:</el-col>
-                <el-col :span="12" v-text="state.healthCode.red" />
-                </el-row>
-                <el-row :gutter="10">
-                <el-col :span="12">黄码:</el-col>
-                <el-col :span="12" v-text="state.healthCode.yellow" />
-                </el-row>
-                <el-row :gutter="10">
-                <el-col :span="12">绿码:</el-col>
-                <el-col :span="12" v-text="state.healthCode.green" />
-                </el-row> -->
-                <el-row :gutter="10" v-for="(item, index) in state.HealthyCode" :key="index">
-                <el-col :span="12">{{item.healthCode}}：</el-col>
-                <el-col :span="12" v-text="item.total" />
-                </el-row>
-              </el-col>
-            </el-row>
-            <!-- 百分比条形进度条 -->
-            <!-- <el-row :gutter="10">
-              <el-col :span="12">红码:</el-col>
-              <el-col :span="12">
-                <el-progress
-                type="line"
-                :percentage="+state.healthCode.red.toFixed(0)"
-                :color="colors"
-                />
-              </el-col>
-            </el-row> -->
+          <div id="health-code"  :style="{ width: '480px', height: '300px' }">
           </div>
         </el-card>
       </el-col>
@@ -61,36 +30,7 @@
           <template #header>
             <div>核酸状况统计</div>
           </template>
-          <div>
-            <el-row :gutter="10">
-              <el-col :span="12">
-                <!-- <el-row :gutter="10">
-                  <el-col :span="12">阴性：</el-col>
-                  <el-col :span="12" v-text="state.hesuanInfo.yin" />
-                </el-row>
-                <el-row :gutter="10">
-                  <el-col :span="12">阳性：</el-col>
-                  <el-col :span="12" v-text="state.hesuanInfo.yang" />
-                </el-row>
-                <el-row :gutter="10">
-                  <el-col :span="12">无48小时核酸：</el-col>
-                  <el-col :span="12" v-text="state.hesuanInfo.wu" />
-                </el-row> -->
-                <el-row :gutter="10" v-for="(item, index) in state.HeSuanRecord" :key="index">
-                  <el-col :span="12">{{item.heSuanInfo}}：</el-col>
-                  <el-col :span="12" v-text="item.total" />
-                </el-row>
-              </el-col>
-              
-              <!-- 百分比环形进度条 -->
-              <!-- <el-col :span="12">
-                <el-progress
-                  type="dashboard"
-                  :percentage="state.hesuanInfo.yang"
-                  :color="colors"
-                />
-              </el-col> -->
-            </el-row>
+          <div id="hesuan-info" :style="{ width: '480px', height: '300px' }">
           </div>
         </el-card>
       </el-col>
@@ -101,49 +41,130 @@
 <script setup>
 import { getWorkerState } from '@/api/csUser/statistics.js'
 import { onUnmounted, ref } from 'vue'
+import * as echarts from 'echarts'
+
 const timer = ref(null)
 const state = ref({})
 
 const reload = async() => {
   const { data } = await getWorkerState()
   state.value = data
-//   let data = {
-//         "HealthyCode": [
-//             {
-//                 "healthCode": "绿码",
-//                 "total": 980
-//             },
-//             {
-//                 "healthCode": "红码",
-//                 "total": 0
-//             },
-//             {
-//                 "healthCode": "黄码",
-//                 "total": 8
-//             }
-//         ],
-//         "HeSuanRecord": [
-//             {
-//                 "heSuanInfo": "阴性",
-//                 "total": 392
-//             },
-//             {
-//                 "heSuanInfo": "无48小时核酸",
-//                 "total": 596
-//             },
-//             {
-//                 "heSuanInfo": "阳性",
-//                 "total": 0
-//             }
-//         ]
-//   }
-//   state.value = data
+// 健康码状况统计
+  var myChart = echarts.init(document.getElementById('health-code'));
+  myChart.setOption({
+    tooltip:{
+      trigger:'item',
+      formatter:"{a} <br/>{b}: {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        x: 'left',
+        data:[ state.value.HealthyCode[1].healthCode,state.value.HealthyCode[0].healthCode]
+    },
+ series: [
+    {
+      name:'健康码状况',
+      type: 'pie',
+      avoidLabelOverlap: false,
+      label: {
+        normal:{
+        show: true,
+        position:'inside',
+        formatter: '{d}%',
+
+         textStyle : {                   
+                    align : 'center',
+                    baseline : 'middle',
+                    fontFamily : '微软雅黑',
+                    fontSize : 15,
+                 }
+        }
+       
+      },
+      color:[
+        '#dd6b66',
+        '#759aa0',
+      ],
+      center:['50%','35%'],
+      
+      data: [
+        {
+          value: state.value.HealthyCode[1].total,
+          name: state.value.HealthyCode[1].healthCode
+        },
+        {
+          value: state.value.HealthyCode[0].total,
+          name: state.value.HealthyCode[0].healthCode
+        },
+      ],
+      radius:'45%',
+      hoverAnimation:false,
+    }
+  ]
+})
+
+var hesuan  = echarts.init(document.getElementById('hesuan-info'));
+hesuan.setOption({
+    tooltip:{
+      trigger:'item',
+      formatter:"{a} <br/>{b}: {c} ({d}%)"
+    },
+ color:[
+  '#cc7e63',
+  '#61a0a8'
+ ],
+ legend: {
+        orient: 'vertical',
+        x: 'left',
+        data:[state.value.HeSuanRecord[0].heSuanInfo,state.value.HeSuanRecord[1].heSuanInfo]
+    },
+ series: [
+    {
+       name:'核酸状况',
+      type: 'pie',
+      avoidLabelOverlap: false,
+      // label: {
+      //   show: false
+      // },
+       label: {
+        normal:{
+        show: true,
+        position:'inside',
+        formatter: '{d}%',
+
+         textStyle : {                   
+                    align : 'center',
+                    baseline : 'middle',
+                    fontFamily : '微软雅黑',
+                    fontSize : 15,
+                 }
+        }
+       
+      },
+      center:['50%','35%'],
+      data: [
+        {
+          value: state.value.HeSuanRecord[0].total,
+          name: state.value.HeSuanRecord[0].heSuanInfo
+        },
+        {
+          value:state.value.HeSuanRecord[1].total,
+          name: state.value.HeSuanRecord[1].heSuanInfo
+        },
+      ],
+      radius:'45%',
+      hoverAnimation:false,
+
+    }
+  ]
+})
+
 }
 
 reload()
 timer.value = setInterval(() => {
   reload()
-}, 1000 * 10)
+}, 800)
 
 onUnmounted(() => {
   clearInterval(timer.value)

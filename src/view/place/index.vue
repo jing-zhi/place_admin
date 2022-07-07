@@ -39,7 +39,8 @@
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
-          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+         <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
+         
           <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/工作人员信息模板.xlsx">
              <el-button class="btn" size="small" type="primary" icon="download">导入信息模板</el-button>
          </a>
@@ -51,9 +52,8 @@
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace">新增</el-button>
-
-
+        <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addPlace"
+       :hidden="userStore.userInfo.authorities[0].authorityName === '场所管理员' " >新增</el-button>
       </div>
 
 
@@ -61,6 +61,7 @@
         :data="tableData"
         row-key="ID"
       >
+
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
         <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="100" prop="csmc" show-overflow-tooltip />
@@ -84,8 +85,26 @@
         <!-- <el-table-column align="left" label="经度" min-width="80" prop="gldjd" />
         <el-table-column align="left" label="纬度" min-width="80" prop="gldwd" /> -->
         <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
-        <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh" />
-        <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz" />
+        <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.fzrdh }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.fzrdh,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.fzrsfz }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.fzrsfz,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="申领单位" min-width="150" prop="fzrgzdw" show-overflow-tooltip />
         <el-table-column align="left" label="申领时间" min-width="220" prop="slsj">
           <template #default="scope">{{ formatDate(scope.row.slsj) }}</template>
@@ -107,7 +126,7 @@
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="enterPeople(scope.row)">隔离人员管理</el-button>
             <el-button :hidden="scope.row.industry.Name !== '隔离点'" type="text" icon="edit" size="small" @click="editPlaceRoome(scope.row)">房间管理</el-button>
-            <el-button :hidden="scope.row.industry.Name !== '工地'" type="text" icon="documentCopy" size="small" @click="copyAddress(scope.row)">报备地址复制</el-button>
+            <el-button :hidden="scope.row.industry.Name !== '工地'" type="text" icon="iphone" size="small" @click="scan(scope.row)">扫码报备</el-button>
             <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
             <!-- <el-button type="text" icon="edit" size="small"  @click="importExcel(scope.row)">导入</el-button> -->
             <el-upload
@@ -142,11 +161,28 @@
         title="物联码"
         width="30%"
       >
+        
+        <div class="placeName">{{ placeInfo.csmc }}</div>
+        <div class="siteInfo">新乡市·{{ placeInfo.qx_name }}·{{ placeInfo.sq_name }}</div>
         <div class="codeDiv" style="padding-left: 13px;">
           <img style="width:100%;height:90%" :src="code.value ">
         </div>
 
       </el-dialog>
+
+      <!-- 扫码报备 -->
+      <el-dialog
+      v-model="scanCode"
+      title="扫码报备"
+      width="30%"
+      >
+      <div class="placeName">{{ placeInfo.csmc }}</div>
+       <div class="siteInfo">新乡市·{{ placeInfo.qx_name }}·{{ placeInfo.sq_name }}</div>
+       <div class="codeDiv" style="padding-left: 13px;">
+          <img style="width:100%;height:90%" :src="reportCode.value ">
+        </div>
+      </el-dialog>
+
       <el-dialog
         v-model="addDialog"
         custom-class="user-dialog"
@@ -311,10 +347,9 @@ import {
   loadExcelData
 } from '@/api/place.js'
 
-const path = ref(import.meta.env.VITE_BASE_API)
 import { useUserStore } from '@/pinia/modules/user'
 
-import { formatDate } from '@/utils/format'
+import { formatDate,formatter } from '@/utils/format'
 import warningBar from '@/components/warningBar/warningBar.vue'
 import { ref, toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
@@ -322,9 +357,11 @@ import json from '@/utils/address/xinxiang.json'
 import vlgs from '@/utils/address/villages.json'
 import { useRouter } from 'vue-router'
 import { debounce } from '@/utils/debounce.js'
-
 import { defineComponent } from "vue";
-import useClipboard from "vue-clipboard3";
+import useClipboard from "vue-clipboard3"
+
+const path = ref(import.meta.env.VITE_BASE_API)
+
 
 const page = ref(1)
 const total = ref(0)
@@ -578,14 +615,14 @@ const rules = ref({
   fzrdh: [
     { required: true, message: '请输入负责人电话', trigger: 'blur' },
     // 正则
-    { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+    { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
       message: '手机号不合法',
       trigger: 'blur' }
   ],
   fzrsfz: [
     { required: true, message: '请输入负责人身份证', trigger: 'blur' },
     // 正则
-    { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+    { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       message: '身份证号不合法',
       trigger: 'blur' }
   ],
@@ -648,26 +685,41 @@ const enterWorker = (row) => {
 }
 
 // 报备地址复制
- const { toClipboard } = useClipboard()
-const copyAddress=async (row)=>{
-  placeInfo.value = JSON.parse(JSON.stringify(row))
-try {
-  await toClipboard( 'http://117.159.44.7:18801/#/farmMidPage?csbh='+ placeInfo.value.csbh)
-  ElMessage({ type: 'success', message: '复制成功' })
-} catch (e) {
-  ElMessage.error('复制失败')
-}
+//  const { toClipboard } = useClipboard()
+// const copyAddress=async (row)=>{
+//   placeInfo.value = JSON.parse(JSON.stringify(row))
+// try {
+//   await toClipboard( 'http://117.159.44.7:18801/#/vehicleMidPage?csbh='+ placeInfo.value.csbh)
+//   ElMessage({ type: 'success', message: '复制成功' })
+// } catch (e) {
+//   ElMessage.error('复制失败')
+// }
   
-  return {copyAddress}
+//   return {copyAddress}
+// }
+
+// 扫码报备
+const scanCode=ref(false)
+const reportCode={}
+const scan=(row)=>{
+   placeInfo.value = JSON.parse(JSON.stringify(row))
+   qx_name.value = row.qx_name
+    scanCode.value = !scanCode.value
+    reportCode.value = import.meta.env.VITE_BASE_API + '/cd/reporting_Address_Code?csbh=' + row.csbh
 }
+
 
 // 物联码
 const showCode = ref(false)
 const code = {}
 const open = (row) => {
-
+    placeInfo.value = JSON.parse(JSON.stringify(row))
+console.log(placeInfo.value);
+    qx_name.value = row.qx_name
+    console.log(qx_name.value);
   showCode.value = !showCode.value
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
+  console.log(row);
 }
 
 
@@ -840,4 +892,20 @@ const getExcel = (fileName) => {
 .excel-btn + .excel-btn {
   margin-left: 10px;
 }
+
+.placeName {
+  font-size: 4vh;
+  color: rgb(198, 136, 29);
+  margin: 1vh;
+  margin-bottom: 2vh;
+  text-align: center;
+}
+/* 省市区 */
+.siteInfo {
+  color: rgb(198, 136, 29);
+  font-size: 3vh;
+  text-align: center;
+
+}
+
 </style>

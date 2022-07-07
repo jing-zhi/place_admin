@@ -28,8 +28,8 @@ export const updataPelop = (data) => {
 
 
 
-// 删除
-export const deletePlaceRoom = (data) => {
+// 删除y
+export const deleteCategory= (data) => {
   return service({
     url: '/cdPersonnelCategory/deletePersonnelCategory',
     method: 'post',

@@ -55,9 +55,24 @@ export const changePassword = (data) => {
 // @Param data body modelInterface.PageInfo true "分页获取用户列表"
 // @Success 200 {string} json "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /user/getUserList [post]
+// export const getUserList = (data) => {
+//   return service({
+//     url: '/user/getUserList',
+//     method: 'post',
+//     data: data
+//   })
+// }
 export const getUserList = (data) => {
   return service({
-    url: '/user/getUserList',
+    url: '/user/getUserListNew',
+    method: 'post',
+    data: data
+  })
+}
+
+export const getUserIndustry = (data) => {
+  return service({
+    url: '/user/getUserIndustry',
     method: 'post',
     data: data
   })
@@ -176,6 +191,15 @@ export const getUserInfo = () => {
 export const resetPassword = (data) => {
   return service({
     url: '/user/resetPassword',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询具体数据
+export const exploreData = (data) =>{
+  return service({
+    url: '/user/getUserListNew',
     method: 'post',
     data: data
   })

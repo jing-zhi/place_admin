@@ -1,25 +1,23 @@
 import service from '@/utils/request'
-
-//分页
-export const getData = data => {
+export const getAcid = (data)=>{
     return service({
-        url: '/car/getRecordList',
-        method: 'POST',
+        url: '/hesuan/pageHesuanList',
+        method: 'post',
         data
     })
 }
-
-export const exportApi = data => {
-    return service({ 
-        url: '/car/export',
-        method: 'POST',
-        data,
-        responseType:'blob'
+export const exportExcel = (data) => {
+    return service({
+      url: '/hesuan/exportExcel',
+      method: 'post',
+      data,
+      responseType: 'blob'
     }).then(res => {
-        handleFileError(res,"vehicle_record.xlsx")
+      handleFileError(res,data.filename)
     })
-}
-const handleFileError = (res, fileName) => {
+  }
+  
+  const handleFileError = (res, fileName="每日核酸检测.xlsx") => {
     if (typeof (res.data) !== 'undefined') {
       if (res.data.type === 'application/json') {
         const reader = new FileReader()
@@ -43,3 +41,4 @@ const handleFileError = (res, fileName) => {
       a.dispatchEvent(event)
     }
   }
+  

@@ -45,6 +45,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
+    console.log("请求拦截器错误");
     closeLoading()
     ElMessage({
       showClose: true,
@@ -69,6 +70,8 @@ service.interceptors.response.use(
       }
       return response.data
     } else {
+      console.log("响应拦截器错误");
+
       ElMessage({
         showClose: true,
         message: response.data.msg || decodeURI(response.headers.msg),

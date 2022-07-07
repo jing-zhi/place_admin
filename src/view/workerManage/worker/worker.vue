@@ -114,17 +114,45 @@
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="120" prop="csbh" />
+        <el-table-column align="left" label="场所编号"  min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
-        <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
-        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" />
+        <!-- <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
+        <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" /> -->
+
+        <el-table-column align="left" label="手机号码" min-width="120" prop="gzrysjh">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top">
+              <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysjh,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="身份证号" min-width="170" prop="gzrysfz">
+          <template v-slot:="scope">
+            <el-popover trigger="hover" placement="top" width="170px">
+              <span style="margin-left: 20px;">{{ scope.row.gzrysfz }}</span>
+              <template #reference>
+                <span>{{formatter(scope.row.gzrysfz,3,4) }}</span>
+              </template>                   
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="核酸信息" min-width="150" prop="heSuanInfo" />
         <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />
-        <el-table-column align="left" label="所在地市" min-width="100" prop="gzrdsname" />
-        <el-table-column align="left" label="所在县区" min-width="100" prop="gzrqxname" />
-        <el-table-column align="left" label="所在乡" min-width="100" prop="gzrxzname" />
-        <el-table-column align="left" label="原工作单位" min-width="100" prop="ydw" show-overflow-tooltip />
+        <!-- 新增 -->
+        <el-table-column align="center" label="是否14天内入豫" min-width="150" prop="is_14rhn">
+          <template #default="scope">
+            {{scope.row.is_14rhn === true ? "是" : "否"}}
+          </template>
+        </el-table-column>
+
+        <el-table-column align="left" label="所在地市" min-width="120" prop="gzrdsname" show-overflow-tooltip />
+        <el-table-column align="left" label="所在县区" min-width="120" prop="gzrqxname" show-overflow-tooltip />
+        <el-table-column align="left" label="所在乡" min-width="120" prop="gzrxzname" show-overflow-tooltip />
+        <el-table-column align="left" label="原工作单位" min-width="120" prop="ydw" show-overflow-tooltip />
         <!-- <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" /> -->
         <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
         <!-- <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq">
@@ -186,7 +214,7 @@
         <div style="height:65vh;overflow:auto;padding:0 10px;">
           <el-form ref="workerForm" :rules="rules" :model="workerInfo" label-width="130px">
             <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
-              <el-input v-model="csbh" placeholder="场所编号" />
+              <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
             </el-form-item>
             <el-form-item v-else label="场所编号" prop="csbh">
               <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
@@ -269,6 +297,12 @@
                 />
               </el-select>
             </el-form-item>
+            <el-form-item label="是否14天内入豫" prop="is_14rhn">
+              <el-select v-model="workerInfo.is_14rhn" placeholder="请选择">
+                <el-option value="true" label="是" />
+                <el-option value="false" label="否"/> 
+              </el-select>
+            </el-form-item>
             <el-form-item label="入职日期" prop="rzrq">
               <!-- <el-input v-model="workerInfo.rzrq" /> -->
               <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择" />
@@ -320,6 +354,7 @@ import {
   setWorker,
   exportExcel
 } from '@/api/csUser/worker.js'
+import { formatter } from '@/utils/format'
 
 import { nextTick, ref, watch, toRaw } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -388,7 +423,9 @@ const ztList = [
 const heSuanList = [
   { name: '阴性' },
   { name: '阳性' },
+  { name: '无24小时核酸' },
   { name: '无48小时核酸' },
+  { name: '无72小时核酸' },
 ]
 
 const healthCode = [
@@ -404,6 +441,7 @@ const handleSizeChange = (val) => {
 }
 
 const handleCurrentChange = (val) => {
+  console.log(val);
   page.value = val
   getTableData(find.value)
 }
@@ -416,11 +454,12 @@ const getTableData = async(value) => {
   }
 
   const table = await getWorkerList(rqt)
+  // console.log("table:",table);
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
+    // page.value = table.data.page
+    // pageSize.value = table.data.pageSize
   }
 }
 
@@ -458,9 +497,6 @@ const onReset = () => {
   getTableData()
 }
 
-//
-
-
 const hy_id = ref('')
 // 查询所有行业名称+id
 const industryList = ref([])
@@ -482,17 +518,14 @@ const changeId = (item) =>{
 }
 
 const getLB = async(hyId) => {
-  let rqt = { page: page.value, pageSize: pageSize.value, hy_id: Number(hyId) }
+  let rqt = { page: page.value, pageSize: 999, hy_id: Number(hyId) }
   console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
-    
     gwList.value = table.data.rylb
     console.log(gwList.value)
   }
 }
-
-
 
 // 初始化
 const initPage = async() => {
@@ -533,7 +566,7 @@ const deleteWorkerFun = async(row) => {
 // 弹窗
 const workerInfo = ref({
   // "id":1,//id主键id
-  // "csbh":"",//csbh隔离点编号
+  "csbh":"",//csbh隔离点编号
   'gzryxm': '', // gzryxm工作人员姓名
   'gzrysjh': '', // gzrysjh工作人员手机号
   'gzrysfz': '', // gzrysfz身份证号
@@ -549,17 +582,20 @@ const workerInfo = ref({
   // "sj": "",    //sj 调离时间
   // "sj": new Date(),
   'dlgldbh': '', // dlgldbh 调离隔离点编号
+  'is_14rhn':null //是否十四天内入豫
 })
 // const rules = ref({})
-
 const rules = ref({
+  csbh: [
+    { required: true, message: '请输入场所编号', trigger: 'blur' },
+  ],
   gzryxm: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
     { min: 1, max: 5, message: '不合要求', trigger: 'blur' },
   ],
   gzrysjh: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+    { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
       message: '手机号不合法',
       trigger: 'blur' },
     // { type: 'number', message: 'must be a number' },
@@ -568,7 +604,7 @@ const rules = ref({
   gzrysfz: [
     { required: true, message: '请输入身份证', trigger: 'blur' },
     // 正则
-    { pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+    { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       message: '身份证号不合法',
       trigger: 'blur' }
   ],
@@ -599,6 +635,9 @@ const rules = ref({
   ],
   zt: [
     { required: true, message: '请选择人员状态' }
+  ],
+  is_14rhn:[
+    {required: true, message: '请选择是否入豫'}
   ]
 })
 
@@ -606,7 +645,7 @@ const workerForm = ref(null)
 const clearForm = () => {
   workerForm.value.resetFields()
   workerInfo.value = {
-    // "csbh":"",//csbh隔离点编号
+    "csbh":"",//csbh隔离点编号
     'gzryxm': '', // gzryxm工作人员姓名
     'gzrysjh': '', // gzrysjh工作人员手机号
     'gzrysfz': '', // gzrysfz身份证号
@@ -618,8 +657,9 @@ const clearForm = () => {
     'gldgw': '', // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
     'rzrq': '', // rzrq入职隔离点日期
     'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
-    //'sj': '', // sj 调离时间
-    'dlgldbh': '' // dlgldbh 调离隔离点编号
+    // 'sj': '', // sj 调离时间
+    'dlgldbh': '' ,// dlgldbh 调离隔离点编号
+    'is_14rhn':null   //是否十四天内入豫
   }
 }
 // 打开修改
@@ -629,12 +669,14 @@ const openEdit = (row) => {
   getxzList(row.gzrqx)
   workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
   if (workerInfo.value.sj == '') delete workerInfo.value.sj
+  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? '否' : '是'
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
 
 // 确认增加修改
 const enterAddDialog = async() => {
+
   workerForm.value.validate(async valid => {
     if (valid) {
       const req = {
@@ -644,11 +686,12 @@ const enterAddDialog = async() => {
       request.gldzwid = zwid.value
       request.gldgwid = gwid.value
       request.ztid = ztid.value
-
+      
 
       // 新增
       if (dialogFlag.value === 'add') {
-        request.csbh = csbh.value
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        // request.csbh = csbh.value
         const res = await createWorker(request)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '创建成功' })
@@ -658,7 +701,9 @@ const enterAddDialog = async() => {
       }
       // 修改
       if (dialogFlag.value === 'edit') {
-        const res = await setWorker(req)
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        
+        const res = await setWorker(request)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
           await getTableData(find.value)
