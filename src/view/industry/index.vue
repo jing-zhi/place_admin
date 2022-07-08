@@ -62,9 +62,9 @@
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
           <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="180px" style="width:80%">
-            <el-form-item label="行业名称" prop="Name">
+            <!-- <el-form-item label="行业名称" prop="Name">
               <el-input v-model="industryInfo.Name" style="width:227px;"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="行业要求有效核酸时间" prop="HesuanTime">
               <el-select v-model="industryInfo.HesuanTime" class="m-2" placeholder="请选择" size="large">
                 <el-option
