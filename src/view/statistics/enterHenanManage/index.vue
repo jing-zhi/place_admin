@@ -137,11 +137,6 @@ watch(searchInfo.value,(newVal,oldVal) => {
 const handleExcelExport = debounce(() => {
     exportExcel({ file_name:'ehPerson_export.xlsx', is_14rhn:is_14rhn.value, hy_id:Number(searchInfo.value.industry)})
 })
-
-const getExcel = () => {
-}
-
-
 </script>
 
 <style scoped>

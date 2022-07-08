@@ -18,6 +18,15 @@ export const addIndustryName = (data) => {
   })
 }
 
+// 删除行业
+export const deleteIndustry = (data) => {
+  return service({
+    url:'/cdIndustry/deleteIndustry',
+    method:'post',
+    data:data
+  })
+}
+
 
 // @Summary 行业修改
 // @Produce  application/json
