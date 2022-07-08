@@ -120,8 +120,9 @@
         <el-button
           size="small"
           type="primary"
+          icon="download"
           @click="exportData"
-        ><span class="iconfont icon-shangchuan" /> 导出</el-button>
+        ><!-- <span class="iconfont icon-shangchuan" /> --> 导出</el-button>
       </div>
     </div>
     <el-table :data="tableData" row-key="ID">
@@ -301,7 +302,7 @@
           >编辑</el-button>
           <el-button
             type="text"
-            icon="edit"
+            icon="Tickets"
             size="small"
             @click="lookOutSign(scope.row)"
           >查看扫码详情</el-button>

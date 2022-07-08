@@ -5,7 +5,16 @@ export const getIndustryList = (data) => {
   return service({
     url: '/cdIndustry/pageIndustryList',
     method: 'post',
-    data: data //
+    data: data 
+  })
+}
+
+// 新增行业
+export const addIndustryName = (data) => {
+  return service({
+    url:'/cdIndustry/createIndustry',
+    method:'post',
+    data:data
   })
 }
 
