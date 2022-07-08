@@ -30,8 +30,8 @@
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="ID" min-width="70" prop="id" /> -->
-        <el-table-column align="center" label="行业名称" min-width="150" prop="Name" />
-        <el-table-column align="center" label="行业要求有效核酸时间" min-width="150" prop="HesuanTime" show-overflow-tooltip />
+        <el-table-column align="left" label="行业名称" min-width="230"  prop="Name" />
+        <el-table-column align="left" label="行业要求有效核酸时间" min-width="100" prop="HesuanTime" show-overflow-tooltip />
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-button type="text" icon="edit" size="small" @click="editIndustry(scope.row)">编辑</el-button>
