@@ -23,7 +23,7 @@
         <el-table-column align="center" label="所属行业" min-width="120" prop="hy_name" />
         <el-table-column align="center" label="人员类别" min-width="120" prop="gldgw" />
         <el-table-column align="center" label="姓名" min-width="120" prop="gzryxm" />
-        <el-table-column align="left" label="手机号" min-width="120" prop="gzrysjh">
+        <el-table-column align="center" label="手机号" min-width="120" prop="gzrysjh">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top">
               <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
@@ -65,12 +65,10 @@ const pageSize = ref(10)
 const total = ref()
 const handleSizeChange = (val) => {
   pageSize.value = val
-  // getTableData(searchInfo.value.industry)
 
 }
 const handleCurrentChange = (val) => {
   page.value = val
-  // getTableData(searchInfo.value.industry)
 }
 
 const searchInfo = ref({
@@ -83,7 +81,7 @@ const industryCate = ref([])
 // 获取行业列表
 const getBusinessList = async() => {
   const { data } = await getBusinessMang({ page:1,pageSize:34 }) 
-  console.log(data.list);
+  // console.log(data.list);
   industryCate.value = data.list
   industryCate.value.unshift({ID:0,Name:'全部行业'})
 
@@ -129,6 +127,7 @@ const getFind = () => {
 }
 getFind()
 
+// 监视输入框中的值
 watch(searchInfo.value,(newVal,oldVal) => {
    getFind()
 },{immediate:true})

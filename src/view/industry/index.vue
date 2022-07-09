@@ -62,9 +62,12 @@
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
           <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="180px" style="width:80%">
-            <!-- <el-form-item label="行业名称" prop="Name">
+            <el-form-item label="行业名称" prop="Name" v-if="showIndustryName">
+              <el-input v-model="industryInfo.Name" style="width:227px;" disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="行业名称" prop="Name" v-else>
               <el-input v-model="industryInfo.Name" style="width:227px;"></el-input>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item label="行业要求有效核酸时间" prop="HesuanTime">
               <el-select v-model="industryInfo.HesuanTime" class="m-2" placeholder="请选择" size="large">
                 <el-option
@@ -136,7 +139,7 @@ const delIndustry = async(row) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(async()=>{
-    // console.log("row.id:",row,row.ID);
+    console.log("row.id:",row,row.ID);
     const res = await deleteIndustry({id:row.ID})
     console.log(res);
     if(res.code === 0){
@@ -220,9 +223,12 @@ const rules = ref({
 
 const industryForm = ref(null)
 
+let showIndustryName = ref(false)
+
 // 修改
 const editIndustry = (row) => {
   industryInfo.value = JSON.parse(JSON.stringify(row))
+  showIndustryName.value = true
   dialogFlag.value = 'edit'
   addDialog.value = true
 }
@@ -237,7 +243,6 @@ const enterAddDialog = async() => {
       // console.log("industryInfo.value:",req)
       let ret = {
           ID:req.ID,
-          //Name:req.Name,
           HesuanTime:req.HesuanTime,
           Name:req.Name
       }
