@@ -714,12 +714,12 @@ const showCode = ref(false)
 const code = {}
 const open = (row) => {
     placeInfo.value = JSON.parse(JSON.stringify(row))
-console.log(placeInfo.value);
+// console.log(placeInfo.value);
     qx_name.value = row.qx_name
-    console.log(qx_name.value);
+    // console.log(qx_name.value);
   showCode.value = !showCode.value
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
-  console.log(row);
+  // console.log(row);
 }
 
 
@@ -906,6 +906,9 @@ const getExcel = (fileName) => {
   font-size: 3vh;
   text-align: center;
 
+}
+.admin-box .el-input__inner{
+  line-height: 1rem !important;
 }
 
 </style>
