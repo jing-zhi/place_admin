@@ -1,4 +1,5 @@
 import service from '@/utils/request'
+// 获取数据
 export const getAcid = (data)=>{
     return service({
         url: '/hesuan/pageHesuanList',
@@ -6,6 +7,7 @@ export const getAcid = (data)=>{
         data
     })
 }
+// 导出
 export const exportExcel = (data) => {
     return service({
       url: '/hesuan/exportExcel',
