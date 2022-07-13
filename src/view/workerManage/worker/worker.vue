@@ -107,12 +107,22 @@
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addWorker">新增</el-button>
+        <el-popover v-model:visible="deleteVisible" placement="top" width="160">
+          <p>确定要删除吗？</p>
+          <div style="text-align: right; margin-top: 8px;">
+            <el-button size="small" type="text" @click="deleteVisible = false">取消</el-button>
+            <el-button size="small" type="primary" @click="onDelete">确定</el-button>
+          </div>
+          <template #reference>
+            <el-button icon="delete" size="small" :disabled="!multipleSelection.length" style="margin-left: 10px;" @click="deleteVisible = true">删除</el-button>
+          </template>
+        </el-popover>
       </div>
       <div class="gva-btn-list" />
       <el-table
         :data="tableData"
-        row-key="ID"
-      >
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
         <el-table-column align="left" label="场所编号"  min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
@@ -185,7 +195,7 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
-            <el-button type="text" icon="edit" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>
+            <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>
 
           </template>
         </el-table-column>
@@ -352,7 +362,8 @@ import {
   deleteWorker,
   createWorker,
   setWorker,
-  exportExcel
+  exportExcel,
+  deletePlaceById
 } from '@/api/csUser/worker.js'
 import { formatter } from '@/utils/format'
 
@@ -518,7 +529,7 @@ const changeId = (item) =>{
 }
 
 const getLB = async(hyId) => {
-  let rqt = { page: page.value, pageSize: 999, hy_id: Number(hyId) }
+  let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) }
   console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
@@ -659,7 +670,7 @@ const clearForm = () => {
     'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
     // 'sj': '', // sj 调离时间
     'dlgldbh': '' ,// dlgldbh 调离隔离点编号
-    'is_14rhn':null   //是否十四天内入豫
+    'is_14rhn':null,   //是否十四天内入豫
   }
 }
 // 打开修改
@@ -712,6 +723,31 @@ const enterAddDialog = async() => {
       }
     }
   })
+}
+
+// 批量删除
+const deleteVisible = ref(false)
+const multipleSelection = ref([])
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val
+}
+
+const onDelete = async() => {
+  const ids = multipleSelection.value.map((item)=>item.id)
+  console.log(ids);
+  const res = await deletePlaceById({ids})
+  if(res.code === 0){
+    ElMessage({
+      type:'success',
+      message:res.msg
+    })
+    if(tableData.value.length === ids.length && page.value > 1){
+      page.value--
+    }
+  }
+   deleteVisible.value = false
+   getTableData()
 }
 
 // 跳转详情
