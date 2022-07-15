@@ -23,7 +23,9 @@
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button size="small" type="primary" icon="plus" @click="addIndustry(add)">新增</el-button>
+        <el-button size="small" type="primary" icon="plus" @click="addIndustry(add)"
+        :hidden="userStore.userInfo.authorities[0].authorityName === '场所管理员'"
+        >新增</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -104,6 +106,10 @@ import { getIndustryList, setIndustry,addIndustryName,deleteIndustry } from '@/a
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, ref, watch ,toRaw } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '../../pinia/modules/user'
+
+const userStore = useUserStore()
+// console.log(userStore.userInfo.authorities[0].authorityName);
 
 const page = ref(1)
 const total = ref(0)
