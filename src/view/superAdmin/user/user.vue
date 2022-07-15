@@ -418,7 +418,7 @@ import {
 } from '@/api/user'
 
 import CustomPic from '@/components/customPic/index.vue'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, ref, watch, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { getAuthorityList } from '@/api/authority'
@@ -436,8 +436,8 @@ const maxWH = ''
 
 // 查询数据内容
 const searchIndustry = ref({
-  parentID:'',
-  authorityName:'',
+  parentID:'0',
+  authorityName:'超级管理员',
   nickName:'',
   phone:'',
   email:'',
@@ -624,8 +624,10 @@ const initPage = async() => {
   depTs.push(json)
   setDeptOptions(depTs)
 }
-
-initPage()
+onMounted(() => {
+  // initPage();
+  search();
+})
 
 const resetPasswordFunc = (row) => {
   ElMessageBox.confirm(
