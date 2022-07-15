@@ -445,7 +445,7 @@ const searchIndustry = ref({
   pageSize:999
 })
 // 部门级别选择
-const jibie = [{id:'0',name:'市级'},{id:'1',name:'区/县/县级市'},{id:'2',name:'镇/街道/乡'}]
+const jibie = [{id:'0',name:'市级'},{id:'2',name:'区/县/县级市'},{id:'1',name:'镇/街道/乡'}]
 // 角色
 const juese = ref([])
 // 查询
