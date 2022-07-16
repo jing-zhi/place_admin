@@ -532,7 +532,7 @@ const handleExcelExport = (fileName) => {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .gva-table-Title{
   margin-bottom: 13px;
 }
