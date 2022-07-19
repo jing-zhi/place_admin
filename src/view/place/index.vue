@@ -34,6 +34,17 @@
         <el-form-item label="负责人身份证">
           <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
         </el-form-item>
+         <el-form-item label="分级查询"  prop="deptId">
+              <el-cascader
+                v-model="searchPlace.deptId"
+                style="width:100%"
+                :options="deptOptions"
+                :show-all-levels="false"
+                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+                :clearable="false"
+                placeholder="请选择查询部门"
+              />
+            </el-form-item>
 
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
@@ -787,6 +798,7 @@ const enterAddDialog = async() => {
       // 修改
       if (dialogFlag.value === 'edit') {
         const res = await setPlace(req)
+        console.log("req:",req);
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
           await getTableData(retFind.value)
