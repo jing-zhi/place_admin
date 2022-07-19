@@ -12,10 +12,10 @@
             <el-option v-for="item in juese" :key="item.authorityId" :value="item.authorityName"/>
           </el-select>
         </el-form-item> 
-        <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="searchIndustry.nickName" @blur="search"/>
+        <el-form-item label="昵称" prop="nickName" >
+          <el-input v-model="searchIndustry.nickName"  class="inputItem" @blur="search"/>
         </el-form-item>     
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="手机号" prop="phone" class="inputItem">
           <el-input v-model="searchIndustry.phone" @blur="search"/>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
@@ -582,9 +582,9 @@ const handleExcelExport = (fileName) => {
     cursor: pointer;
   }
 }
-.el-form-item__content{
-  width: 150px;
-}
+// .el-form-item__content{
+//   width: 150px !important;
+// }
 .nickName {
   display: flex;
   justify-content: flex-start;
@@ -600,5 +600,14 @@ const handleExcelExport = (fileName) => {
 }
 .excel-btn+.excel-btn{
   margin-left: 10px;
+}
+.el-form-item__content{
+  width: 200px !important;
+}
+.el-form-item{
+  width: 190px !important;
+}
+.inputItem{
+  width: 210px !important;
 }
 </style>
