@@ -2,29 +2,45 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchIndustry" style="margin-left:20px">
-        <el-form-item label="部门" prop="deptName" >
-          <el-select v-model="searchIndustry.parentID" @change="search">
+
+
+      <el-row>
+        <el-col :span="5">
+          <el-form-item label="部门" prop="deptName" >
+          <el-select v-model="searchIndustry.parentID" min-width="80" style="width:91%" @change="search" >
             <el-option v-for="(item,index) in jibie" :key="index" :value="item.id" :label="item.name"/>
           </el-select>
         </el-form-item>
-         <el-form-item label="角色" prop="authorityName">
-          <el-select v-model="searchIndustry.authorityName" @change="search">
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="角色" prop="authorityName">
+          <el-select v-model="searchIndustry.authorityName" style="width:91%" min-width="80" @change="search">
             <el-option v-for="item in juese" :key="item.authorityId" :value="item.authorityName"/>
           </el-select>
         </el-form-item> 
-        <el-form-item label="昵称" prop="nickName" >
-          <el-input v-model="searchIndustry.nickName"  class="inputItem" @blur="search"/>
-        </el-form-item>     
-        <el-form-item label="手机号" prop="phone" class="inputItem">
-          <el-input v-model="searchIndustry.phone" @blur="search"/>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="昵称" prop="nickName" >
+          <el-input v-model="searchIndustry.nickName" placeholder="昵称" min-width="80"  class="inputItem" @blur="search"/>
+        </el-form-item> 
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="手机号" prop="phone" class="inputItem">
+          <el-input v-model="searchIndustry.phone" placeholder="手机号" min-width="80" @blur="search"/>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="searchIndustry.email" @blur="search"/>
-        </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row >
+        <el-col :span="5">
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="searchIndustry.email" placeholder="邮箱"  min-width="80" @blur="search"/>
+          </el-form-item>
+        </el-col>
         <el-form-item class="btn">
           <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addUser">新增用户</el-button>
           <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport('ExcelExport.xlsx')">导出</el-button>
         </el-form-item>
+      </el-row>
       </el-form>
     </div>
     <div class="gva-table-box">
@@ -601,13 +617,17 @@ const handleExcelExport = (fileName) => {
 .excel-btn+.excel-btn{
   margin-left: 10px;
 }
-.el-form-item__content{
+/* .el-form-item__content{
   width: 200px !important;
-}
-.el-form-item{
+} */
+/* .el-form-item{
   width: 190px !important;
-}
-.inputItem{
+} */
+/* .inputItem{
   width: 210px !important;
+} */
+
+.el-row{
+  padding: 0 !important;
 }
 </style>
