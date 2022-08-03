@@ -9,92 +9,121 @@
             <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
           </el-form-item>  -->
 
-        <el-form-item label="场所编号" prop="csbh">
-          <el-input v-model="searchWorker.csbh" placeholder="场所编号" />
-        </el-form-item>
-        <el-form-item label="场所名称" prop="csmc">
-          <el-input v-model="searchWorker.csmc" placeholder="场所名称" />
-        </el-form-item>
-        <el-form-item label="姓名">
-          <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
-        </el-form-item>
-        <el-form-item label="身份证">
-          <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
-        </el-form-item>
-        <el-form-item label="核酸信息">
-          <el-select v-model="searchWorker.heSuanInfo" class="m-2" placeholder="核酸信息" size="large">
-            <el-option
-              v-for="item in heSuanList"
-              :key="item.name"
-              :label="item.name"
-              :value="item.name"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="健康码信息">
-          <el-select v-model="searchWorker.healthCode" class="m-2" placeholder="健康码信息" size="large">
-            <el-option
-              v-for="item in healthCode"
-              :key="item.name"
-              :label="item.name"
-              :value="item.name"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="searchWorker.zt" class="m-2" placeholder="请选择人员状态" size="large">
-            <el-option
-              v-for="item in ztList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name"
-              @click="ztSearch(item)"
-            />
-          </el-select>
-        </el-form-item>
-        <!-- <el-form-item label="入职时间范围">
-              <el-date-picker
-                    v-model="searchWorker.rz"
-                    type="daterange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
+            <el-row>
+              <el-col :span="5">
+                <el-form-item label="场所编号" prop="csbh">
+                  <el-input v-model="searchWorker.csbh" min-width="80" placeholder="场所编号" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                 <el-form-item label="场所名称" prop="csmc">
+                  <el-input v-model="searchWorker.csmc" min-width="80" placeholder="场所名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="姓名">
+                  <el-input v-model="searchWorker.gzryxm" min-width="80" placeholder="工作人员姓名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="手机号">
+                  <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+             <el-row>
+              <el-col :span="5">
+                <el-form-item label="身份证">
+                  <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="核酸信息">
+                  <el-select v-model="searchWorker.heSuanInfo" min-width="80" class="m-2" placeholder="核酸信息" size="large">
+                    <el-option
+                      v-for="item in heSuanList"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.name"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="健康码信息">
+                  <el-select v-model="searchWorker.healthCode" min-width="80" class="m-2" placeholder="健康码信息" size="large">
+                    <el-option
+                      v-for="item in healthCode"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.name"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="状态">
+                  <el-select v-model="searchWorker.zt" class="m-2" min-width="80" placeholder="请选择人员状态" size="large">
+                    <el-option
+                      v-for="item in ztList"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.name"
+                      @click="ztSearch(item)"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+           <el-row>
+            <el-col :span="10">
+               <!-- <el-form-item label="入职时间范围">
+                  <el-date-picker
+                        v-model="searchWorker.rz"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                    />
+              </el-form-item>       -->
+              <el-form-item label="入职时间范围" label-width="auto">
+                <el-date-picker
+                  v-model="searchWorker.rz"
+                  type="datetimerange"
+                  range-separator=":"
+                  :default-time="defaultTime"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  @change="changeRZTime"
                 />
-          </el-form-item>       -->
-        <el-form-item label="入职时间范围" label-width="auto">
-          <el-date-picker
-            v-model="searchWorker.rz"
-            type="datetimerange"
-            range-separator=":"
-            :default-time="defaultTime"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            @change="changeRZTime"
-          />
-        </el-form-item>
-        <!-- <el-form-item label="调离时间范围">
-              <el-date-picker
-                    v-model="searchWorker.dl"
-                    type="daterange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+             <!-- <el-form-item label="调离时间范围">
+                    <el-date-picker
+                          v-model="searchWorker.dl"
+                          type="daterange"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                      />
+                </el-form-item>       -->
+              <el-form-item label="扫码时间范围" label-width="auto">
+                <el-date-picker
+                  v-model="searchWorker.dl"
+                  type="datetimerange"
+                  range-separator=":"
+                  :default-time="defaultTime"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  @change="changeDLTime"
                 />
-          </el-form-item>       -->
-        <el-form-item label="扫码时间范围" label-width="auto">
-          <el-date-picker
-            v-model="searchWorker.dl"
-            type="datetimerange"
-            range-separator=":"
-            :default-time="defaultTime"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            @change="changeDLTime"
-          />
-        </el-form-item>
+              </el-form-item>
+              
+            </el-col>
+          </el-row>
+       
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
@@ -886,5 +915,9 @@ const getExcel = (fileName) => {
 }
 .excel-btn+.excel-btn{
   margin-left: 10px;
+}
+
+.el-row{
+  padding: 0 !important;
 }
 </style>

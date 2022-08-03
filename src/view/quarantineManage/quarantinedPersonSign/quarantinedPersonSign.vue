@@ -3,68 +3,67 @@
     <div>
       <div class="gva-table-box" style="margin-bottom: 10px">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
-          <el-form-item label="姓名" label-width="auto" prop="name">
-            <el-input v-model="searchInfo.name" style="width:120px;" placeholder="姓名" />
-          </el-form-item>
-          <el-form-item
-            label="证件号码"
-            label-width="auto"
-            prop="gzrsfz"
-          >
-            <el-input
-              v-model="searchInfo.gzrsfz"
-              placeholder="证件号码"
-            />
-          </el-form-item>
-          <el-form-item label="手机号码" label-width="auto" prop="phone">
-            <el-input v-model="searchInfo.phone" placeholder="手机号" />
-          </el-form-item>
-          <el-form-item label="场所名称" label-width="auto" prop="csmc">
-            <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
-          </el-form-item>
 
-          <el-form-item label="场所编号" label-width="auto" prop="csbh">
-            <el-input v-model="searchInfo.csbh" placeholder="场所编号" />
-          </el-form-item>
-          <el-form-item
-            label="体温范围"
-            label-width="auto"
-            prop="small_bodyTemperature"
-          >
-            <el-input
-              v-model="searchInfo.small_bodyTemperature"
-              style="width: 100px"
-              placeholder="最低温度"
-            />
-            <span class="line" />
 
-          </el-form-item>
-
-          <el-form-item label-width="auto" prop="big_bodyTemperature">
-            <el-input
-              v-model="searchInfo.big_bodyTemperature"
-              style="width: 100px"
-              placeholder="最高温度"
-            />
-          </el-form-item>
-          <el-form-item
+        <el-row>
+          <el-col :span="5">
+           <el-form-item label="姓名" label-width="auto" prop="name">
+              <el-input v-model="searchInfo.name" min-width="80"  placeholder="姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item
+              label="证件号码"
+              label-width="auto"
+              prop="gzrsfz"
+            >
+              <el-input
+                v-model="searchInfo.gzrsfz"
+                min-width="80" 
+                placeholder="证件号码"
+              />
+            </el-form-item>
+          </el-col>
+           <el-col :span="5">
+            <el-form-item label="手机号码" label-width="auto" prop="phone">
+              <el-input v-model="searchInfo.phone" min-width="80"  placeholder="手机号" />
+            </el-form-item>
+          </el-col>
+           <el-col :span="5">
+            <el-form-item label="场所名称" label-width="auto" prop="csmc">
+              <el-input v-model="searchInfo.csmc" min-width="80"  placeholder="场所名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label="场所编号" label-width="auto" prop="csbh">
+              <el-input v-model="searchInfo.csbh" min-width="80"  placeholder="场所编号" />
+            </el-form-item>
+          </el-col>
+        
+           <el-col :span="5">
+             <el-form-item
             label="有效核酸"
             label-width="auto"
             prop="hasHsjl"
           >
-            <el-select v-model="searchInfo.hasHsjl" style="width:120px;" placeholder="请选择">
+            <el-select v-model="searchInfo.hasHsjl" min-width="80"  placeholder="请选择">
               <el-option :value="0" label="无" />
               <el-option :value="1" label="有" />
             </el-select>
           </el-form-item>
-
-          <el-form-item label="核酸结果" label-width="auto" prop="hsResult">
-            <el-select v-model="searchInfo.hsResult" placeholder="请选择" style="width:120px;">
+          </el-col>
+           <el-col :span="5">
+           <el-form-item label="核酸结果" label-width="auto" prop="hsResult">
+            <el-select v-model="searchInfo.hsResult" placeholder="请选择" min-width="80" >
               <el-option value="阴性" label="阴性" />
-              <el-option value="阳性" label="阳性" />
+              <el-option value="阳性" label="阳性"  />
             </el-select>
           </el-form-item>
-          <el-form-item
+          </el-col>
+          <el-col :span="5">
+           <el-form-item
             label="症状"
             label-width="auto"
             prop="symptomInformation"
@@ -75,6 +74,7 @@
               placeholder="请选择"
             >
               <el-option
+                min-width="80" 
                 v-for="(item, index) in QSsymptomList"
                 :key="index"
                 :label="item"
@@ -82,8 +82,32 @@
               />
             </el-select>
           </el-form-item>
-
-          <el-form-item label="核酸时间范围" label-width="auto" prop="Time">
+          </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="10">
+              <el-form-item
+              label="体温范围"
+              label-width="auto"
+              prop="small_bodyTemperature"
+            >
+              <el-input
+                v-model="searchInfo.small_bodyTemperature"
+                style="width: 120px"
+                placeholder="最低温度"
+              />
+              <span class="line" />
+            </el-form-item>
+            <el-form-item label-width="auto" prop="big_bodyTemperature">
+            <el-input
+              v-model="searchInfo.big_bodyTemperature"
+              style="width: 120px"
+              placeholder="最高温度"
+            />
+          </el-form-item>
+          </el-col>
+           <el-col :span="10">
+            <el-form-item label="核酸时间范围" label-width="auto" prop="Time">
             <el-date-picker
               v-model="searchInfo.Time"
               clearable
@@ -96,19 +120,25 @@
               @change="timeScopeDiv"
             />
           </el-form-item>
-          <el-form-item label="扫码时间范围" label-width="auto" prop="SMTime">
-            <el-date-picker
-              v-model="searchInfo.SMTime"
-              :default-time="defaultTime2"
-              type="datetimerange"
-              range-separator=":"
-              :shortcuts="Qshortcuts"
-              start-placeholder="扫码开始时间"
-              end-placeholder="扫码结束时间"
-              @change="SMtimeScopeDiv"
-            />
-          </el-form-item>
-
+          </el-col>
+        </el-row>
+          <el-row>
+            <el-col :span="10">
+               <el-form-item label="扫码时间范围" label-width="auto" prop="SMTime">
+                  <el-date-picker
+                    v-model="searchInfo.SMTime"
+                    :default-time="defaultTime2"
+                    type="datetimerange"
+                    range-separator=":"
+                    :shortcuts="Qshortcuts"
+                    start-placeholder="扫码开始时间"
+                    end-placeholder="扫码结束时间"
+                    @change="SMtimeScopeDiv"
+                  />
+                </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              
           <div class="searchForm">
             <el-button
               size="small"
@@ -122,6 +152,8 @@
               @click="onReset"
             >重置</el-button>
           </div>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
     </div>
@@ -421,5 +453,9 @@ const SMtimeScopeDiv = () => {
   height: .9px;
   width: 10px;
   margin-left: 20px;
+}
+
+.el-row{
+  padding: 0 !important;
 }
 </style>

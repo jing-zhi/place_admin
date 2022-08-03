@@ -4,19 +4,19 @@
       <div class="gva-table-box" style="margin-bottom: 10px">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
           <el-form-item label="姓名" label-width="auto">
-            <el-input v-model="searchInfo.people_name" style="width:120px;" placeholder="姓名" prop="people_name" />
+            <el-input v-model="searchInfo.people_name"  min-width="80" placeholder="姓名" prop="people_name" />
           </el-form-item>
           <el-form-item label="手机号码" label-width="auto" prop="phone_number">
-            <el-input v-model="searchInfo.phone_number" placeholder="手机号码" />
+            <el-input v-model="searchInfo.phone_number" min-width="80" placeholder="手机号码" />
           </el-form-item>
           <el-form-item label="身份证号" label-width="auto" prop="id_card">
-            <el-input v-model="searchInfo.id_card" placeholder="身份证号" />
+            <el-input v-model="searchInfo.id_card" min-width="80" placeholder="身份证号" />
           </el-form-item>
           <el-form-item label="车牌号" label-width="auto" prop="plate_number">
-            <el-input v-model="searchInfo.plate_number" placeholder="车牌号" />
+            <el-input v-model="searchInfo.plate_number" min-width="80" placeholder="车牌号" />
           </el-form-item>
           <el-form-item label="场所名称" label-width="auto" prop="place_name">
-            <el-input v-model="searchInfo.place_name" placeholder="场所名称" />
+            <el-input v-model="searchInfo.place_name" min-width="80" placeholder="场所名称" />
           </el-form-item>
           <el-form-item label="预计进入日期" label-width="auto" prop="glsj">
             <el-date-picker v-model="searchInfo.glsj" type="datetimerange" :default-time="defaultTime2"
