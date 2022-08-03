@@ -3,86 +3,118 @@
     <div>
       <div class="gva-table-box" style="margin-bottom: 10px">
         <el-form ref="searchForm" :inline="true" :model="searchInfo">
-          <el-form-item label="姓名" label-width="auto">
-            <el-input v-model="searchInfo.glryxm" style="width:120px;" placeholder="姓名" />
-          </el-form-item>
-          <el-form-item label="人员类别">
-            <el-select v-model="searchInfo.rylb" placeholder="请选择">
-              <!--  -->
-              <el-option
-                v-for="(item, index) in rylbList"
-                :key="index"
-                :label="item.value"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="国籍" label-width="auto">
-            <el-select v-model="searchInfo.gj" placeholder="请选择" style="width:120px;">
-              <el-option
-                v-for="(item, index) in gjList"
-                :key="index"
-                :label="item.value"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="隔离点房间编号" prop="gldfjbh">
-            <el-select
-              v-model="searchInfo.gldfjbh"
-              :style="{ width: '80%' }"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in roomList"
-                :key="item.ID"
-                :label="
-                  item.BuildingNumber +
-                    '栋' +
-                    item.FloorNumber +
-                    '层' +
-                    item.RoomNumber +
-                    '房间'
-                "
-                :value="item.ID"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="入境航班号" label-width="auto" prop="rjhbh">
-            <el-input v-model="searchInfo.rjhbh" placeholder="入境航班号" />
-          </el-form-item>
-          <el-form-item label="身份证号" label-width="auto" prop="zjhm">
-            <el-input v-model="searchInfo.zjhm" placeholder="身份证号" />
-          </el-form-item>
-          <el-form-item label="手机号码" label-width="auto" prop="sjhm">
-            <el-input v-model="searchInfo.sjhm" placeholder="手机号码" />
-          </el-form-item>
-          <el-form-item label="场所编号" label-width="auto" prop="csbh">
-            <el-input v-model="searchInfo.csbh" placeholder="场所编号" />
-          </el-form-item>
-          <el-form-item label="场所名称" label-width="auto" prop="csmc">
-            <el-input v-model="searchInfo.csmc" placeholder="场所名称" />
-          </el-form-item>
-
-          <el-form-item label="隔离状态" label-width="auto" prop="glzt">
-            <el-select v-model="searchInfo.glzt" placeholder="请选择" style="width:120px;">
-              <el-option value="2" label="转运" />
-              <el-option value="1" label="隔离" />
-              <el-option value="3" label="结束隔离" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否接种疫苗" label-width="auto" prop="sfjzym">
-            <el-select v-model="searchInfo.sfjzym" placeholder="请选择" style="width:120px;">
-              <el-option value="2" label="未接种" />
-              <el-option value="1" label="已接种" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否阳性" label-width="auto" prop="sfyz">
-            <el-select v-model="searchInfo.sfyx" style="width:120px;" placeholder="请选择">
-              <el-option value="2" label="否" />
-              <el-option value="1" label="是" />
-            </el-select>
-          </el-form-item>
+         <el-row>
+          <el-col :span="5">
+            <el-form-item label="姓名"  label-width="auto">
+              <el-input v-model="searchInfo.glryxm" min-width="80" placeholder="姓名" />
+            </el-form-item>
+          </el-col>
+            <el-col :span="5">
+            <el-form-item label="国籍" label-width="auto">
+              <el-select v-model="searchInfo.gj" placeholder="请选择" min-width="80">
+                <el-option
+                  v-for="(item, index) in gjList"
+                  :key="index"
+                  :label="item.value"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="人员类别">
+              <el-select v-model="searchInfo.rylb" min-width="80" style="width:95%" placeholder="请选择">
+                <!--  -->
+                <el-option
+                  v-for="(item, index) in rylbList"
+                  :key="index"
+                  :label="item.value"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        
+          <el-col :span="5">
+            <el-form-item label="隔离点房间编号"  prop="gldfjbh">
+              <el-select
+                v-model="searchInfo.gldfjbh"
+                min-width="80"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in roomList"
+                  :key="item.ID"
+                  :label="
+                    item.BuildingNumber +
+                      '栋' +
+                      item.FloorNumber +
+                      '层' +
+                      item.RoomNumber +
+                      '房间'
+                  "
+                  :value="item.ID"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label="入境航班" label-width="auto" prop="rjhbh">
+              <el-input v-model="searchInfo.rjhbh" min-width="80" placeholder="入境航班号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+           <el-form-item label="身份证号" label-width="auto" prop="zjhm">
+              <el-input v-model="searchInfo.zjhm" min-width="80" placeholder="身份证号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="手机号码" label-width="auto" prop="sjhm">
+              <el-input v-model="searchInfo.sjhm" min-width="80"  placeholder="手机号码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="场所编号" label-width="auto" prop="csbh">
+              <el-input v-model="searchInfo.csbh" min-width="80" placeholder="场所编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label="场所名称" label-width="auto" prop="csmc">
+              <el-input v-model="searchInfo.csmc" min-width="80" placeholder="场所名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="隔离状态" label-width="auto" prop="glzt">
+              <el-select v-model="searchInfo.glzt" placeholder="请选择" min-width="80">
+                <el-option value="2" label="转运" />
+                <el-option value="1" label="隔离" />
+                <el-option value="3" label="结束隔离" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="是否接种疫苗" label-width="auto" prop="sfjzym">
+              <el-select v-model="searchInfo.sfjzym" placeholder="请选择" min-width="80">
+                <el-option value="2" label="未接种" />
+                <el-option value="1" label="已接种" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="是否阳性" label-width="auto" prop="sfyz">
+              <el-select v-model="searchInfo.sfyx" min-width="80" placeholder="请选择">
+                <el-option value="2" label="否" />
+                <el-option value="1" label="是" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+          
+         
           <el-form-item label="隔离时间范围" label-width="auto" prop="glsj">
             <el-date-picker
               v-model="searchInfo.glsj"
@@ -120,8 +152,9 @@
         <el-button
           size="small"
           type="primary"
+          icon="download"
           @click="exportData"
-        ><span class="iconfont icon-shangchuan" /> 导出</el-button>
+        ><!-- <span class="iconfont icon-shangchuan" /> --> 导出</el-button>
       </div>
     </div>
     <el-table :data="tableData" row-key="ID">
@@ -301,7 +334,7 @@
           >编辑</el-button>
           <el-button
             type="text"
-            icon="edit"
+            icon="Tickets"
             size="small"
             @click="lookOutSign(scope.row)"
           >查看扫码详情</el-button>
@@ -529,5 +562,8 @@ provide('reGetData', reGetData)
 .iconfont {
   margin-right: 5px;
   font-size: 12px;
+}
+.el-row{
+  padding: 0 !important;
 }
 </style>

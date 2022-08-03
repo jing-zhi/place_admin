@@ -2,14 +2,36 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchPlace" style="margin-left:20px">
-        <el-form-item label="场所编号" prop="csbh">
-          <el-input v-model="searchPlace.csbh" placeholder="场所编号" />
+       <el-row>
+        <el-col :span="5">
+          <el-form-item label="场所编号" prop="csbh">
+            <el-input v-model="searchPlace.csbh" min-width="80" placeholder="场所编号" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="场所名称" prop="csmc">
+            <el-input v-model="searchPlace.csmc" min-width="80" placeholder="场所名称" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="负责人姓名">
+          <el-input v-model="searchPlace.fzrxm" min-width="80" placeholder="负责人姓名" />
         </el-form-item>
-        <el-form-item label="场所名称" prop="csmc">
-          <el-input v-model="searchPlace.csmc" placeholder="场所名称" />
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="负责人电话">
+            <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="负责人电话" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+          <el-row>
+        <el-col :span="5">
+          <el-form-item label="负责人身份证">
+          <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
         </el-form-item>
-
-        <el-form-item label="行业类型" prop="hylx">
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="行业类型" prop="hylx">
           <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
             <el-option
               v-for="item in options"
@@ -19,26 +41,32 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="启用状态">
+        </el-col>
+        <el-col :span="5">
+         <el-form-item label="启用状态">
           <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择启用状态" size="large">
             <el-option label="是" :value="1" />
             <el-option label="否" :value="0" />
           </el-select>
         </el-form-item>
-        <el-form-item label="负责人姓名">
-          <el-input v-model="searchPlace.fzrxm" min-width="50" placeholder="负责人姓名" />
-        </el-form-item>
-        <el-form-item label="负责人电话">
-          <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="负责人电话" />
-        </el-form-item>
-        <el-form-item label="负责人身份证">
-          <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
-        </el-form-item>
-
+        </el-col>
+        <el-col :span="5">
+           <el-form-item label="区域"  prop="deptId">
+              <el-cascader
+                v-model="searchPlace.deptId"
+                style="width:100%"
+                :options="deptOptions"
+                :show-all-levels="false"
+                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
+                :clearable="false"
+                placeholder="请选择查询区域"
+              />
+            </el-form-item>
+        </el-col>
+      </el-row>
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
-
          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
          
           <a style="margin-left:20px" href="http://117.159.44.7:18801/excel/module/工作人员信息模板.xlsx">
@@ -714,12 +742,12 @@ const showCode = ref(false)
 const code = {}
 const open = (row) => {
     placeInfo.value = JSON.parse(JSON.stringify(row))
-console.log(placeInfo.value);
+// console.log(placeInfo.value);
     qx_name.value = row.qx_name
-    console.log(qx_name.value);
+    // console.log(qx_name.value);
   showCode.value = !showCode.value
   code.value = import.meta.env.VITE_BASE_API + '/cd/code?csbh=' + row.csbh
-  console.log(row);
+  // console.log(row);
 }
 
 
@@ -787,6 +815,7 @@ const enterAddDialog = async() => {
       // 修改
       if (dialogFlag.value === 'edit') {
         const res = await setPlace(req)
+        console.log("req:",req);
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
           await getTableData(retFind.value)
@@ -907,5 +936,11 @@ const getExcel = (fileName) => {
   text-align: center;
 
 }
+.admin-box .el-input__inner{
+  line-height: 1rem !important;
+}
 
+.el-row{
+  padding: 0 !important;
+}
 </style>

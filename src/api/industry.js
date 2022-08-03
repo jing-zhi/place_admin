@@ -5,7 +5,25 @@ export const getIndustryList = (data) => {
   return service({
     url: '/cdIndustry/pageIndustryList',
     method: 'post',
-    data: data //
+    data: data 
+  })
+}
+
+// 新增行业
+export const addIndustryName = (data) => {
+  return service({
+    url:'/cdIndustry/createIndustry',
+    method:'post',
+    data:data
+  })
+}
+
+// 删除行业
+export const deleteIndustry = (data) => {
+  return service({
+    url:'/cdIndustry/deleteIndustry',
+    method:'post',
+    data:data
   })
 }
 

@@ -69,6 +69,15 @@ export const getWorkerDetailsList = (data) => {
   })
 }
 
+// 批量删除
+export const deletePlaceById = (data) => {
+  return service({
+    url:'/cdworker/deleteWorkerByIds',
+    method:'post',
+    data:data
+  })
+}
+
 // 工作人员导出Excel
 export const exportExcel = data => {
   return service({
