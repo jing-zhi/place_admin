@@ -171,6 +171,7 @@ const getTableData = async(value) => {
   if (table.code === 0) {
     // console.log(table)
     tableData.value = table.data.list
+    console.log(table.data);
     total.value = table.data.total
     page.value = table.data.page
     pageSize.value = table.data.pageSize
