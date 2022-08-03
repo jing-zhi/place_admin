@@ -39,26 +39,26 @@
         row-key="ID"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column align="left" type="selection" width="55" />
-        <el-table-column align="left" label="操作人" width="140">
+        <el-table-column align="center" type="selection" width="55" />
+        <el-table-column align="center" label="操作人" width="140">
           <template #default="scope">
             <div>{{ scope.row.user.userName }}({{ scope.row.user.nickName }})</div>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="日期" width="180">
+        <el-table-column align="center" label="日期" width="180">
           <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
         </el-table-column>
-        <el-table-column align="left" label="状态码" prop="status" width="120">
+        <el-table-column align="center" label="状态码" prop="status" width="120">
           <template #default="scope">
             <div>
               <el-tag type="success">{{ scope.row.status }}</el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="请求IP" prop="ip" width="120" />
-        <el-table-column align="left" label="请求方法" prop="method" width="120" />
-        <el-table-column align="left" label="请求路径" prop="path" width="240" />
-        <el-table-column align="left" label="请求" prop="path" width="80">
+        <el-table-column align="center" label="请求IP" prop="ip" width="120" />
+        <el-table-column align="center" label="请求方法" prop="method" width="120" />
+        <el-table-column align="center" label="请求路径" prop="path" width="240" />
+        <el-table-column align="center" label="请求" prop="path" width="80">
           <template #default="scope">
             <div>
               <el-popover v-if="scope.row.body" placement="left-start" trigger="click">
@@ -74,7 +74,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="响应" prop="path" width="80">
+        <el-table-column align="center" label="响应" prop="path" width="80">
           <template #default="scope">
             <div>
               <el-popover v-if="scope.row.resp" placement="left-start" trigger="click">
@@ -89,7 +89,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="按钮组">
+        <el-table-column align="center" label="按钮组">
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗？</p>
@@ -102,6 +102,17 @@
               </template>
             </el-popover>
           </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作类型" width="160">
+          <template #default="scope">
+            <div>
+              <span v-if=" scope.row.is_delete===0">否</span>
+              <span v-else>是</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作内容" width="180">
+          <template #default="scope">  {{ scope.row.delete_record }}  </template>
         </el-table-column>
       </el-table>
       <div class="gva-pagination">
@@ -123,111 +134,109 @@
 import {
   deleteSysOperationRecord,
   getSysOperationRecordList,
-  deleteSysOperationRecordByIds
-} from '@/api/sysOperationRecord' // 此处请自行替换地址
-import { formatDate } from '@/utils/format'
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+  deleteSysOperationRecordByIds,
+} from "@/api/sysOperationRecord"; // 此处请自行替换地址
+import { formatDate } from "@/utils/format";
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
 
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(10)
-const tableData = ref([])
-const searchInfo = ref({})
+const page = ref(1);
+const total = ref(0);
+const pageSize = ref(10);
+const tableData = ref([]);
+const searchInfo = ref({});
 const onReset = () => {
-  searchInfo.value = {}
-}
+  searchInfo.value = {};
+};
 // 条件搜索前端看此方法
 const onSubmit = () => {
-  page.value = 1
-  pageSize.value = 10
-  if (searchInfo.value.status === '') {
-    searchInfo.value.status = null
+  page.value = 1;
+  pageSize.value = 10;
+  if (searchInfo.value.status === "") {
+    searchInfo.value.status = null;
   }
-  getTableData()
-}
+  getTableData();
+};
 
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val
-  getTableData()
-}
+  pageSize.value = val;
+  getTableData();
+};
 
 const handleCurrentChange = (val) => {
-  page.value = val
-  getTableData()
-}
+  page.value = val;
+  getTableData();
+};
 
 // 查询
-const getTableData = async() => {
+const getTableData = async () => {
   const table = await getSysOperationRecordList({
     page: page.value,
     pageSize: pageSize.value,
     ...searchInfo.value,
-  })
+  });
   if (table.code === 0) {
-    tableData.value = table.data.list
-    total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
+    tableData.value = table.data.list;
+    total.value = table.data.total;
+    page.value = table.data.page;
+    pageSize.value = table.data.pageSize;
   }
-}
+};
 
-getTableData()
+getTableData();
 
-const deleteVisible = ref(false)
-const multipleSelection = ref([])
+const deleteVisible = ref(false);
+const multipleSelection = ref([]);
 const handleSelectionChange = (val) => {
-  multipleSelection.value = val
-}
-const onDelete = async() => {
-  const ids = []
+  multipleSelection.value = val;
+};
+const onDelete = async () => {
+  const ids = [];
   multipleSelection.value &&
-        multipleSelection.value.forEach(item => {
-          ids.push(item.ID)
-        })
-  const res = await deleteSysOperationRecordByIds({ ids })
+    multipleSelection.value.forEach((item) => {
+      ids.push(item.ID);
+    });
+  const res = await deleteSysOperationRecordByIds({ ids });
   if (res.code === 0) {
     ElMessage({
-      type: 'success',
-      message: '删除成功'
-    })
+      type: "success",
+      message: "删除成功",
+    });
     if (tableData.value.length === ids.length && page.value > 1) {
-      page.value--
+      page.value--;
     }
-    deleteVisible.value = false
-    getTableData()
+    deleteVisible.value = false;
+    getTableData();
   }
-}
-const deleteSysOperationRecordFunc = async(row) => {
-  row.visible = false
-  const res = await deleteSysOperationRecord({ ID: row.ID })
+};
+const deleteSysOperationRecordFunc = async (row) => {
+  row.visible = false;
+  const res = await deleteSysOperationRecord({ ID: row.ID });
   if (res.code === 0) {
     ElMessage({
-      type: 'success',
-      message: '删除成功'
-    })
+      type: "success",
+      message: "删除成功",
+    });
     if (tableData.value.length === 1 && page.value > 1) {
-      page.value--
+      page.value--;
     }
-    getTableData()
+    getTableData();
   }
-}
+};
 const fmtBody = (value) => {
   try {
-    return JSON.parse(value)
+    return JSON.parse(value);
   } catch (err) {
-    return value
+    return value;
   }
-}
-
+};
 </script>
 
 <script>
-
 export default {
-  name: 'SysOperationRecord'
-}
+  name: "SysOperationRecord",
+};
 </script>
 
 <style lang="scss">
@@ -251,7 +260,13 @@ export default {
   width: 420px;
   overflow: auto;
 }
-.popover-box::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
-}
+// .el-table .cell{
+//   text-overflow:ellipsis;
+//   white-space:nowrap;
+//   overflow:hidden;
+// }
+// .popover-box::-webkit-scrollbar {
+//   display: none;
+//   /* Chrome Safari */
+// }
 </style>

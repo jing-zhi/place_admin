@@ -397,7 +397,6 @@ const pageSize = ref(10)
 const tableData = ref([])
 const searchPlace = ref({})
 
-
 // 区和街道
 const res = ref([])
 const areaValue = ref()
@@ -504,6 +503,7 @@ const onSubmit = debounce(() => {
 })
 const getRetFind = () => {
   retFind.value = toRaw(searchPlace.value)
+  console.log(retFind.value);
 }
 const onReset = () => {
   searchPlace.value = {}
