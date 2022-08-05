@@ -22,7 +22,7 @@ export const getWorkerList = (data) => {
 
 // 导出文件
 export const exportExcel = data => {
-  console.log(data);
+  // console.log(data);
   return service({
     url: '/cdStatisticsRouter/is14RhnExcelExport',
     method: 'post',
@@ -35,7 +35,7 @@ export const exportExcel = data => {
 
 const handleFileError = (res, fileName) => {
   if (res.data === 'undefined') {
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data.type !== 'application/json') {
       const reader = new FileReader()
       reader.onload = function() {

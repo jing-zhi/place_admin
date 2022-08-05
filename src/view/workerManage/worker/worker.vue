@@ -349,13 +349,7 @@
             </el-form-item>
             <el-form-item label="入职日期" prop="rzrq">
               <!-- <el-input v-model="workerInfo.rzrq" /> -->
-              <el-date-picker
-                v-model="workerInfo.rzrq"
-                type="date"
-                placeholder="请选择"
-                format="YYYY/MM/DD"
-                value-format="YYYY-MM-DD"
-              />
+              <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择"/>
             </el-form-item>
             <el-form-item label="状态" prop="zt">
               <el-select v-model="workerInfo.zt" class="m-2" placeholder="请选择" size="large">
@@ -482,10 +476,10 @@ const handleSizeChange = (val) => {
 };
 
 const handleCurrentChange = (val) => {
-  console.log(val);
   page.value = val;
   getTableData(find.value);
 };
+
 
 // 查询
 const getTableData = async (value) => {
@@ -495,7 +489,6 @@ const getTableData = async (value) => {
   }
 
   const table = await getWorkerList(rqt);
-  // console.log("table:",table);
   if (table.code === 0) {
     tableData.value = table.data.list;
     total.value = table.data.total;
@@ -543,28 +536,23 @@ const hy_id = ref("");
 const industryList = ref([]);
 const getIndustry = async () => {
   let rqt = { page: 1, pageSize: 100 };
-  //console.log(rqt);
   const table = await getIndustryList(rqt);
   if (table.code === 0) {
-    console.log(table);
     industryList.value = table.data.list;
   }
 };
 
 const changeId = (item) => {
   hy_id.value = item.ID;
-  //console.log(hy_id);
   workerInfo.value.gldgw = "";
   getLB(hy_id.value);
 };
 
 const getLB = async (hyId) => {
   let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) };
-  console.log(rqt);
   const table = await getCategory(rqt);
   if (table.code === 0) {
     gwList.value = table.data.rylb;
-    console.log(gwList.value);
   }
 };
 
@@ -684,55 +672,61 @@ const clearForm = () => {
   };
 };
 // 打开修改
+let fixedrzrq = ""
 const openEdit = (row) => {
-  workerInfo.value = JSON.parse(JSON.stringify(row));
-  workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd");
-  getqxList(row.gzrds);
-  getxzList(row.gzrqx);
-  workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : "";
-  if (workerInfo.value.sj == "") delete workerInfo.value.sj;
-  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? "否" : "是";
-  dialogFlag.value = "edit";
-  addDialog.value = true;
-};
+  workerInfo.value = JSON.parse(JSON.stringify(row))
+  fixedrzrq = workerInfo.value.rzrq.Time; //2022-08-05T11:02:15+08:00   2022-08-01T16:00:00.000Z
+  workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd"); //2022-08-01
+  getqxList(row.gzrds)
+  getxzList(row.gzrqx)
+  workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
+  if (workerInfo.value.sj == '') delete workerInfo.value.sj
+  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? '否' : '是'
+  dialogFlag.value = 'edit'
+  addDialog.value = true
+}
 
 // 确认增加修改
-const enterAddDialog = async () => {
-  workerForm.value.validate(async (valid) => {
+const enterAddDialog = async() => {
+
+  workerForm.value.validate(async valid => {
     if (valid) {
       const req = {
         ...workerInfo.value,
-      };
-      const request = req;
-      request.gldzwid = zwid.value;
-      request.gldgwid = gwid.value;
-      request.ztid = ztid.value;
+      }
+      const request = req
+      request.gldzwid = zwid.value
+      request.gldgwid = gwid.value
+      request.ztid = ztid.value
+      
 
       // 新增
-      if (dialogFlag.value === "add") {
-        request.is_14rhn = request.is_14rhn == "true" ? true : false;
+      if (dialogFlag.value === 'add') {
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
         // request.csbh = csbh.value
-        const res = await createWorker(request);
+        const res = await createWorker(request)
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "创建成功" });
-          await getTableData(find.value);
-          closeAddDialog();
+          ElMessage({ type: 'success', message: '创建成功' })
+          await getTableData(find.value)
+          closeAddDialog()
         }
       }
       // 修改
-      if (dialogFlag.value === "edit") {
-        request.is_14rhn = request.is_14rhn == "true" ? true : false;
-
-        const res = await setWorker(request);
+      if (dialogFlag.value === 'edit') {
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+         if(formatDate(fixedrzrq, "yyyy-MM-dd") == workerInfo.value.rzrq){
+          request.rzrq = new Date(request.rzrq).toISOString()
+         }
+        const res = await setWorker(request)
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "编辑成功" });
-          await getTableData(find.value);
-          closeAddDialog();
+          ElMessage({ type: 'success', message: '编辑成功' })
+          await getTableData(find.value)
+          closeAddDialog()
         }
       }
     }
-  });
-};
+  })
+}
 
 // 批量删除
 const deleteVisible = ref(false);
@@ -744,7 +738,6 @@ const handleSelectionChange = (val) => {
 
 const onDelete = async () => {
   const ids = multipleSelection.value.map((item) => item.id);
-  console.log(ids);
   const res = await deletePlaceById({ ids });
   if (res.code === 0) {
     ElMessage({
@@ -821,8 +814,8 @@ const zwSelect = (item) => {
 // 岗位
 const gwSelect = (item) => {
   gwid.value = item.id;
-  console.log(item.id);
 };
+
 // 状态
 const ztSelect = (item) => {
   ztid.value = item.id;

@@ -83,7 +83,7 @@ const dialogFormVisibleShow = inject("dialogFormVisibleShow");
 const form = ref(Qform);
 const Form = ref(null);
 const test =  ()=>{
-    console.log(form.value.city)
+    // console.log(form.value.city)
 }
 
 
@@ -98,11 +98,11 @@ const closeDialog = () => {
 //供父组件调用***************
 const initForm = (v) => {
   Form.value.resetFields();
-  console.log("父组件调用");
+  // console.log("父组件调用");
 };
 const echoData = (data, v) => {
   //回显数据
-  console.log("父组件调用回显数据");
+  // console.log("父组件调用回显数据");
  
 };
 defineExpose({
