@@ -684,9 +684,11 @@ const clearForm = () => {
   };
 };
 // 打开修改
+let fixedrzrq = ""
 const openEdit = (row) => {
   workerInfo.value = JSON.parse(JSON.stringify(row))
-  workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd");
+  fixedrzrq = workerInfo.value.rzrq.Time; //2022-08-05T11:02:15+08:00   2022-08-01T16:00:00.000Z
+  workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd"); //2022-08-01
   getqxList(row.gzrds)
   getxzList(row.gzrqx)
   workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
@@ -724,7 +726,9 @@ const enterAddDialog = async() => {
       // 修改
       if (dialogFlag.value === 'edit') {
         request.is_14rhn = request.is_14rhn == 'true' ? true : false
-        
+         if(formatDate(fixedrzrq, "yyyy-MM-dd") == workerInfo.value.rzrq){
+          request.rzrq = new Date(request.rzrq).toISOString()
+         }
         const res = await setWorker(request)
         if (res.code === 0) {
           ElMessage({ type: 'success', message: '编辑成功' })
