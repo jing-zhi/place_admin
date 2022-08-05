@@ -134,7 +134,7 @@ const getTableData = async() => {
     // pageSize.value = table.data.pageSize
   
   }else{
-    console.log("请求失败");
+    // console.log("请求失败");
   }
 }
 getTableData()

@@ -83,7 +83,7 @@ const industryCate = ref([])
 // 获取行业列表
 const getBusinessList = async() => {
   const { data } = await getBusinessMang({ page:1,pageSize:34 }) 
-  console.log(data.list);
+  // console.log(data.list);
   industryCate.value = data.list
   industryCate.value.unshift({ID:0,Name:'全部行业'})
 

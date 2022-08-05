@@ -309,7 +309,7 @@ const defaultTime2 = [
   new Date(2000, 2, 1, 23, 59, 59),
 ] // '12:00:00', '08:00:00'
 const timeScopeDiv = () => {
-  console.log(searchInfo.Time)
+  // console.log(searchInfo.Time)
   searchInfo.start_hsTime = searchInfo.Time[0]
   searchInfo.end_hsTime = searchInfo.Time[1]
   // searchInfo.start_hsTime = Date.parse(searchInfo.start_hsTime)
@@ -319,12 +319,12 @@ const timeScopeDiv = () => {
 const route = useRoute()
 const zjhm = route.params.zjhm ? route.params.zjhm : ''
 // const csbh = route.params.csbh ? route.params.csbh :"";
-console.log(
-  zjhm,
-  '拿到了路由跳转的人的zjhm',
-  'route.params.cd_id',
-  route.params
-)
+// console.log(
+//   zjhm,
+//   '拿到了路由跳转的人的zjhm',
+//   'route.params.cd_id',
+//   route.params
+// )
 // 首页表格数据
 const tableData = ref(null)
 const dialogFormVisible = ref(false)
