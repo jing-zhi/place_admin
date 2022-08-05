@@ -441,7 +441,6 @@ const handleSizeChange = (val) => {
 }
 
 const handleCurrentChange = (val) => {
-  console.log(val);
   page.value = val
   getTableData(find.value)
 }
@@ -505,7 +504,6 @@ const getIndustry = async() => {
   //console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
-    console.log(table)
     industryList.value = table.data.list
   }
 }
@@ -519,11 +517,9 @@ const changeId = (item) =>{
 
 const getLB = async(hyId) => {
   let rqt = { page: page.value, pageSize: 999, hy_id: Number(hyId) }
-  console.log(rqt);
   const table = await getCategory(rqt)
   if (table.code === 0) {
     gwList.value = table.data.rylb
-    console.log(gwList.value)
   }
 }
 
@@ -665,6 +661,7 @@ const clearForm = () => {
 // 打开修改
 const openEdit = (row) => {
   workerInfo.value = JSON.parse(JSON.stringify(row))
+  workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd");
   getqxList(row.gzrds)
   getxzList(row.gzrqx)
   workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
@@ -776,7 +773,6 @@ const zwSelect = (item) => {
 // 岗位
 const gwSelect = (item) => {
   gwid.value = item.id
-  console.log(item.id);
 }
 // 状态
 const ztSelect = (item) => {
