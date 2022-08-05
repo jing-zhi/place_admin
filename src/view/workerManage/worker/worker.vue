@@ -353,8 +353,6 @@
                 v-model="workerInfo.rzrq"
                 type="date"
                 placeholder="请选择"
-                format="YYYY/MM/DD"
-                value-format="YYYY-MM-DD"
               />
             </el-form-item>
             <el-form-item label="状态" prop="zt">
@@ -482,7 +480,6 @@ const handleSizeChange = (val) => {
 };
 
 const handleCurrentChange = (val) => {
-  console.log(val);
   page.value = val;
   getTableData(find.value);
 };
@@ -495,7 +492,6 @@ const getTableData = async (value) => {
   }
 
   const table = await getWorkerList(rqt);
-  // console.log("table:",table);
   if (table.code === 0) {
     tableData.value = table.data.list;
     total.value = table.data.total;
@@ -543,28 +539,23 @@ const hy_id = ref("");
 const industryList = ref([]);
 const getIndustry = async () => {
   let rqt = { page: 1, pageSize: 100 };
-  //console.log(rqt);
   const table = await getIndustryList(rqt);
   if (table.code === 0) {
-    console.log(table);
     industryList.value = table.data.list;
   }
 };
 
 const changeId = (item) => {
   hy_id.value = item.ID;
-  //console.log(hy_id);
   workerInfo.value.gldgw = "";
   getLB(hy_id.value);
 };
 
 const getLB = async (hyId) => {
   let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) };
-  console.log(rqt);
   const table = await getCategory(rqt);
   if (table.code === 0) {
     gwList.value = table.data.rylb;
-    console.log(gwList.value);
   }
 };
 
@@ -750,7 +741,6 @@ const handleSelectionChange = (val) => {
 
 const onDelete = async () => {
   const ids = multipleSelection.value.map((item) => item.id);
-  console.log(ids);
   const res = await deletePlaceById({ ids });
   if (res.code === 0) {
     ElMessage({
@@ -827,7 +817,6 @@ const zwSelect = (item) => {
 // 岗位
 const gwSelect = (item) => {
   gwid.value = item.id;
-  console.log(item.id);
 };
 // 状态
 const ztSelect = (item) => {
