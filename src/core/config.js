@@ -3,7 +3,7 @@
  */
 
 const config = {
-  appName: '重要场所管理',
+  appName: '重要行业管理',
   appLogo: 'https://www.gin-vue-admin.com/img/logo.png',
   showViteLogo: true
 }
