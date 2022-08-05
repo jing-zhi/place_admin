@@ -349,15 +349,7 @@
             </el-form-item>
             <el-form-item label="入职日期" prop="rzrq">
               <!-- <el-input v-model="workerInfo.rzrq" /> -->
-<<<<<<< HEAD
-              <el-date-picker
-                v-model="workerInfo.rzrq"
-                type="date"
-                placeholder="请选择"
-              />
-=======
               <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择"/>
->>>>>>> dev
             </el-form-item>
             <el-form-item label="状态" prop="zt">
               <el-select v-model="workerInfo.zt" class="m-2" placeholder="请选择" size="large">
