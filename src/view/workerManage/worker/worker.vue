@@ -685,57 +685,56 @@ const clearForm = () => {
 };
 // 打开修改
 const openEdit = (row) => {
-  workerInfo.value = JSON.parse(JSON.stringify(row));
-  console.log(workerInfo.value.rzrq);
+  workerInfo.value = JSON.parse(JSON.stringify(row))
   workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd");
-  console.log(workerInfo.value.rzrq);
-
-  getqxList(row.gzrds);
-  getxzList(row.gzrqx);
-  workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : "";
-  if (workerInfo.value.sj == "") delete workerInfo.value.sj;
-  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? "否" : "是";
-  dialogFlag.value = "edit";
-  addDialog.value = true;
-};
+  getqxList(row.gzrds)
+  getxzList(row.gzrqx)
+  workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
+  if (workerInfo.value.sj == '') delete workerInfo.value.sj
+  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? '否' : '是'
+  dialogFlag.value = 'edit'
+  addDialog.value = true
+}
 
 // 确认增加修改
-const enterAddDialog = async () => {
-  workerForm.value.validate(async (valid) => {
+const enterAddDialog = async() => {
+
+  workerForm.value.validate(async valid => {
     if (valid) {
       const req = {
         ...workerInfo.value,
-      };
-      const request = req;
-      request.gldzwid = zwid.value;
-      request.gldgwid = gwid.value;
-      request.ztid = ztid.value;
+      }
+      const request = req
+      request.gldzwid = zwid.value
+      request.gldgwid = gwid.value
+      request.ztid = ztid.value
+      
 
       // 新增
-      if (dialogFlag.value === "add") {
-        request.is_14rhn = request.is_14rhn == "true" ? true : false;
-        console.log(request.rzrq);
-        const res = await createWorker(request);
+      if (dialogFlag.value === 'add') {
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        // request.csbh = csbh.value
+        const res = await createWorker(request)
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "创建成功" });
-          await getTableData(find.value);
-          closeAddDialog();
+          ElMessage({ type: 'success', message: '创建成功' })
+          await getTableData(find.value)
+          closeAddDialog()
         }
       }
       // 修改
-      if (dialogFlag.value === "edit") {
-        request.is_14rhn = request.is_14rhn == "true" ? true : false;
-        request.rzrq=request.rzrq+"T00:00:00+08:00"
-        const res = await setWorker(request);
+      if (dialogFlag.value === 'edit') {
+        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+        
+        const res = await setWorker(request)
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "编辑成功" });
-          await getTableData(find.value);
-          closeAddDialog();
+          ElMessage({ type: 'success', message: '编辑成功' })
+          await getTableData(find.value)
+          closeAddDialog()
         }
       }
     }
-  });
-};
+  })
+}
 
 // 批量删除
 const deleteVisible = ref(false);
