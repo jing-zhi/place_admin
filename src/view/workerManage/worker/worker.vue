@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="gva-search-box">
-      <el-form :inline="true" :model="searchWorker" style="margin-left:20px">
+      <el-form :inline="true" :model="searchWorker" style="margin-left: 20px">
         <!-- <el-form-item v-show="csbh==''" label="场所编号" prop="csbh">
             <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
           </el-form-item>
@@ -9,76 +9,78 @@
             <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
           </el-form-item>  -->
 
-            <el-row>
-              <el-col :span="5">
-                <el-form-item label="场所编号" prop="csbh">
-                  <el-input v-model="searchWorker.csbh" min-width="80" placeholder="场所编号" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="5">
-                 <el-form-item label="场所名称" prop="csmc">
-                  <el-input v-model="searchWorker.csmc" min-width="80" placeholder="场所名称" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="5">
-                <el-form-item label="姓名">
-                  <el-input v-model="searchWorker.gzryxm" min-width="80" placeholder="工作人员姓名" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="5">
-                <el-form-item label="手机号">
-                  <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-             <el-row>
-              <el-col :span="5">
-                <el-form-item label="身份证">
-                  <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="5">
-                <el-form-item label="核酸信息">
-                  <el-select v-model="searchWorker.heSuanInfo" min-width="80" class="m-2" placeholder="核酸信息" size="large">
-                    <el-option
-                      v-for="item in heSuanList"
-                      :key="item.name"
-                      :label="item.name"
-                      :value="item.name"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="5">
-                <el-form-item label="健康码信息">
-                  <el-select v-model="searchWorker.healthCode" min-width="80" class="m-2" placeholder="健康码信息" size="large">
-                    <el-option
-                      v-for="item in healthCode"
-                      :key="item.name"
-                      :label="item.name"
-                      :value="item.name"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="5">
-                <el-form-item label="状态">
-                  <el-select v-model="searchWorker.zt" class="m-2" min-width="80" placeholder="请选择人员状态" size="large">
-                    <el-option
-                      v-for="item in ztList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.name"
-                      @click="ztSearch(item)"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label="场所编号" prop="csbh">
+              <el-input v-model="searchWorker.csbh" min-width="80" placeholder="场所编号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="场所名称" prop="csmc">
+              <el-input v-model="searchWorker.csmc" min-width="80" placeholder="场所名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="姓名">
+              <el-input v-model="searchWorker.gzryxm" min-width="80" placeholder="工作人员姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="手机号">
+              <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label="身份证">
+              <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="核酸信息">
+              <el-select
+                v-model="searchWorker.heSuanInfo"
+                min-width="80"
+                class="m-2"
+                placeholder="核酸信息"
+                size="large"
+              >
+                <el-option v-for="item in heSuanList" :key="item.name" :label="item.name" :value="item.name" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="健康码信息">
+              <el-select
+                v-model="searchWorker.healthCode"
+                min-width="80"
+                class="m-2"
+                placeholder="健康码信息"
+                size="large"
+              >
+                <el-option v-for="item in healthCode" :key="item.name" :label="item.name" :value="item.name" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="状态">
+              <el-select v-model="searchWorker.zt" class="m-2" min-width="80" placeholder="请选择人员状态" size="large">
+                <el-option
+                  v-for="item in ztList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name"
+                  @click="ztSearch(item)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-           <el-row>
-            <el-col :span="10">
-               <!-- <el-form-item label="入职时间范围">
+        <el-row>
+          <el-col :span="10">
+            <!-- <el-form-item label="入职时间范围">
                   <el-date-picker
                         v-model="searchWorker.rz"
                         type="daterange"
@@ -87,20 +89,20 @@
                         end-placeholder="结束日期"
                     />
               </el-form-item>       -->
-              <el-form-item label="入职时间范围" label-width="auto">
-                <el-date-picker
-                  v-model="searchWorker.rz"
-                  type="datetimerange"
-                  range-separator=":"
-                  :default-time="defaultTime"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  @change="changeRZTime"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-             <!-- <el-form-item label="调离时间范围">
+            <el-form-item label="入职时间范围" label-width="auto">
+              <el-date-picker
+                v-model="searchWorker.rz"
+                type="datetimerange"
+                range-separator=":"
+                :default-time="defaultTime"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                @change="changeRZTime"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <!-- <el-form-item label="调离时间范围">
                     <el-date-picker
                           v-model="searchWorker.dl"
                           type="daterange"
@@ -109,27 +111,27 @@
                           end-placeholder="结束日期"
                       />
                 </el-form-item>       -->
-              <el-form-item label="扫码时间范围" label-width="auto">
-                <el-date-picker
-                  v-model="searchWorker.dl"
-                  type="datetimerange"
-                  range-separator=":"
-                  :default-time="defaultTime"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  @change="changeDLTime"
-                />
-              </el-form-item>
-              
-            </el-col>
-          </el-row>
-       
+            <el-form-item label="扫码时间范围" label-width="auto">
+              <el-date-picker
+                v-model="searchWorker.dl"
+                type="datetimerange"
+                range-separator=":"
+                :default-time="defaultTime"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                @change="changeDLTime"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
           <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
 
-          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport">按条件导出</el-button>
-
+          <el-button class="excel-btn" size="small" type="primary" icon="download" @click="handleExcelExport"
+            >按条件导出</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -138,22 +140,27 @@
         <el-button class="excel-btn" size="small" type="primary" icon="plus" @click="addWorker">新增</el-button>
         <el-popover v-model:visible="deleteVisible" placement="top" width="160">
           <p>确定要删除吗？</p>
-          <div style="text-align: right; margin-top: 8px;">
+          <div style="text-align: right; margin-top: 8px">
             <el-button size="small" type="text" @click="deleteVisible = false">取消</el-button>
             <el-button size="small" type="primary" @click="onDelete">确定</el-button>
           </div>
           <template #reference>
-            <el-button icon="delete" size="small" :disabled="!multipleSelection.length" style="margin-left: 10px;" @click="deleteVisible = true">删除</el-button>
+            <el-button
+              icon="delete"
+              size="small"
+              :disabled="!multipleSelection.length"
+              style="margin-left: 10px"
+              @click="deleteVisible = true"
+              >删除</el-button
+            >
           </template>
         </el-popover>
       </div>
       <div class="gva-btn-list" />
-      <el-table
-        :data="tableData"
-        @selection-change="handleSelectionChange">
+      <el-table :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="场所编号"  min-width="230" prop="csbh" />
+        <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
         <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
         <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
         <!-- <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
@@ -162,20 +169,20 @@
         <el-table-column align="left" label="手机号码" min-width="120" prop="gzrysjh">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top">
-              <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
+              <span style="margin-left: 30px">{{ scope.row.gzrysjh }}</span>
               <template #reference>
-                <span>{{formatter(scope.row.gzrysjh,3,4) }}</span>
-              </template>                   
+                <span>{{ formatter(scope.row.gzrysjh, 3, 4) }}</span>
+              </template>
             </el-popover>
           </template>
         </el-table-column>
         <el-table-column align="left" label="身份证号" min-width="170" prop="gzrysfz">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top" width="170px">
-              <span style="margin-left: 20px;">{{ scope.row.gzrysfz }}</span>
+              <span style="margin-left: 20px">{{ scope.row.gzrysfz }}</span>
               <template #reference>
-                <span>{{formatter(scope.row.gzrysfz,3,4) }}</span>
-              </template>                   
+                <span>{{ formatter(scope.row.gzrysfz, 3, 4) }}</span>
+              </template>
             </el-popover>
           </template>
         </el-table-column>
@@ -184,7 +191,7 @@
         <!-- 新增 -->
         <el-table-column align="center" label="是否14天内入豫" min-width="150" prop="is_14rhn">
           <template #default="scope">
-            {{scope.row.is_14rhn === true ? "是" : "否"}}
+            {{ scope.row.is_14rhn === true ? "是" : "否" }}
           </template>
         </el-table-column>
 
@@ -215,7 +222,7 @@
           <template #default="scope">
             <el-popover v-model:visible="scope.row.visible" placement="top" width="100">
               <p>确定要删除此用户吗</p>
-              <div style="text-align: right; margin-top: 8px;">
+              <div style="text-align: right; margin-top: 8px">
                 <el-button size="small" type="text" @click="scope.row.visible = false">取消</el-button>
                 <el-button type="primary" size="small" @click="deleteWorkerFun(scope.row)">确定</el-button>
               </div>
@@ -225,10 +232,8 @@
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
             <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>
-
           </template>
         </el-table-column>
-
       </el-table>
       <div class="gva-pagination">
         <el-pagination
@@ -250,7 +255,7 @@
         :close-on-press-escape="false"
         :close-on-click-modal="false"
       >
-        <div style="height:65vh;overflow:auto;padding:0 10px;">
+        <div style="height: 65vh; overflow: auto; padding: 0 10px">
           <el-form ref="workerForm" :rules="rules" :model="workerInfo" label-width="130px">
             <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
               <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
@@ -339,12 +344,18 @@
             <el-form-item label="是否14天内入豫" prop="is_14rhn">
               <el-select v-model="workerInfo.is_14rhn" placeholder="请选择">
                 <el-option value="true" label="是" />
-                <el-option value="false" label="否"/> 
+                <el-option value="false" label="否" />
               </el-select>
             </el-form-item>
             <el-form-item label="入职日期" prop="rzrq">
               <!-- <el-input v-model="workerInfo.rzrq" /> -->
-              <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择" />
+              <el-date-picker
+                v-model="workerInfo.rzrq"
+                type="date"
+                placeholder="请选择"
+                format="YYYY/MM/DD"
+                value-format="YYYY-MM-DD"
+              />
             </el-form-item>
             <el-form-item label="状态" prop="zt">
               <el-select v-model="workerInfo.zt" class="m-2" placeholder="请选择" size="large">
@@ -364,7 +375,6 @@
               <el-input v-model="workerInfo.dlgldbh" />
             </el-form-item> -->
           </el-form>
-
         </div>
 
         <template #footer>
@@ -374,15 +384,14 @@
           </div>
         </template>
       </el-dialog>
-
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Worker',
-}
+  name: "Worker",
+};
 </script>
 
 <script setup>
@@ -392,56 +401,52 @@ import {
   createWorker,
   setWorker,
   exportExcel,
-  deletePlaceById
-} from '@/api/csUser/worker.js'
-import { formatter } from '@/utils/format'
+  deletePlaceById,
+} from "@/api/csUser/worker.js";
+import { formatter } from "@/utils/format";
 
-import { nextTick, ref, watch, toRaw } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import dsData from '@/utils/address/ds.json'
+import { nextTick, ref, watch, toRaw } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import dsData from "@/utils/address/ds.json";
 // import qxData from '@/utils/address/areas.json'
 // import xzData from '@/utils/address/streets.json'
-import vlgs from '@/utils/address/jlhenan.json'
-import { formatDate } from '@/utils/format'
+import vlgs from "@/utils/address/jlhenan.json";
+import { formatDate } from "@/utils/format";
 
-import { formatTimeToStr } from '@/utils/date.js'
-import { useRoute, useRouter } from 'vue-router'
-import { debounce } from '@/utils/debounce.js'
+import { formatTimeToStr } from "@/utils/date.js";
+import { useRoute, useRouter } from "vue-router";
+import { debounce } from "@/utils/debounce.js";
 
-import { getIndustryList} from '@/api/industry.js'
-import { getCategory} from '@/api/Category.js'
+import { getIndustryList } from "@/api/industry.js";
+import { getCategory } from "@/api/Category.js";
 
+const route = useRoute();
+const csbh = ref("");
+csbh.value = route.params.csbh ? route.params.csbh : "";
 
-const route = useRoute()
-const csbh = ref('')
-csbh.value = route.params.csbh ? route.params.csbh : ''
+const page = ref(1);
+const total = ref(0);
+const pageSize = ref(10);
+const tableData = ref([]);
+const searchWorker = ref({});
+searchWorker.value.csbh = csbh.value;
 
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(10)
-const tableData = ref([])
-const searchWorker = ref({})
-searchWorker.value.csbh = csbh.value
-
-const defaultTime = [
-  new Date(2022, 1, 1, 0, 0, 0),
-  new Date(2022, 1, 1, 23, 59, 59)
-]
+const defaultTime = [new Date(2022, 1, 1, 0, 0, 0), new Date(2022, 1, 1, 23, 59, 59)];
 
 // 地址
-const dsList = ref([])
-const qxList = ref([])
-const xzList = ref([])
+const dsList = ref([]);
+const qxList = ref([]);
+const xzList = ref([]);
 const zwList = [
-  { id: 1, name: '点长' },
-  { id: 2, name: '基层干部' },
-  { id: 3, name: '公安人员' },
-  { id: 4, name: '交通人员' },
-  { id: 5, name: '感控人员' },
-  { id: 6, name: '医务人员' },
-] // 1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员
+  { id: 1, name: "点长" },
+  { id: 2, name: "基层干部" },
+  { id: 3, name: "公安人员" },
+  { id: 4, name: "交通人员" },
+  { id: 5, name: "感控人员" },
+  { id: 6, name: "医务人员" },
+]; // 1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员
 
-const gwList = ref([])
+const gwList = ref([]);
 // const gwList = [
 //   { id: 1, name: '负责人' },
 //   { id: 2, name: '医务人员' },
@@ -454,418 +459,391 @@ const gwList = ref([])
 // ] // 负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员
 
 const ztList = [
-  { id: 1, name: '在岗' },
-  { id: 2, name: '离岗' },
-  { id: 3, name: '调离' },
-  { id: 4, name: '正常隔离' },
-] // 1在岗 2离岗 3调离  4 正常隔离
+  { id: 1, name: "在岗" },
+  { id: 2, name: "离岗" },
+  { id: 3, name: "调离" },
+  { id: 4, name: "正常隔离" },
+]; // 1在岗 2离岗 3调离  4 正常隔离
 
 const heSuanList = [
-  { name: '阴性' },
-  { name: '阳性' },
-  { name: '无24小时核酸' },
-  { name: '无48小时核酸' },
-  { name: '无72小时核酸' },
-]
+  { name: "阴性" },
+  { name: "阳性" },
+  { name: "无24小时核酸" },
+  { name: "无48小时核酸" },
+  { name: "无72小时核酸" },
+];
 
-const healthCode = [
-  { name: '绿码' },
-  { name: '黄码' },
-  { name: '红码' },
-]
+const healthCode = [{ name: "绿码" }, { name: "黄码" }, { name: "红码" }];
 
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val
-  getTableData(find.value)
-}
+  pageSize.value = val;
+  getTableData(find.value);
+};
 
 const handleCurrentChange = (val) => {
   console.log(val);
-  page.value = val
-  getTableData(find.value)
-}
+  page.value = val;
+  getTableData(find.value);
+};
 
 // 查询
-const getTableData = async(value) => {
-  let rqt = { csbh: csbh.value, page: page.value, pageSize: pageSize.value }
+const getTableData = async (value) => {
+  let rqt = { csbh: csbh.value, page: page.value, pageSize: pageSize.value };
   if (value) {
-    rqt = { csbh: csbh.value, page: page.value, pageSize: pageSize.value, ...value }
+    rqt = { csbh: csbh.value, page: page.value, pageSize: pageSize.value, ...value };
   }
 
-  const table = await getWorkerList(rqt)
+  const table = await getWorkerList(rqt);
   // console.log("table:",table);
   if (table.code === 0) {
-    tableData.value = table.data.list
-    total.value = table.data.total
+    tableData.value = table.data.list;
+    total.value = table.data.total;
     // page.value = table.data.page
     // pageSize.value = table.data.pageSize
   }
-}
+};
 
-const find = ref({})
+const find = ref({});
 // 搜索
 const onSubmit = debounce(() => {
-  const retFind = getFind()
-  getTableData(retFind)
-})
+  const retFind = getFind();
+  getTableData(retFind);
+});
 const getFind = () => {
-  const retFind = toRaw(searchWorker.value)
+  const retFind = toRaw(searchWorker.value);
   if (searchWorker.value.rz) {
-    retFind.start_time = searchWorker.value.rz[0]
-    retFind.end_time = searchWorker.value.rz[1]
+    retFind.start_time = searchWorker.value.rz[0];
+    retFind.end_time = searchWorker.value.rz[1];
     // delete retFind.rz
   } else {
     // delete retFind.rz
-    delete retFind.start_time
-    delete retFind.end_time
+    delete retFind.start_time;
+    delete retFind.end_time;
   }
   if (searchWorker.value.dl) {
-    retFind.transfer_start_time = searchWorker.value.dl[0]
-    retFind.transfer_end_time = searchWorker.value.dl[1]
+    retFind.transfer_start_time = searchWorker.value.dl[0];
+    retFind.transfer_end_time = searchWorker.value.dl[1];
     // delete retFind.dl
   } else {
     // delete retFind.dl
-    delete retFind.transfer_start_time
-    delete retFind.transfer_end_time
+    delete retFind.transfer_start_time;
+    delete retFind.transfer_end_time;
   }
-  find.value = retFind
-  return retFind
-}
+  find.value = retFind;
+  return retFind;
+};
 const onReset = () => {
-  searchWorker.value = {}
-  getTableData()
-}
+  searchWorker.value = {};
+  getTableData();
+};
 
-const hy_id = ref('')
+const hy_id = ref("");
 // 查询所有行业名称+id
-const industryList = ref([])
-const getIndustry = async() => {
-  let rqt = { page: 1, pageSize: 100 } 
+const industryList = ref([]);
+const getIndustry = async () => {
+  let rqt = { page: 1, pageSize: 100 };
   //console.log(rqt);
-  const table = await getIndustryList(rqt)
+  const table = await getIndustryList(rqt);
   if (table.code === 0) {
-    console.log(table)
-    industryList.value = table.data.list
+    console.log(table);
+    industryList.value = table.data.list;
   }
-}
+};
 
-const changeId = (item) =>{
-  hy_id.value = item.ID
+const changeId = (item) => {
+  hy_id.value = item.ID;
   //console.log(hy_id);
-  workerInfo.value.gldgw = ''
-  getLB(hy_id.value)
-}
+  workerInfo.value.gldgw = "";
+  getLB(hy_id.value);
+};
 
-const getLB = async(hyId) => {
-  let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) }
+const getLB = async (hyId) => {
+  let rqt = { page: 0, pageSize: 999, hy_id: Number(hyId) };
   console.log(rqt);
-  const table = await getCategory(rqt)
+  const table = await getCategory(rqt);
   if (table.code === 0) {
-    gwList.value = table.data.rylb
-    console.log(gwList.value)
+    gwList.value = table.data.rylb;
+    console.log(gwList.value);
   }
-}
+};
 
 // 初始化
-const initPage = async() => {
-  getTableData()
-  dsList.value = dsData
-  getIndustry()
+const initPage = async () => {
+  getTableData();
+  dsList.value = dsData;
+  getIndustry();
+};
 
-}
-
-initPage()
+initPage();
 
 // 弹窗
-const addDialog = ref(false)
+const addDialog = ref(false);
 const closeAddDialog = () => {
   // workerForm.value.resetFields()
   // 置空
-  clearForm()
-  addDialog.value = false
-}
-const dialogFlag = ref('add')
+  clearForm();
+  addDialog.value = false;
+};
+const dialogFlag = ref("add");
 
 // 新增
 const addWorker = () => {
-  dialogFlag.value = 'add'
-  addDialog.value = true
-}
+  dialogFlag.value = "add";
+  addDialog.value = true;
+};
 // 删除
-const deleteWorkerFun = async(row) => {
-
-  const res = await deleteWorker({ id: row.id })
+const deleteWorkerFun = async (row) => {
+  const res = await deleteWorker({ id: row.id });
   if (res.code === 0) {
-    ElMessage.success('删除成功')
-    row.visible = false
-    await getTableData()
+    ElMessage.success("删除成功");
+    row.visible = false;
+    await getTableData();
   }
-}
+};
 
 // 弹窗
 const workerInfo = ref({
   // "id":1,//id主键id
-  "csbh":"",//csbh隔离点编号
-  'gzryxm': '', // gzryxm工作人员姓名
-  'gzrysjh': '', // gzrysjh工作人员手机号
-  'gzrysfz': '', // gzrysfz身份证号
-  'gzrds': null, // gzrds人员原单位所在地市编码
-  'gzrqx': null, // gzrqx人员所在县区编码
-  'gzrxz': null, // gzrxz人员所在乡编码
-  'ydw': '', // ydw原工作单位
-  'gldzw': '', // gldzw隔离点职务（1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员）
-  'sshy':'',//sshy所属行业
-  'gldgw': '', // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
-  'rzrq': '', // rzrq入职隔离点日期
-  'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
+  csbh: "", //csbh隔离点编号
+  gzryxm: "", // gzryxm工作人员姓名
+  gzrysjh: "", // gzrysjh工作人员手机号
+  gzrysfz: "", // gzrysfz身份证号
+  gzrds: null, // gzrds人员原单位所在地市编码
+  gzrqx: null, // gzrqx人员所在县区编码
+  gzrxz: null, // gzrxz人员所在乡编码
+  ydw: "", // ydw原工作单位
+  gldzw: "", // gldzw隔离点职务（1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员）
+  sshy: "", //sshy所属行业
+  gldgw: "", // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
+  rzrq: "", // rzrq入职隔离点日期
+  zt: "", // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
   // "sj": "",    //sj 调离时间
   // "sj": new Date(),
-  'dlgldbh': '', // dlgldbh 调离隔离点编号
-  'is_14rhn':null //是否十四天内入豫
-})
+  dlgldbh: "", // dlgldbh 调离隔离点编号
+  is_14rhn: null, //是否十四天内入豫
+});
 // const rules = ref({})
 const rules = ref({
-  csbh: [
-    { required: true, message: '请输入场所编号', trigger: 'blur' },
-  ],
+  csbh: [{ required: true, message: "请输入场所编号", trigger: "blur" }],
   gzryxm: [
-    { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 1, max: 5, message: '不合要求', trigger: 'blur' },
+    { required: true, message: "请输入姓名", trigger: "blur" },
+    { min: 1, max: 5, message: "不合要求", trigger: "blur" },
   ],
   gzrysjh: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
-      message: '手机号不合法',
-      trigger: 'blur' },
+    { required: true, message: "请输入手机号", trigger: "blur" },
+    {
+      pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+      message: "手机号不合法",
+      trigger: "blur",
+    },
     // { type: 'number', message: 'must be a number' },
     // 正则
   ],
   gzrysfz: [
-    { required: true, message: '请输入身份证', trigger: 'blur' },
+    { required: true, message: "请输入身份证", trigger: "blur" },
     // 正则
-    { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
-      message: '身份证号不合法',
-      trigger: 'blur' }
+    { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, message: "身份证号不合法", trigger: "blur" },
   ],
-  gzrds: [
-    { required: true, message: '请选择地市' },
-  ],
-  gzrqx: [
-    { required: true, message: '请选择区县' },
-  ],
-  gzrxz: [
-    { required: true, message: '请选择乡镇' },
-  ],
+  gzrds: [{ required: true, message: "请选择地市" }],
+  gzrqx: [{ required: true, message: "请选择区县" }],
+  gzrxz: [{ required: true, message: "请选择乡镇" }],
   // 地区
   ydw: [
-    { required: true, message: '请输入原单位', trigger: 'blur' },
-    { min: 2, message: '最低2位字符', trigger: 'blur' },
+    { required: true, message: "请输入原单位", trigger: "blur" },
+    { min: 2, message: "最低2位字符", trigger: "blur" },
   ],
   // zw gw
-  sshy : [
-    { required: true, message: '请选择所属行业' },
-  ],
+  sshy: [{ required: true, message: "请选择所属行业" }],
 
-  gldgw: [
-    { required: true, message: '请选择人员类别' },
-  ],
-  rzrq: [
-    { required: true, message: '请输入入职日期', trigger: 'blur' }
-  ],
-  zt: [
-    { required: true, message: '请选择人员状态' }
-  ],
-  is_14rhn:[
-    {required: true, message: '请选择是否入豫'}
-  ]
-})
+  gldgw: [{ required: true, message: "请选择人员类别" }],
+  rzrq: [{ required: true, message: "请输入入职日期", trigger: "blur" }],
+  zt: [{ required: true, message: "请选择人员状态" }],
+  is_14rhn: [{ required: true, message: "请选择是否入豫" }],
+});
 
-const workerForm = ref(null)
+const workerForm = ref(null);
 const clearForm = () => {
-  workerForm.value.resetFields()
+  workerForm.value.resetFields();
   workerInfo.value = {
-    "csbh":"",//csbh隔离点编号
-    'gzryxm': '', // gzryxm工作人员姓名
-    'gzrysjh': '', // gzrysjh工作人员手机号
-    'gzrysfz': '', // gzrysfz身份证号
-    'gzrds': null, // gzrds人员原单位所在地市编码
-    'gzrqx': null, // gzrqx人员所在县区编码
-    'gzrxz': null, // gzrxz人员所在乡编码
-    'ydw': '', // ydw原工作单位
-    'gldzw': '', // gldzw隔离点职务（1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员）
-    'gldgw': '', // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
-    'rzrq': '', // rzrq入职隔离点日期
-    'zt': '', // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
+    csbh: "", //csbh隔离点编号
+    gzryxm: "", // gzryxm工作人员姓名
+    gzrysjh: "", // gzrysjh工作人员手机号
+    gzrysfz: "", // gzrysfz身份证号
+    gzrds: null, // gzrds人员原单位所在地市编码
+    gzrqx: null, // gzrqx人员所在县区编码
+    gzrxz: null, // gzrxz人员所在乡编码
+    ydw: "", // ydw原工作单位
+    gldzw: "", // gldzw隔离点职务（1:点长,2:基层干部,3:公安人员,4:交通人员,5:感控人员,6:医务人员）
+    gldgw: "", // gldgw工作人员类别：负责人，医务人员，信息联络员，清洁消毒员，安全保障员，后勤保障员，心理辅导员，污水处理设施管理员。共八种
+    rzrq: "", // rzrq入职隔离点日期
+    zt: "", // zt人员状态（1在岗 2离岗 3调离  4 正常隔离）
     // 'sj': '', // sj 调离时间
-    'dlgldbh': '' ,// dlgldbh 调离隔离点编号
-    'is_14rhn':null,   //是否十四天内入豫
-  }
-}
+    dlgldbh: "", // dlgldbh 调离隔离点编号
+    is_14rhn: null, //是否十四天内入豫
+  };
+};
 // 打开修改
 const openEdit = (row) => {
-  workerInfo.value = JSON.parse(JSON.stringify(row))
-  getqxList(row.gzrds)
-  getxzList(row.gzrqx)
-  workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : ''
-  if (workerInfo.value.sj == '') delete workerInfo.value.sj
-  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? '否' : '是'
-  dialogFlag.value = 'edit'
-  addDialog.value = true
-}
+  workerInfo.value = JSON.parse(JSON.stringify(row));
+  workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd");
+  getqxList(row.gzrds);
+  getxzList(row.gzrqx);
+  workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : "";
+  if (workerInfo.value.sj == "") delete workerInfo.value.sj;
+  workerInfo.value.is_14rhn = workerInfo.value.is_14rhn === false ? "否" : "是";
+  dialogFlag.value = "edit";
+  addDialog.value = true;
+};
 
 // 确认增加修改
-const enterAddDialog = async() => {
-
-  workerForm.value.validate(async valid => {
+const enterAddDialog = async () => {
+  workerForm.value.validate(async (valid) => {
     if (valid) {
       const req = {
         ...workerInfo.value,
-      }
-      const request = req
-      request.gldzwid = zwid.value
-      request.gldgwid = gwid.value
-      request.ztid = ztid.value
-      
+      };
+      const request = req;
+      request.gldzwid = zwid.value;
+      request.gldgwid = gwid.value;
+      request.ztid = ztid.value;
 
       // 新增
-      if (dialogFlag.value === 'add') {
-        request.is_14rhn = request.is_14rhn == 'true' ? true : false
+      if (dialogFlag.value === "add") {
+        request.is_14rhn = request.is_14rhn == "true" ? true : false;
         // request.csbh = csbh.value
-        const res = await createWorker(request)
+        const res = await createWorker(request);
         if (res.code === 0) {
-          ElMessage({ type: 'success', message: '创建成功' })
-          await getTableData(find.value)
-          closeAddDialog()
+          ElMessage({ type: "success", message: "创建成功" });
+          await getTableData(find.value);
+          closeAddDialog();
         }
       }
       // 修改
-      if (dialogFlag.value === 'edit') {
-        request.is_14rhn = request.is_14rhn == 'true' ? true : false
-        
-        const res = await setWorker(request)
+      if (dialogFlag.value === "edit") {
+        request.is_14rhn = request.is_14rhn == "true" ? true : false;
+
+        const res = await setWorker(request);
         if (res.code === 0) {
-          ElMessage({ type: 'success', message: '编辑成功' })
-          await getTableData(find.value)
-          closeAddDialog()
+          ElMessage({ type: "success", message: "编辑成功" });
+          await getTableData(find.value);
+          closeAddDialog();
         }
       }
     }
-  })
-}
+  });
+};
 
 // 批量删除
-const deleteVisible = ref(false)
-const multipleSelection = ref([])
+const deleteVisible = ref(false);
+const multipleSelection = ref([]);
 
 const handleSelectionChange = (val) => {
-  multipleSelection.value = val
-}
+  multipleSelection.value = val;
+};
 
-const onDelete = async() => {
-  const ids = multipleSelection.value.map((item)=>item.id)
+const onDelete = async () => {
+  const ids = multipleSelection.value.map((item) => item.id);
   console.log(ids);
-  const res = await deletePlaceById({ids})
-  if(res.code === 0){
+  const res = await deletePlaceById({ ids });
+  if (res.code === 0) {
     ElMessage({
-      type:'success',
-      message:res.msg
-    })
-    if(tableData.value.length === ids.length && page.value > 1){
-      page.value--
+      type: "success",
+      message: res.msg,
+    });
+    if (tableData.value.length === ids.length && page.value > 1) {
+      page.value--;
     }
   }
-   deleteVisible.value = false
-   getTableData()
-}
+  deleteVisible.value = false;
+  getTableData();
+};
 
 // 跳转详情
-const router = useRouter()
+const router = useRouter();
 const openDetails = (row) => {
   router.push({
-    name: 'workerclock',
+    name: "workerclock",
     params: {
-      'pid': row.id
-    }
-  })
-}
+      pid: row.id,
+    },
+  });
+};
 
 // 市 区 镇
 // const dsname = ref("")
 // const qxname = ref("")
 // const xzname = ref("")
 const dsSelect = (item) => {
-  workerInfo.value.gzrdsname = item.name
+  workerInfo.value.gzrdsname = item.name;
   // dsname.value = item.name
   // 获取区县列表
-  getqxList(item.code)
-  workerInfo.value.gzrqx = null
-  workerInfo.value.gzrxz = null
-}
-const getqxList = async(code) => {
+  getqxList(item.code);
+  workerInfo.value.gzrqx = null;
+  workerInfo.value.gzrxz = null;
+};
+const getqxList = async (code) => {
   for (let i = 0; i < vlgs.length; i++) {
     if (vlgs[i].code == code) {
-      qxList.value = vlgs[i].children
+      qxList.value = vlgs[i].children;
     }
   }
-}
+};
 const qxSelect = (item) => {
   // qxname.value = item.name
-  workerInfo.value.gzrqxname = item.name
+  workerInfo.value.gzrqxname = item.name;
   // 获取乡镇列表
-  getxzList(item.code)
-  workerInfo.value.gzrxz = null
-}
-const getxzList = async(code) => {
+  getxzList(item.code);
+  workerInfo.value.gzrxz = null;
+};
+const getxzList = async (code) => {
   for (let i = 0; i < qxList.value.length; i++) {
     if (qxList.value[i].code == code) {
       // let list = toRaw(qxList.value[i].children)
-      const list = qxList.value[i].children
-      xzList.value = list
+      const list = qxList.value[i].children;
+      xzList.value = list;
       // return list;
     }
   }
-}
+};
 const xzSelect = (item) => {
   // xzname.value = item.name
-  workerInfo.value.gzrxzname = item.name
-}
+  workerInfo.value.gzrxzname = item.name;
+};
 
-const zwid = ref(1)
-const gwid = ref(1)
-const ztid = ref(1)
+const zwid = ref(1);
+const gwid = ref(1);
+const ztid = ref(1);
 // 职位
 const zwSelect = (item) => {
-  zwid.value = item.id
-}
+  zwid.value = item.id;
+};
 // 岗位
 const gwSelect = (item) => {
-  gwid.value = item.id
+  gwid.value = item.id;
   console.log(item.id);
-}
+};
 // 状态
 const ztSelect = (item) => {
-  ztid.value = item.id
-}
+  ztid.value = item.id;
+};
 
 const ztSearch = (item) => {
-  searchWorker.value.ztid = item.id
-}
+  searchWorker.value.ztid = item.id;
+};
 
 // 导出
 const handleExcelExport = debounce(() => {
-  getFind()
-  getExcel('cdWorker_export.xlsx')
-})
+  getFind();
+  getExcel("cdWorker_export.xlsx");
+});
 
 const getExcel = (fileName) => {
   // if (!fileName || typeof fileName !== 'string') {
   //   fileName = 'cdWorker_export.xlsx'
   // }
-  exportExcel({ fileName, csbh: csbh.value, ...find.value })
-}
-
-
+  exportExcel({ fileName, csbh: csbh.value, ...find.value });
+};
 </script>
 
 <style lang="scss">
@@ -913,11 +891,11 @@ const getExcel = (fileName) => {
   font-size: 16px;
   margin-left: 2px;
 }
-.excel-btn+.excel-btn{
+.excel-btn + .excel-btn {
   margin-left: 10px;
 }
 
-.el-row{
+.el-row {
   padding: 0 !important;
 }
 </style>
