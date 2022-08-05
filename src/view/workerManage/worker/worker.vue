@@ -686,7 +686,10 @@ const clearForm = () => {
 // 打开修改
 const openEdit = (row) => {
   workerInfo.value = JSON.parse(JSON.stringify(row));
+  console.log(workerInfo.value.rzrq);
   workerInfo.value.rzrq = formatDate(workerInfo.value.rzrq.Time, "yyyy-MM-dd");
+  console.log(workerInfo.value.rzrq);
+
   getqxList(row.gzrds);
   getxzList(row.gzrqx);
   workerInfo.value.sj = row.sj.Valid ? workerInfo.value.sj.Time : "";
@@ -711,7 +714,7 @@ const enterAddDialog = async () => {
       // 新增
       if (dialogFlag.value === "add") {
         request.is_14rhn = request.is_14rhn == "true" ? true : false;
-        // request.csbh = csbh.value
+        console.log(request.rzrq);
         const res = await createWorker(request);
         if (res.code === 0) {
           ElMessage({ type: "success", message: "创建成功" });
@@ -722,7 +725,7 @@ const enterAddDialog = async () => {
       // 修改
       if (dialogFlag.value === "edit") {
         request.is_14rhn = request.is_14rhn == "true" ? true : false;
-
+        request.rzrq=request.rzrq+"T00:00:00+08:00"
         const res = await setWorker(request);
         if (res.code === 0) {
           ElMessage({ type: "success", message: "编辑成功" });
