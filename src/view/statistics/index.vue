@@ -4,7 +4,7 @@
       <el-form :inline="true" style="margin-left: 20px" :model="searchInfo">
         <el-form-item label="地区" @click="onSearch">
           <el-cascader
-            v-model="searchInfo.deptId"
+            v-model="searchInfo.dept_id"
             style="width: 100%"
             @change="onSearch"
             :options="deptOptions"
@@ -29,7 +29,7 @@
         </el-form-item>
         <el-form-item label="健康码信息">
           <el-select
-            v-model="searchInfo.healthCode"
+            v-model="searchInfo.health_code_info"
             class="m-2"
             placeholder="健康码信息"
             size="large"
@@ -181,10 +181,8 @@ const handleCurrentChange = (val) => {
 
 // 健康码信息
 const healthCode = [
-  { name: "全部" },
-  { name: "绿码" },
-  { name: "黄码" },
-  { name: "红码" },
+  { name: "正常" },
+  { name: "异常" },
 ];
 
 const deptOptions = ref([]);
