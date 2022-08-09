@@ -12,12 +12,12 @@ export const formatBoolean = (bool) => {
 export const formatDate = (time, type = "yyyy-MM-dd hh:mm:ss") => {
   if (time !== null && time !== "") {
     var date = new Date(time);
+    console.log(date);
     return formatTimeToStr(date, type);
   } else {
     return "";
   }
 };
-
 export const filterDict = (value, options) => {
   const rowLabel = options && options.filter((item) => item.value === value);
   return rowLabel && rowLabel[0] && rowLabel[0].label;

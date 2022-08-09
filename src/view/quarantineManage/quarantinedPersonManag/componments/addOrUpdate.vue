@@ -413,7 +413,7 @@ const cityList = QcityList
 const csbh = props.csbh
 const getRoom = async() => {
   const res = await getRoomList({ PlaceID: csbh, page: 1, pageSize: 999 })
-  console.log(res)
+  // console.log(res)
   roomList.value = res.data.list
 }
 getRoom()
@@ -429,11 +429,11 @@ const checkTime = (rule, value, callback) => {
   let end
   if (value != '') {
     end = value.replace(/\-/g, '')
-    console.log(end, ',end')
+    // console.log(end, ',end')
   }
   if (form.glkssj) {
     start = form.glkssj.replace(/\-/g, '')
-    console.log(start, 'start')
+    // console.log(start, 'start')
   }
   if (!start) {
     callback(new Error('请输入隔离开始时间'))
@@ -517,12 +517,12 @@ const enterDialog = () => {
     }
     if (props.dialogTitle.includes('新增')) {
       try {
-        console.log('新增')
+        // console.log('新增')
         form.gldfjbh = 2
         form.csbh = '084107030070091651747871'
         const res = await addData({ ...result })
         reGetData()
-        console.log(res, '这是新增是否成功的数据')
+        // console.log(res, '这是新增是否成功的数据')
         if (res.code !== 0) {
           throw new Error(res.msg)
         }
@@ -544,11 +544,11 @@ const enterDialog = () => {
     } else {
       // 修改逻辑处理
       try {
-        console.log('修改')
+        // console.log('修改')
         form.gldfjbh = 2
         const res = await updateData({ ...result })
         reGetData()
-        console.log(res, '这是修改是否成功的数据')
+        // console.log(res, '这是修改是否成功的数据')
         if (res.code !== 0) {
           throw new Error(res.msg)
         }
@@ -598,7 +598,7 @@ const initForm = function(v) {
     form.csbh = csbh
   }
   onMounted(() => {
-    console.log('挂载---refresh')
+    // console.log('挂载---refresh')
     Form.value.resetFields()
   })
 }
