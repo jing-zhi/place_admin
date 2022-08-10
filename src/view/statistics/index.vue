@@ -266,10 +266,23 @@ const getTableData = async (value) => {
   const table = await getAreaList(rqt);
   if (table.code === 0) {
     tableData.value = table.data.list;
+    // this.$set(tableData,'value',table.data.list)
+
+    console.log(tableData.value.length,1111111111)
+
+    for(let i = 0; i < tableData.value.length; i++){      
+      if(tableData.value[i].health_code === 0){
+        tableData.value[i].health_code = '正常'
+      }else{
+        tableData.value[i].health_code = '异常'
+      }
+      
+    }
     total.value = table.data.total;
     page.value = table.data.page;
     pageSize.value = table.data.pageSize;
   }
+
 };
 
 const exceptionDetail=ref([])
