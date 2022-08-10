@@ -2,14 +2,15 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" style="margin-left: 20px" :model="searchInfo">
-        <el-form-item label="所属行业" @click="onSearch">
-          <el-select v-model="searchInfo.place_name" @click="onSearch" class="m-2" placeholder="所属行业" size="large">
+        <el-form-item label="所属行业">
+          <el-select v-model="searchInfo.place_name"  class="m-2" placeholder="所属行业" size="large">
             <el-option
               v-for="item in industryList"
               :key="item.Name"
               :label="item.Name"
               :value="item.Name"
               @click="changeId(item)"
+              
               
             />
           </el-select>
@@ -190,6 +191,11 @@ const getIndustry = async() => {
   }
 }
 const changeId = (item) =>{
+  
+  page.value = 1;
+  pageSize.value = 10;
+  getRetFind();
+  getTableData(retFind.value);
   ID.value = item.ID
 
   //console.log(ID.value);
