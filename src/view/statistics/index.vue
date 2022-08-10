@@ -2,6 +2,19 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" style="margin-left: 20px" :model="searchInfo">
+        <el-form-item label="所属行业" @click="onSearch">
+          <el-select v-model="searchInfo.place_name" @click="onSearch" class="m-2" placeholder="所属行业" size="large">
+            <el-option
+              v-for="item in industryList"
+              :key="item.Name"
+              :label="item.Name"
+              :value="item.Name"
+              @click="changeId(item)"
+              
+            />
+          </el-select>
+
+        </el-form-item>
         <el-form-item label="地区" @click="onSearch">
           <el-cascader
             v-model="searchInfo.dept_id"
@@ -57,31 +70,31 @@
         <el-table-column
           align="center"
           label="登记总人数"
-          prop="register_total"
+          prop="register_num"
           min-width="120"
         />
         <el-table-column
           align="center"
           label="今日扫码人数"
-          prop="scan_code_total"
+          prop="scan_num"
           min-width="120"
         />
         <el-table-column
           align="center"
           label="健康码信息"
-          prop="healthy_code"
+          prop="health_code"
           min-width="120"
         />
         <el-table-column
           align="center"
           label="已做核酸人数"
-          prop="have_nucleic_acid_total"
+          prop="have_nucleic_num"
           min-width="120"
         />
         <el-table-column
           align="center"
           label="未做核酸人数"
-          prop="no_nucleic_acid_total"
+          prop="no_nucleic_num"
           min-width="120"
         />
 
@@ -109,7 +122,7 @@
       <!-- 弹出页面 -->
       <el-dialog v-model="exception" title="异常详情" width="40%">
         <div style="height: 60vh; overflow: auto; padding: 0 10px">
-          <p>未扫码人员：</p>
+          <!-- <p>未扫码人员：</p>
              <el-table
             border
             :data="scanCodeDetail"
@@ -122,7 +135,7 @@
             </el-table-column>
             <el-table-column prop="gzrysfz"  align="center">
             </el-table-column>
-          </el-table>
+          </el-table> -->
         
           <p>未核酸人员：</p>
            <el-table
@@ -132,11 +145,11 @@
             :show-header="false"
             class="tableBox"
           >
-           <el-table-column prop="gzryxm"  align="center" />
-            <el-table-column prop="gzrysjh"  align="center" width="120"/>
-            <el-table-column prop="gzrysfz"  align="center" />
+           <el-table-column prop="name"  align="center" />
+            <!-- <el-table-column prop="gzrysjh"  align="center" width="120"/> -->
+            <el-table-column prop="phone"  align="center" />
           </el-table>
-          <p>健康码异常人员：</p>
+          <!-- <p>健康码异常人员：</p>
             <el-table
             border
             :data="healthyCodeDetail"
@@ -147,7 +160,7 @@
             <el-table-column prop="gzryxm"  align="center" />
             <el-table-column prop="gzrysjh"  align="center" width="120"/>
             <el-table-column prop="gzrysfz"  align="center" />
-          </el-table>
+          </el-table> -->
         </div>
       </el-dialog>
     </div>
@@ -157,12 +170,30 @@
 <script setup>
 import { ref, toRaw } from "vue";
 import json from "@/utils/address/xinxiang.json";
-import { getAreaList } from "@/api/manageAreaList.js";
+import { getAreaList ,getExceptionInfo} from "@/api/manageAreaList.js";
+import { getIndustryList} from '@/api/industry.js'
 
 // 页面数据
 const tableData = ref([]);
 // 获取区县
 const qxList = ref([]);
+
+// 查询所有行业名称+id
+const industryList = ref([])
+const getIndustry = async() => {
+  let rqt = { page: 1, pageSize: 100 } 
+  //console.log(rqt);
+  const table = await getIndustryList(rqt)
+  if (table.code === 0) {
+    // console.log(table)
+    industryList.value = table.data.list
+  }
+}
+const changeId = (item) =>{
+  ID.value = item.ID
+
+  //console.log(ID.value);
+}
 
 // 分页
 const page = ref(1);
@@ -228,19 +259,31 @@ const getRetFind = () => {
 
 // 查询列表
 const getTableData = async (value) => {
-  let rqt = { page: page.value, pageSize: pageSize.value };
+  let rqt = { page: page.value, pageSize: pageSize.value};
   if (value) {
     rqt = { page: page.value, pageSize: pageSize.value, ...value };
   }
   const table = await getAreaList(rqt);
   if (table.code === 0) {
-    tableData.value = table.data.cdManageAreaRes;
+    tableData.value = table.data.list;
+    // this.$set(tableData,'value',table.data.list)
+
+    console.log(tableData.value.length,1111111111)
+
+    for(let i = 0; i < tableData.value.length; i++){      
+      if(tableData.value[i].health_code === 0){
+        tableData.value[i].health_code = '正常'
+      }else{
+        tableData.value[i].health_code = '异常'
+      }
+      
+    }
     total.value = table.data.total;
     page.value = table.data.page;
     pageSize.value = table.data.pageSize;
   }
-};
 
+};
 
 const exceptionDetail=ref([])
 const scanCodeDetail=ref([])
@@ -249,12 +292,20 @@ const healthyCodeDetail=ref([])
 // 显示异常
 const exception = ref(false);
 
-const  getDetail = async(row) => {
+const getDetail = async(row) => {
     exceptionDetail.value=JSON.parse(JSON.stringify(row))
-    scanCodeDetail.value=exceptionDetail.value.not_scan_code_people;
+    // scanCodeDetail.value=exceptionDetail.value.not_scan_code_people;
     nucleicAcidDetail.value=exceptionDetail.value.not_nucleic_acid_people;
-    healthyCodeDetail.value=exceptionDetail.value.not_green_code;
+    // healthyCodeDetail.value=exceptionDetail.value.not_green_code;
     exception.value=!exception.value;
+
+    console.log(row.place_num,11111111);
+
+
+    const res = await getExceptionInfo({place_num: row.place_num})
+    if(res.code === 0) {
+      nucleicAcidDetail.value = res.data.no_nucleic_worker_list
+    }
   }
 
 const initPage = async () => {
@@ -263,6 +314,7 @@ const initPage = async () => {
   setDeptOptions(depTs);
   qxList.value = json.children;
   getTableData();
+  getIndustry();
 };
 initPage();
 </script>
