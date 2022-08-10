@@ -3,15 +3,15 @@
     <div class="gva-search-box">
       <el-form :inline="true" style="margin-left: 20px" :model="searchInfo">
         <el-form-item label="所属行业">
-          <el-select v-model="searchInfo.place_name"  class="m-2" placeholder="所属行业" size="large">
+          <el-select v-model="searchInfo.industry_id"  class="m-2" placeholder="所属行业" size="large">
             <el-option
               v-for="item in industryList"
               :key="item.Name"
               :label="item.Name"
-              :value="item.Name"
+              :value="item.ID"
               @click="changeId(item)"
-              
-              
+
+
             />
           </el-select>
 
@@ -36,7 +36,7 @@
         </el-form-item>
         <el-form-item label="场所名称" prop="place">
           <el-input
-            v-model="searchInfo.csmc"
+            v-model="searchInfo.place_name"
             placeholder="场所名称"
             @keyup="onSearch"
           ></el-input>
@@ -103,7 +103,7 @@
           <template #default="scope">
             <el-button type="text" @click="getDetail(scope.row)==true">异常详情</el-button>
           </template>
-        
+
         </el-table-column>
       </el-table>
 
@@ -137,7 +137,7 @@
             <el-table-column prop="gzrysfz"  align="center">
             </el-table-column>
           </el-table> -->
-        
+
           <p>未核酸人员：</p>
            <el-table
             border
@@ -182,7 +182,7 @@ const qxList = ref([]);
 // 查询所有行业名称+id
 const industryList = ref([])
 const getIndustry = async() => {
-  let rqt = { page: 1, pageSize: 100 } 
+  let rqt = { page: 1, pageSize: 100 }
   //console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
@@ -191,7 +191,7 @@ const getIndustry = async() => {
   }
 }
 const changeId = (item) =>{
-  
+
   page.value = 1;
   pageSize.value = 10;
   getRetFind();
@@ -276,13 +276,13 @@ const getTableData = async (value) => {
 
     console.log(tableData.value.length,1111111111)
 
-    for(let i = 0; i < tableData.value.length; i++){      
+    for(let i = 0; i < tableData.value.length; i++){
       if(tableData.value[i].health_code === 0){
         tableData.value[i].health_code = '正常'
       }else{
         tableData.value[i].health_code = '异常'
       }
-      
+
     }
     total.value = table.data.total;
     page.value = table.data.page;
