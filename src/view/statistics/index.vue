@@ -123,33 +123,36 @@
       <!-- 弹出页面 -->
       <el-dialog v-model="exception" title="异常详情" width="40%">
         <div style="height: 60vh; overflow: auto; padding: 0 10px">
-          <!-- <p>未扫码人员：</p>
-             <el-table
-            border
-            :data="scanCodeDetail"
-            style="width: 100%"
-            :show-header="false"
-            class="tableBox"
-          >
-            <el-table-column prop="gzryxm"  align="center" />
-            <el-table-column prop="gzrysjh"  align="center" width="120">
-            </el-table-column>
-            <el-table-column prop="gzrysfz"  align="center">
-            </el-table-column>
-          </el-table> -->
+          <el-collapse v-model="activeName" accordion>
+            <el-collapse-item title="未核酸人员" name="1">
+              <el-table
+                border
+                :data="nucleicAcidDetail"
+                style="width: 100%"
+                :show-header="false"
+                class="tableBox"
+              >
+                <el-table-column prop="name"  align="center" />
+                <!-- <el-table-column prop="gzrysjh"  align="center" width="120"/> -->
+                <el-table-column prop="phone"  align="center" />
+              </el-table>
+            </el-collapse-item>
+            <el-collapse-item title="未扫码人员" name="2">
+              <el-table
+                border
+                :data="scanCodeDetail"
+                style="width: 100%"
+                :show-header="false"
+                class="tableBox"
+              >
+                <el-table-column prop="name"  align="center" />
+                <el-table-column prop="phone"  align="center" />
+              </el-table>
+            </el-collapse-item>
+          </el-collapse>
+   
 
-          <p>未核酸人员：</p>
-           <el-table
-            border
-            :data="nucleicAcidDetail"
-            style="width: 100%"
-            :show-header="false"
-            class="tableBox"
-          >
-           <el-table-column prop="name"  align="center" />
-            <!-- <el-table-column prop="gzrysjh"  align="center" width="120"/> -->
-            <el-table-column prop="phone"  align="center" />
-          </el-table>
+         
           <!-- <p>健康码异常人员：</p>
             <el-table
             border
@@ -179,24 +182,29 @@ const tableData = ref([]);
 // 获取区县
 const qxList = ref([]);
 
+// 异常详情
+const activeName = ref('0')
+
 // 查询所有行业名称+id
 const industryList = ref([])
 const getIndustry = async() => {
   let rqt = { page: 1, pageSize: 100 }
-  //console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
     // console.log(table)
     industryList.value = table.data.list
+    searchInfo.value.industry_id = industryList.value[0].ID;
   }
 }
+
+
 const changeId = (item) =>{
 
   page.value = 1;
   pageSize.value = 10;
   getRetFind();
   getTableData(retFind.value);
-  ID.value = item.ID
+  // ID.value = item.ID
 
   //console.log(ID.value);
 }
@@ -274,7 +282,7 @@ const getTableData = async (value) => {
     tableData.value = table.data.list;
     // this.$set(tableData,'value',table.data.list)
 
-    console.log(tableData.value.length,1111111111)
+    // console.log(tableData.value.length,1111111111)
 
     for(let i = 0; i < tableData.value.length; i++){
       if(tableData.value[i].health_code === 0){
@@ -300,17 +308,18 @@ const exception = ref(false);
 
 const getDetail = async(row) => {
     exceptionDetail.value=JSON.parse(JSON.stringify(row))
-    // scanCodeDetail.value=exceptionDetail.value.not_scan_code_people;
+    scanCodeDetail.value=exceptionDetail.value.not_scan_code_people;
     nucleicAcidDetail.value=exceptionDetail.value.not_nucleic_acid_people;
     // healthyCodeDetail.value=exceptionDetail.value.not_green_code;
     exception.value=!exception.value;
 
-    console.log(row.place_num,11111111);
+    // console.log(row.place_num,11111111);
 
 
     const res = await getExceptionInfo({place_num: row.place_num})
     if(res.code === 0) {
       nucleicAcidDetail.value = res.data.no_nucleic_worker_list
+      scanCodeDetail.value = res.data.no_scan_worker_list
     }
   }
 
@@ -319,8 +328,8 @@ const initPage = async () => {
   depTs.push(json);
   setDeptOptions(depTs);
   qxList.value = json.children;
-  getTableData();
-  getIndustry();
+  await getIndustry();
+  onSearch();
 };
 initPage();
 </script>
