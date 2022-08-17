@@ -78,6 +78,15 @@ export const deletePlaceById = (data) => {
   })
 }
 
+// 查看场所码详情
+export const getCodeScanDetail = (data) => {
+  return service({
+    url:'/cdworker/workerCsmRecordList',
+    method:'post',
+    data:data
+  })
+}
+
 // 工作人员导出Excel
 export const exportExcel = data => {
   return service({
