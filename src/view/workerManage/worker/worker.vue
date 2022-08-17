@@ -767,7 +767,6 @@ const openDetails = (row) => {
 
 // 跳转 场所码扫码详情
 const openCodeScanDetails = (row) => {
-  console.log("row: ",row);
   router.push({
     name: "codeScanDetails",
     params: {
