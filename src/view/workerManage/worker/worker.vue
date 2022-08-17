@@ -232,6 +232,7 @@
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
             <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>
+            <el-button type="text" icon="Tickets" size="small" @click="openCodeScanDetails(scope.row)">查看场所码扫码详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -494,6 +495,7 @@ const getTableData = async (value) => {
     total.value = table.data.total;
     // page.value = table.data.page
     // pageSize.value = table.data.pageSize
+    console.log("tableData.value:",tableData.value);
   }
 };
 
@@ -759,6 +761,21 @@ const openDetails = (row) => {
     name: "workerclock",
     params: {
       pid: row.id,
+    },
+  });
+};
+
+// 跳转 场所码扫码详情
+const openCodeScanDetails = (row) => {
+  router.push({
+    name: "codeScanDetails",
+    params: {
+      pid: row.id,
+      pcsbh:row.csbh,
+      pxm: row.gzryxm,
+      psjh:row.gzrysjh,
+      pcsmc:row.CdJoin.csmc,
+      psfz: row.gzrysfz,
     },
   });
 };
