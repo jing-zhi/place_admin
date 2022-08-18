@@ -74,11 +74,11 @@ const tableData = ref([])
 
 // 查询
 const getTableTime = async() => {
-  let rqt = {} 
+    let rqt = {} 
     if(dataDetail.psfz){
       rqt = {gzrsfz: dataDetail.psfz,csmc: dataDetail.pcsmc}
     } else {
-      rqt = {gzrysfz:' ',csmc:''}
+      rqt = {gzrsfz:' ',csmc:' '}
     }
     
     const table = await getCodeScanDetail(rqt)
