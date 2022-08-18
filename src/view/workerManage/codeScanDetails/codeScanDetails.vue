@@ -74,11 +74,11 @@ const tableData = ref([])
 
 // 查询
 const getTableTime = async() => {
-  let rqt = {}
+  let rqt = {} 
     if(dataDetail.psfz){
-      rqt = {gzrysfz:dataDetail.psfz}
+      rqt = {gzrsfz: dataDetail.psfz,csmc: dataDetail.pcsmc}
     } else {
-      rqt = {gzrysfz:' '}
+      rqt = {gzrysfz:' ',csmc:''}
     }
     
     const table = await getCodeScanDetail(rqt)
@@ -93,13 +93,12 @@ const getTableTime = async() => {
             psjh:dataDetail.psjh,
             pcsmc:dataDetail.pcsmc,
             psfz:dataDetail.psfz,
-            ptime:dataDetail.ptime
+            ptime:dataDetail.ptime.replace(/\-/g, "/")
           }
           tableData.value.push(a)
         }
     } 
 }
-
 
 
 const timestampToTime = (timestamp) => {
