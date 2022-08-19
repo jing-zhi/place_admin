@@ -133,3 +133,13 @@ const handleFileError = (res, fileName) => {
     a.dispatchEvent(event)
   }
 }
+
+export const getscanfDetails = (data) =>{
+  return service({
+    url:'/cdworker/workerCsmRecordList',
+    method:'post',
+    data
+  })
+
+
+}
