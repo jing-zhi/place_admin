@@ -379,6 +379,27 @@
           </div>
         </template>
       </el-dialog>
+
+      <el-dialog v-model="scanf"  title="场所码扫码详情"  width="90%" show-close @close="close">
+        <div style="height: 60vh; overflow: auto; padding: 0 10px; ">
+              <el-table
+                  border
+                  :data="scanfDetail"
+                  style="width: 100%"
+                  class="tableBox"
+              >
+                <el-table-column prop="pcsbh" label="场所编号" align="center" />
+                <el-table-column prop="pcsmc" label="场所名称"  align="center" />
+                <el-table-column prop="pxm" label="工作人员姓名"  align="center" />
+                <el-table-column prop="psjh" label="手机号码"  align="center" />
+                <el-table-column prop="psfz" label="身份证号码"  align="center" />
+                <el-table-column prop="ptime" label="扫码时间"  align="center" />
+              </el-table>
+
+        </div>
+      </el-dialog>
+
+
     </div>
   </div>
 </template>
@@ -397,10 +418,11 @@ import {
   setWorker,
   exportExcel,
   deletePlaceById,
+  getscanfDetails
 } from "@/api/csUser/worker.js";
 import { formatter } from "@/utils/format";
 
-import { nextTick, ref, watch, toRaw } from "vue";
+import { nextTick, ref, watch, toRaw,reactive} from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import dsData from "@/utils/address/ds.json";
 // import qxData from '@/utils/address/areas.json'
@@ -766,19 +788,59 @@ const openDetails = (row) => {
 };
 
 // 跳转 场所码扫码详情
-const openCodeScanDetails = (row) => {
-  router.push({
-    name: "codeScanDetails",
-    params: {
-      pid: row.id,
-      pcsbh:row.csbh,
-      pxm: row.gzryxm,
-      psjh:row.gzrysjh,
-      pcsmc:row.CdJoin.csmc,
-      psfz: row.gzrysfz,
-    },
-  });
-};
+// const openCodeScanDetails = (row) => {
+//   router.push({
+//     name: "codeScanDetails",
+//     params: {
+//       pid: row.id,
+//       pcsbh:row.csbh,
+//       pxm: row.gzryxm,
+//       psjh:row.gzrysjh,
+//       pcsmc:row.CdJoin.csmc,
+//       psfz: row.gzrysfz,
+//     },
+//   });
+// };
+
+const scanf = ref(false);
+const scanfDetail = ref([]);
+const openCodeScanDetails = async(row) => {
+  scanf.value = true;
+  const search = {
+    gzrsfz:row.gzrysfz,
+    csmc:row.CdJoin.csmc,
+  }
+  let dataDetail = reactive({
+    pid:row.id,
+    pcsbh:row.csbh,
+    pxm:row.CdJoin.fzrxm,
+    psjh:row.CdJoin.fzrdh,
+    pcsmc:row.CdJoin.csmc,
+    psfz:row.CdJoin.fzrsfz,
+    ptime:''
+  })
+  let allTime = ref([]);
+  allTime.value = (await getscanfDetails(search)).data;
+  for (let i = 0; i < allTime.value.length; i++) {
+          dataDetail.ptime = allTime.value[i]
+          let a = {
+            pid:dataDetail.pid,
+            pcsbh:dataDetail.pcsbh,
+            pxm:dataDetail.pxm,
+            psjh:dataDetail.psjh,
+            pcsmc:dataDetail.pcsmc,
+            psfz:dataDetail.psfz,
+            ptime:dataDetail.ptime.replace(/\-/g, "/")
+          }
+          scanfDetail.value.push(a)
+  }
+}
+
+const close = ()=>{
+  scanfDetail.value = [];
+
+}
+
 
 // 市 区 镇
 // const dsname = ref("")
@@ -908,4 +970,8 @@ const getExcel = (fileName) => {
 .el-row {
   padding: 0 !important;
 }
+.el-input__inner{
+  line-height: 1rem !important;
+}
 </style>
+

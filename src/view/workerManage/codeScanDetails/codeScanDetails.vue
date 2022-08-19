@@ -8,11 +8,10 @@
               <el-autocomplete
                 v-model="search.place_name"
                 :fetch-suggestions="querySearch"
-                :trigger-on-focus="false"
                 clearable
                 placeholder="场所名称"
                 @select="handleSelect"
-                @input.once="handleInput"
+                @focus.once="handleInput"
               />
             </el-form-item>
           </el-col>
@@ -231,7 +230,7 @@ const formDate = (timestamp) => {
 //           }
 //           tableData.value.push(a)
 //         }
-//     } 
+//     }
 // }
 
 
@@ -290,4 +289,10 @@ const formDate = (timestamp) => {
 .el-row{
   padding: 0 !important;
 }
+
+.el-form-item__content{
+  height: 34px;
+  line-height: 34px;
+}
 </style>
+
