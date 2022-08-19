@@ -62,7 +62,7 @@
           </el-table-column>
           <el-table-column align="left" label="扫码时间" min-width="160" prop="scan_time">
             <template #default="scope">
-              {{tableData.scan_time = scope.row.scan_time?timestampToTime(scope.row.scan_time):''}}
+              {{tableData.scan_time = scope.row.scan_time?formDate(scope.row.scan_time):''}}
             </template>
           </el-table-column>
         </el-table>
@@ -98,20 +98,19 @@ import { useRoute } from 'vue-router'
 
 const router = useRoute()
 
-let allTime = ref([])
-let dataDetail = reactive({
-  pid:router.params.pid,
-  pcsbh:router.params.pcsbh,
-  pxm:router.params.pxm,
-  psjh:router.params.psjh,
-  pcsmc:router.params.pcsmc,
-  psfz:router.params.psfz,
-  ptime:''
-})
+// let allTime = ref([])
+// let dataDetail = reactive({
+//   pid:router.params.pid,
+//   pcsbh:router.params.pcsbh,
+//   pxm:router.params.pxm,
+//   psjh:router.params.psjh,
+//   pcsmc:router.params.pcsmc,
+//   psfz:router.params.psfz,
+//   ptime:''
+// })
 
 
 const tableData = ref([])
-
 const search = reactive({
   place_name:'',
   dl:'',
@@ -191,7 +190,7 @@ const handleCurrentChange = (value) => {
 const getTable = async() => {
     const data = (await getTabledata(searchContent)).data;
     search.total = data.total;
-    tableData.value = data.list;
+    tableData.value = (await getTabledata(searchContent)).data.list;
 }
 
 const formDate = (timestamp) => {
@@ -295,4 +294,3 @@ const formDate = (timestamp) => {
   line-height: 34px;
 }
 </style>
-
