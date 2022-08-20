@@ -388,12 +388,9 @@
                   style="width: 100%"
                   class="tableBox"
               >
-                <el-table-column prop="pcsbh" label="场所编号" align="center" />
-                <el-table-column prop="pcsmc" label="场所名称"  align="center" />
-                <el-table-column prop="pxm" label="工作人员姓名"  align="center" />
-                <el-table-column prop="psjh" label="手机号码"  align="center" />
-                <el-table-column prop="psfz" label="身份证号码"  align="center" />
-                <el-table-column prop="ptime" label="扫码时间"  align="center" />
+                <el-table-column prop="csmc" label="场所名称"  align="center" />
+                <el-table-column prop="name" label="工作人员姓名"  align="center" />
+                <el-table-column prop="scanfTime" label="扫码时间"  align="center" />
               </el-table>
 
         </div>
@@ -517,7 +514,6 @@ const getTableData = async (value) => {
     total.value = table.data.total;
     // page.value = table.data.page
     // pageSize.value = table.data.pageSize
-    console.log("tableData.value:",tableData.value);
   }
 };
 
@@ -804,41 +800,29 @@ const openDetails = (row) => {
 
 const scanf = ref(false);
 const scanfDetail = ref([]);
-const openCodeScanDetails = async(row) => {
-  scanf.value = true;
-  const search = {
-    gzrsfz:row.gzrysfz,
-    csmc:row.CdJoin.csmc,
-  }
-  let dataDetail = reactive({
-    pid:row.id,
-    pcsbh:row.csbh,
-    pxm:row.CdJoin.fzrxm,
-    psjh:row.CdJoin.fzrdh,
-    pcsmc:row.CdJoin.csmc,
-    psfz:row.CdJoin.fzrsfz,
-    ptime:''
-  })
-  let allTime = ref([]);
-  allTime.value = (await getscanfDetails(search)).data;
-  for (let i = 0; i < allTime.value.length; i++) {
-          dataDetail.ptime = allTime.value[i]
-          let a = {
-            pid:dataDetail.pid,
-            pcsbh:dataDetail.pcsbh,
-            pxm:dataDetail.pxm,
-            psjh:dataDetail.psjh,
-            pcsmc:dataDetail.pcsmc,
-            psfz:dataDetail.psfz,
-            ptime:dataDetail.ptime.replace(/\-/g, "/")
-          }
-          scanfDetail.value.push(a)
-  }
+let allTime = ref([]);
+let search = reactive({})
+let res = {
+  csmc:"",
+  name:'',
 }
-
+const openCodeScanDetails = async(row) => {
+  res.name = row.gzryxm;
+  res.csmc = row.ydw;
+  search.gzrsfz = row.gzrysfz;
+  search.csmc = row.ydw;
+  allTime.value = (await getscanfDetails(search)).data;
+  getTableDetail();
+  scanf.value = true;
+}
 const close = ()=>{
   scanfDetail.value = [];
-
+}
+const getTableDetail = () => {
+  for(let i = 0;i < allTime.value.length; i ++){
+    let mid = {...res,scanfTime:allTime.value[i]}
+    scanfDetail.value.push(mid);
+  }
 }
 
 
