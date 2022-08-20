@@ -62,7 +62,7 @@
           </el-table-column>
           <el-table-column align="left" label="扫码时间" min-width="160" prop="scan_time">
             <template #default="scope">
-              {{tableData.scan_time = scope.row.scan_time?formDate(scope.row.scan_time):''}}
+              {{tableData.scan_time = scope.row.scan_time?scope.row.scan_time.replace(/\-/g,"/"):''}}
             </template>
           </el-table-column>
         </el-table>
@@ -190,7 +190,7 @@ const handleCurrentChange = (value) => {
 const getTable = async() => {
     const data = (await getTabledata(searchContent)).data;
     search.total = data.total;
-    tableData.value = (await getTabledata(searchContent)).data.list;
+    tableData.value = data.list;
 }
 
 const formDate = (timestamp) => {
