@@ -231,7 +231,7 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
-            <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>
+<!--            <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>-->
             <el-button type="text" icon="Tickets" size="small" @click="openCodeScanDetails(scope.row)">查看场所码扫码详情</el-button>
           </template>
         </el-table-column>
@@ -958,4 +958,3 @@ const getExcel = (fileName) => {
   line-height: 1rem !important;
 }
 </style>
-
