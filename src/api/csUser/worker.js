@@ -69,6 +69,16 @@ export const getWorkerDetailsList = (data) => {
   })
 }
 
+// 模糊查询获取场所列表
+export const getPlaceList = (data)=>{
+  return service({
+    url:'/api/cd/lists',
+    method:'post',
+    data:data
+  })
+
+}
+
 // 批量删除
 export const deletePlaceById = (data) => {
   return service({
@@ -122,4 +132,14 @@ const handleFileError = (res, fileName) => {
     var event = new MouseEvent('click')
     a.dispatchEvent(event)
   }
+}
+
+export const getscanfDetails = (data) =>{
+  return service({
+    url:'/cdworker/workerCsmRecordList',
+    method:'post',
+    data
+  })
+
+
 }

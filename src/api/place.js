@@ -12,14 +12,6 @@ export const createPlace = (data) => {
   })
 }
 
-// @Summary 分页获取场所列表
-export const getPlaceList = (data) => {
-  return service({
-    url: '/cd/lists',
-    method: 'post',
-    data: data //
-  })
-}
 
 // @Summary 删除场合
 export const deletePlace = (data) => {
@@ -46,6 +38,15 @@ export const getBusinessMang = (data) => {
     url: "cdIndustry/pageIndustryList",
     method: 'POST',
     data
+  })
+}
+
+// @Summary 分页获取场所列表
+export const getPlaceList = (data) => {
+  return service({
+    url: '/cd/lists',
+    method: 'post',
+    data: data //
   })
 }
 // @Summary 启用场合

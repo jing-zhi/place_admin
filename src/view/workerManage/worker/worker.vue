@@ -231,7 +231,7 @@
               </template>
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
-            <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>
+<!--            <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>-->
             <el-button type="text" icon="Tickets" size="small" @click="openCodeScanDetails(scope.row)">查看场所码扫码详情</el-button>
           </template>
         </el-table-column>
@@ -379,6 +379,24 @@
           </div>
         </template>
       </el-dialog>
+
+      <el-dialog v-model="scanf"  title="场所码扫码详情"  width="90%" show-close @close="close">
+        <div style="height: 60vh; overflow: auto; padding: 0 10px; ">
+              <el-table
+                  border
+                  :data="scanfDetail"
+                  style="width: 100%"
+                  class="tableBox"
+              >
+                <el-table-column prop="csmc" label="场所名称"  align="center" />
+                <el-table-column prop="name" label="工作人员姓名"  align="center" />
+                <el-table-column prop="scanfTime" label="扫码时间"  align="center" />
+              </el-table>
+
+        </div>
+      </el-dialog>
+
+
     </div>
   </div>
 </template>
@@ -397,10 +415,11 @@ import {
   setWorker,
   exportExcel,
   deletePlaceById,
+  getscanfDetails
 } from "@/api/csUser/worker.js";
 import { formatter } from "@/utils/format";
 
-import { nextTick, ref, watch, toRaw } from "vue";
+import { nextTick, ref, watch, toRaw,reactive} from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import dsData from "@/utils/address/ds.json";
 // import qxData from '@/utils/address/areas.json'
@@ -495,7 +514,6 @@ const getTableData = async (value) => {
     total.value = table.data.total;
     // page.value = table.data.page
     // pageSize.value = table.data.pageSize
-    console.log("tableData.value:",tableData.value);
   }
 };
 
@@ -766,19 +784,47 @@ const openDetails = (row) => {
 };
 
 // 跳转 场所码扫码详情
-const openCodeScanDetails = (row) => {
-  router.push({
-    name: "codeScanDetails",
-    params: {
-      pid: row.id,
-      pcsbh:row.csbh,
-      pxm: row.gzryxm,
-      psjh:row.gzrysjh,
-      pcsmc:row.CdJoin.csmc,
-      psfz: row.gzrysfz,
-    },
-  });
-};
+// const openCodeScanDetails = (row) => {
+//   router.push({
+//     name: "codeScanDetails",
+//     params: {
+//       pid: row.id,
+//       pcsbh:row.csbh,
+//       pxm: row.gzryxm,
+//       psjh:row.gzrysjh,
+//       pcsmc:row.CdJoin.csmc,
+//       psfz: row.gzrysfz,
+//     },
+//   });
+// };
+
+const scanf = ref(false);
+const scanfDetail = ref([]);
+let allTime = ref([]);
+let search = reactive({})
+let res = {
+  csmc:"",
+  name:'',
+}
+const openCodeScanDetails = async(row) => {
+  res.name = row.gzryxm;
+  res.csmc = row.ydw;
+  search.gzrsfz = row.gzrysfz;
+  search.csmc = row.ydw;
+  allTime.value = (await getscanfDetails(search)).data;
+  getTableDetail();
+  scanf.value = true;
+}
+const close = ()=>{
+  scanfDetail.value = [];
+}
+const getTableDetail = () => {
+  for(let i = 0;i < allTime.value.length; i ++){
+    let mid = {...res,scanfTime:allTime.value[i]}
+    scanfDetail.value.push(mid);
+  }
+}
+
 
 // 市 区 镇
 // const dsname = ref("")
@@ -907,5 +953,8 @@ const getExcel = (fileName) => {
 
 .el-row {
   padding: 0 !important;
+}
+.el-input__inner{
+  line-height: 1rem !important;
 }
 </style>
