@@ -11,7 +11,8 @@
                 clearable
                 placeholder="场所名称"
                 @select="handleSelect"
-                @focus.once="handleInput"
+                @focus.once="handleFocus"
+                @input="handleInput"
               />
             </el-form-item>
           </el-col>
@@ -161,9 +162,19 @@ const handleSelect = (item) => {
 }
 
 const handleInput = async(value) => {
-  console.log("handleInput:",handleInput);
+  if(value !== ''){
+    searchPlace.csmc = value
+    placeList.value = (await getPlaceContent(searchPlace)).data.list.map(item=>{
+    let res = {};
+    res.value = item.csmc;
+    res.csbh = item.csbh;
+    return res;
+    })
+  }
+}
+const handleFocus = async(value) => {
   searchPlace.csmc = value
-  placeList.value = (await getPlaceContent(searchPlace)).data.list.map(item=>{
+  placeList.value = (await getPlaceContent(searchPlace)).data.list.map((item,index)=>{
   let res = {};
   res.value = item.csmc;
   res.csbh = item.csbh;
