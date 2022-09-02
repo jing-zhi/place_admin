@@ -152,9 +152,11 @@ const createFilter = (queryString) => {
 }
 
 const handleSelect = (item) => {
+  console.log("item:",item);
   searchContent.place_num = item.csbh;
   searchContent.place_name = item.value;
-  if(search.dl!==""){
+  console.log("search.dl:",search.dl);
+  if(search.dl!==" "){
     getTable();
   }
 }
@@ -178,6 +180,7 @@ const handleFocus = async(value) => {
   res.csbh = item.csbh;
   return res;
  })
+ console.log("placeList.value :",placeList.value );
 }
 
 const changeDLTime = () => {
@@ -244,8 +247,6 @@ const formDate = (timestamp) => {
 //     }
 // }
 
-
-// s
 </script>
 
 <style lang="scss">

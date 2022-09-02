@@ -112,3 +112,12 @@ export const loadExcelData = (data) => {
     data:data
   })
 }
+
+// 弹窗 获取场所码场所列表
+export const getScanList = (data) => {
+  return service({
+    url: '/cd/scanList',
+    method: 'post',
+    data: data,
+  })
+}

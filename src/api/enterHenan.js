@@ -33,9 +33,9 @@ export const exportExcel = data => {
 })
 }
 
+
 const handleFileError = (res, fileName) => {
   if (res.data === 'undefined') {
-    // console.log(res.data);
     if (res.data.type !== 'application/json') {
       const reader = new FileReader()
       reader.onload = function() {
