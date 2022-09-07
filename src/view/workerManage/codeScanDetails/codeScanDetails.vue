@@ -83,13 +83,13 @@
       </div>
       <div class="gva-pagination">
         <el-pagination
-          v-model:currentPage="searchContent.page"
-          v-model:page-size="searchContent.pageSize"
-          :page-sizes="[10, 20, 30, 40]"
-          layout="total, sizes, prev, pager, next"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :total="search.total"
+            v-model:currentPage="searchContent.page"
+            v-model:page-size="searchContent.pageSize"
+            :page-sizes="[10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next"
+            @current-change="getTable"
+            @size-change="getTable"
+            :total="search.total"
         />
       </div>
 
@@ -145,7 +145,7 @@ const querySearch = async (queryString, cb) => {
 const handleSelect = (item) => {
   searchContent.place_num = item.csbh;
   searchContent.place_name = item.value;
-  getTable();
+  changeDLTime();
 }
 
 const handleFocus = async(value) => {
@@ -161,16 +161,6 @@ const handleFocus = async(value) => {
 const changeDLTime = () => {
   searchContent.start_time = search.dl[0];
   searchContent.end_time = search.dl[1];
-  getTable();
-}
-
-const handleSizeChange = (value) => {
-  searchContent.pageSize = value;
-  getTable();
-}
-
-const handleCurrentChange = (value) => {
-  searchContent.page = value;
   getTable();
 }
 
