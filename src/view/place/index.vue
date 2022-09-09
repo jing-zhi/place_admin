@@ -294,12 +294,11 @@
             </el-form-item>
             <el-form-item label="场所名称" prop="csmc">
               <el-autocomplete
-                v-model="placeInfo.csmc"
-                :fetch-suggestions="querySearch"
-                clearable
-                placeholder="场所名称"
-                @select="handleSelect"
-                @focus.once="handleInput"
+                  v-model="placeInfo.csmc"
+                  :fetch-suggestions="querySearch"
+                  clearable
+                  placeholder="场所名称"
+                  @select="handleSelect"
               />
             </el-form-item>
             <el-form-item label="所属区县" prop="qx_name">
@@ -637,7 +636,6 @@ const onSubmit = debounce(() => {
 });
 const getRetFind = () => {
   retFind.value = toRaw(searchPlace.value);
-  console.log(retFind.value);
 };
 const onReset = () => {
   searchPlace.value = {};
@@ -668,7 +666,7 @@ const searchQuery = reactive({
 });
 
 const getDialogData = async () => {
-  const data = (await getScanList(searchQuery)).data.List;
+  const data = (await getScanList(searchQuery)).data.list;
   const {
     detail_address,
     district_code,
@@ -699,13 +697,20 @@ const getDialogData = async () => {
 };
 const placeList = ref([]);
 
-const querySearch = (queryString, cb) => {
-  const results = ref(
-    queryString
-      ? placeList.value.filter(createFilter(queryString))
-      : placeList.value
-  );
-  cb(results.value);
+const querySearch = async(queryString, cb) => {
+  const params = {
+    place_name: queryString,
+    page: 1,
+    pageSize: 10
+  }
+  placeList.value = (await getScanList(params)).data.list.map((iterm) => {
+    let res = {}
+    res.value = iterm.place_name
+    return res
+  })
+  
+  console.log(placeList.value)
+  cb(placeList.value);
 };
 
 const createFilter = queryString => {
@@ -722,14 +727,12 @@ const handleSelect = item => {
 };
 
 const handleInput = async value => {
-  console.log("handleInput:", value);
   // 表格数据
   placeList.value = (await getScanList(value)).data.List.map(item => {
     let res = {};
     res.value = item.place_name;
     return res;
   });
-  console.log("placeList.value:", placeList.value);
 };
 
 // 弹窗
