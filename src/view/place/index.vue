@@ -701,15 +701,13 @@ const querySearch = async(queryString, cb) => {
   const params = {
     place_name: queryString,
     page: 1,
-    pageSize: 10
+    pageSize: 50
   }
-  placeList.value = (await getScanList(params)).data.list.map((iterm) => {
+  placeList.value = (await getScanList(params)).data.list.map(iterm => {
     let res = {}
     res.value = iterm.place_name
     return res
   })
-  
-  console.log(placeList.value)
   cb(placeList.value);
 };
 
