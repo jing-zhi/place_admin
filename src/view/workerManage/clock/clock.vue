@@ -8,57 +8,56 @@
               <!-- <el-form-item v-show="pid==null" label="场所编号" prop="csbh">
                 <el-input v-model="searchWorker.csbh"   placeholder="场所编号" />
               </el-form-item> -->
-                <el-form-item label="场所编号" prop="csbh">
-                  <el-input v-model="searchWorker.csbh" min-width="80"   placeholder="场所编号" />
+                <el-form-item label="宿舍编号" prop="csbh">
+                  <el-input v-model="searchWorker.csbh" min-width="80"   placeholder="宿舍编号" />
                 </el-form-item>
               </el-col>
               <el-col :span="5">
-                <!-- 
-                <el-form-item v-show="pid==null" label="场所名称" prop="csmc">
+                <!--  <el-form-item v-show="pid==null" label="场所名称" prop="csmc">
                   <el-input v-model="searchWorker.csmc"   placeholder="场所名称" />
                 </el-form-item>  -->
-                
-                <el-form-item label="场所名称" prop="csmc">
-                  <el-input v-model="searchWorker.csmc" min-width="80"   placeholder="场所名称" />
+
+                <el-form-item label="宿舍名称" prop="csmc">
+                  <el-input v-model="searchWorker.csmc" min-width="80"   placeholder="宿舍名称" />
                 </el-form-item>
               </el-col>
               <el-col :span="5">
-                <el-form-item label="姓名">
-                  <el-input  min-width="80" v-model="searchWorker.gzryxm" placeholder="工作人员姓名" />
+                <el-form-item label="学生姓名">
+                  <el-input  min-width="80" v-model="searchWorker.gzryxm" placeholder="学生姓名" />
                 </el-form-item>
               </el-col>
               <el-col :span="5">
                 <el-form-item label="手机号">
-                  <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
+                  <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="学生手机号" />
                 </el-form-item>
               </el-col>
-            </el-row>   
-            
+            </el-row>
+
             <el-row>
               <el-col :span="5">
                  <el-form-item label="身份证号">
-                  <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
+                  <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="学生身份证" />
                 </el-form-item>
               </el-col>
-              <el-col :span="5">
-                <el-form-item label="工作区域">
-                  <el-select  min-width="80" style="width:98%" v-model="searchWorker.gzqy" class="m-2" placeholder="请选择" size="large">
-                    <el-option
-                      v-for="item in gzqyList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.name"
-                      @click="gzqySearch(item)"
-                    />
-                  </el-select>
-               </el-form-item>
-              </el-col>
+<!--              <el-col :span="5">-->
+<!--                <el-form-item label="工作区域">-->
+<!--                  <el-select  min-width="80" style="width:98%" v-model="searchWorker.gzqy" class="m-2" placeholder="请选择" size="large">-->
+<!--                    <el-option-->
+<!--                      v-for="item in gzqyList"-->
+<!--                      :key="item.id"-->
+<!--                      :label="item.name"-->
+<!--                      :value="item.name"-->
+<!--                      @click="gzqySearch(item)"-->
+<!--                    />-->
+<!--                  </el-select>-->
+<!--               </el-form-item>-->
+<!--              </el-col>-->
               <el-col :span="8">
                 <el-form-item label="体温范围">
                   <el-input v-model="searchWorker.temp_min" :inline="true" style="width: 120px" placeholder="最低体温" />
                   <div style="width: 20px;text-align:center;color: #606266;">-</div>
                   <el-input v-model="searchWorker.temp_max" :inline="true" style="width: 120px" placeholder="最高体温" />
-                </el-form-item> 
+                </el-form-item>
               </el-col>
             </el-row>
              <el-row>
@@ -78,23 +77,23 @@
                 <el-col :span="10">
                   <el-form-item>
                     <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
-                    
+
                     <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
                   </el-form-item>
                 </el-col>
               </el-row>
-                      
+
 
           <!-- <el-form-item v-show="pid==null" label="姓名">
             <el-input v-model="searchWorker.gzryxm" min-width="50" placeholder="工作人员姓名" />
-          </el-form-item>  
+          </el-form-item>
           <el-form-item v-show="pid==null" label="手机号">
             <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
-          </el-form-item>    
+          </el-form-item>
           <el-form-item v-show="pid==null" label="身份证">
             <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
           </el-form-item> -->
-            
+
           <!-- <el-form-item label="扫码时间范围">
               <el-date-picker
                     v-model="searchWorker.dk"
@@ -104,8 +103,8 @@
                     end-placeholder="结束日期"
                 />
           </el-form-item>    -->
-          
-          
+
+
         </el-form>
     </div>
     <div class="gva-table-box">
@@ -115,9 +114,9 @@
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="150" prop="CdJoin.csmc" show-overflow-tooltip />
-        <el-table-column align="left" label="工作人员姓名" min-width="150" prop="gzryxm" />
+        <el-table-column align="left" label="宿舍编号" min-width="230" prop="csbh" />
+        <el-table-column align="left" label="宿舍名称" min-width="150" prop="CdJoin.csmc" show-overflow-tooltip />
+        <el-table-column align="left" label="学生姓名" min-width="150" prop="gzryxm" />
 
         <el-table-column align="left" label="手机号码" min-width="150" prop="gzrysjh">
           <template v-slot:="scope">
@@ -125,7 +124,7 @@
               <span style="margin-left: 30px;">{{ scope.row.gzrysjh }}</span>
               <template #reference>
                 <span>{{formatter(scope.row.gzrysjh,3,4) }}</span>
-              </template>                   
+              </template>
             </el-popover>
           </template>
         </el-table-column>
@@ -135,11 +134,11 @@
               <span style="margin-left: 20px;">{{ scope.row.gzrysfz }}</span>
               <template #reference>
                 <span>{{formatter(scope.row.gzrysfz,3,4) }}</span>
-              </template>                   
+              </template>
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="工作区域" min-width="150" prop="gzqy" />
+<!--        <el-table-column align="left" label="工作区域" min-width="150" prop="gzqy" />-->
         <el-table-column align="left" label="体温" min-width="150" prop="gzrtw" />
         <el-table-column align="left" label="扫码时间" min-width="160" prop="smsj">
           <template #default="scope">
@@ -214,15 +213,15 @@ const getTableData = async(value) => {
     }
     let rqt = {...rq}
     if(value) {
-        rqt = { ...rq, ...value }   
-    } 
+        rqt = { ...rq, ...value }
+    }
     const table = await getWorkerDetailsList(rqt)
     if (table.code === 0) {
         tableData.value = table.data.list
         total.value = table.data.total
         page.value = table.data.page
         pageSize.value = table.data.pageSize
-    } 
+    }
 }
 
 // 工作区域
@@ -272,7 +271,7 @@ const getRetFind = () => {
     } else {
         delete retFind.temp_max
     }
-    
+
     return retFind
 }
 const onReset = () => {

@@ -2,10 +2,10 @@
   <div>
     <div class="gva-search-box">
       <el-form ref="searchForm" :inline="true" :model="searchInfo">
-        <el-form-item  label="行业名称">
-            <el-input v-model="searchInfo.Name"  placeholder="行业名称"></el-input>
+        <el-form-item  label="宿舍楼名称">
+            <el-input v-model="searchInfo.Name"  placeholder="宿舍楼名称"></el-input>
         </el-form-item>
-        <el-form-item label="有效核酸时间">
+        <el-form-item label="处理有效时间">
             <!-- <el-input v-model="searchInfo.HesuanTime" placeholder="有效核酸时间"></el-input> -->
             <el-select v-model="searchInfo.HesuanTime" class="m-2" placeholder="有效核酸时间" size="large">
               <el-option
@@ -32,8 +32,8 @@
         row-key="ID"
       >
         <!-- <el-table-column align="left" label="ID" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="行业名称" min-width="230"  prop="Name" />
-        <el-table-column align="left" label="行业要求有效核酸时间" min-width="100" prop="HesuanTime" show-overflow-tooltip />
+        <el-table-column align="left" label="宿舍楼名称" min-width="230"  prop="Name" />
+        <el-table-column align="left" label="处理有效时间" min-width="100" prop="HesuanTime" show-overflow-tooltip />
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-button type="text" icon="edit" size="small" @click="editIndustry(scope.row)">编辑</el-button>
@@ -64,13 +64,13 @@
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
           <el-form ref="industryForm" :rules="rules" :model="industryInfo" label-width="180px" style="width:80%">
-            <el-form-item label="行业名称" prop="Name" v-if="showIndustryName">
+            <el-form-item label="宿舍楼名称" prop="Name" v-if="showIndustryName">
               <el-input v-model="industryInfo.Name" style="width:227px;" disabled="true"></el-input>
             </el-form-item>
-            <el-form-item label="行业名称" prop="Name" v-else>
+            <el-form-item label="宿舍楼名称" prop="Name" v-else>
               <el-input v-model="industryInfo.Name" style="width:227px;"></el-input>
             </el-form-item>
-            <el-form-item label="行业要求有效核酸时间" prop="HesuanTime">
+            <el-form-item label="处理有效时间" prop="HesuanTime">
               <el-select v-model="industryInfo.HesuanTime" class="m-2" placeholder="请选择" size="large">
                 <el-option
                   v-for="item in options"
@@ -80,7 +80,7 @@
                 />
               </el-select>
             </el-form-item>
-           
+
           </el-form>
 
         </div>
@@ -164,8 +164,8 @@ const delIndustry = async(row) => {
 const getTableData = async(value) => {
     let rqt = { page: page.value, pageSize: pageSize.value }
     if(value) {
-        rqt = { page: page.value, pageSize: pageSize.value, ...value }   
-    } 
+        rqt = { page: page.value, pageSize: pageSize.value, ...value }
+    }
     //console.log(rqt);
   const table = await getIndustryList(rqt)
   if (table.code === 0) {
@@ -224,7 +224,7 @@ const rules = ref({
     { required: true, message: '请选择核酸时间' },
   ],
   Name:[
-    { required: true, message: '请输入行业名称' },
+    { required: true, message: '请输入宿舍楼名称' },
   ]
 })
 
@@ -246,7 +246,7 @@ const enterAddDialog = async() => {
     if (valid) {
       const req = {
         ...industryInfo.value,
-      }     
+      }
       // console.log("industryInfo.value:",req)
       let ret = {
           ID:req.ID,
@@ -274,7 +274,7 @@ const enterAddDialog = async() => {
           closeAddDialog()
         }
       }
-      
+
     }
   })
 

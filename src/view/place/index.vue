@@ -4,35 +4,35 @@
       <el-form :inline="true" :model="searchPlace" style="margin-left:20px">
         <el-row>
           <el-col :span="5">
-            <el-form-item label="场所编号" prop="csbh">
-              <el-input v-model="searchPlace.csbh" min-width="80" placeholder="场所编号" />
+            <el-form-item label="宿舍编号" prop="csbh">
+              <el-input v-model="searchPlace.csbh" min-width="80" placeholder="宿舍编号" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="场所名称" prop="csmc">
-              <el-input v-model="searchPlace.csmc" min-width="80" placeholder="场所名称" />
+            <el-form-item label="宿舍名称" prop="csmc">
+              <el-input v-model="searchPlace.csmc" min-width="80" placeholder="宿舍名称" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="负责人姓名">
-              <el-input v-model="searchPlace.fzrxm" min-width="80" placeholder="负责人姓名" />
+            <el-form-item label="宿舍负责人姓名">
+              <el-input v-model="searchPlace.fzrxm" min-width="80" placeholder="宿舍负责人姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="负责人电话">
-              <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="负责人电话" />
+            <el-form-item label="宿舍负责人电话">
+              <el-input v-model="searchPlace.fzrdh" min-width="80" placeholder="宿舍负责人电话" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="5">
-            <el-form-item label="负责人身份证">
-              <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="负责人身份证" />
+            <el-form-item label="宿舍负责人身份证">
+              <el-input v-model="searchPlace.fzrsfz" min-width="80" placeholder="宿舍负责人身份证" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="行业类型" prop="hylx">
-              <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择行业类型" size="large">
+            <el-form-item label="所属宿舍楼" prop="hylx">
+              <el-select v-model="searchPlace.hylx" class="m-2" placeholder="请选择宿舍楼" size="large">
                 <el-option
                   v-for="item in options"
                   :key="item.ID"
@@ -42,27 +42,27 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="启用状态">
-              <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择启用状态" size="large">
-                <el-option label="是" :value="1" />
-                <el-option label="否" :value="0" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="区域" prop="deptId">
-              <el-cascader
-                v-model="searchPlace.deptId"
-                style="width:100%"
-                :options="deptOptions"
-                :show-all-levels="false"
-                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
-                :clearable="false"
-                placeholder="请选择查询区域"
-              />
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="5">-->
+<!--            <el-form-item label="启用状态">-->
+<!--              <el-select v-model="searchPlace.qyzt" class="m-2" placeholder="请选择启用状态" size="large">-->
+<!--                <el-option label="是" :value="1" />-->
+<!--                <el-option label="否" :value="0" />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--          <el-col :span="5">-->
+<!--            <el-form-item label="区域" prop="deptId">-->
+<!--              <el-cascader-->
+<!--                v-model="searchPlace.deptId"-->
+<!--                style="width:100%"-->
+<!--                :options="deptOptions"-->
+<!--                :show-all-levels="false"-->
+<!--                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"-->
+<!--                :clearable="false"-->
+<!--                placeholder="请选择查询区域"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
         </el-row>
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
@@ -94,43 +94,43 @@
       </div>
       <el-table :data="tableData" row-key="ID">
         <!-- <el-table-column align="left" label="记录ID" min-width="70" prop="cd_id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
+        <el-table-column align="left" label="宿舍编号" min-width="230" prop="csbh" />
         <el-table-column
           align="left"
-          label="场所名称"
+          label="宿舍名称"
           min-width="100"
           prop="csmc"
           show-overflow-tooltip
         />
-        <el-table-column
-          align="left"
-          label="管理员账号"
-          min-width="150"
-          prop="user.userName"
-          show-overflow-tooltip
-        />
-        <el-table-column align="left" label="行业类型" min-width="120" prop="industry.Name" />
-        <el-table-column
-          align="left"
-          label="所属区县"
-          min-width="80"
-          prop="qx_name"
-          show-overflow-tooltip
-        />
-        <el-table-column
-          align="left"
-          label="所属乡镇"
-          min-width="90"
-          prop="sq_name"
-          show-overflow-tooltip
-        />
-        <el-table-column
-          align="left"
-          label="所属村"
-          min-width="120"
-          prop="jd_name"
-          show-overflow-tooltip
-        />
+<!--        <el-table-column-->
+<!--          align="left"-->
+<!--          label="管理员账号"-->
+<!--          min-width="150"-->
+<!--          prop="user.userName"-->
+<!--          show-overflow-tooltip-->
+<!--        />-->
+        <el-table-column align="left" label="所属宿舍楼" min-width="120" prop="industry.Name" />
+<!--        <el-table-column-->
+<!--          align="left"-->
+<!--          label="所属区县"-->
+<!--          min-width="80"-->
+<!--          prop="qx_name"-->
+<!--          show-overflow-tooltip-->
+<!--        />-->
+<!--        <el-table-column-->
+<!--          align="left"-->
+<!--          label="所属乡镇"-->
+<!--          min-width="90"-->
+<!--          prop="sq_name"-->
+<!--          show-overflow-tooltip-->
+<!--        />-->
+<!--        <el-table-column-->
+<!--          align="left"-->
+<!--          label="所属村"-->
+<!--          min-width="120"-->
+<!--          prop="jd_name"-->
+<!--          show-overflow-tooltip-->
+<!--        />-->
         <el-table-column
           align="left"
           label="详细地址"
@@ -138,20 +138,20 @@
           prop="xxdz"
           show-overflow-tooltip
         />
-        <el-table-column align="left" label="启用状态" min-width="80" prop="qyzt">
-          <template #default="scope">
-            <el-switch
-              v-model="scope.row.qyzt"
-              :active-value="1"
-              :inactive-value="0"
-              @click="switchChange(scope.row)"
-            />
-          </template>
-        </el-table-column>
+<!--        <el-table-column align="left" label="启用状态" min-width="80" prop="qyzt">-->
+<!--          <template #default="scope">-->
+<!--            <el-switch-->
+<!--              v-model="scope.row.qyzt"-->
+<!--              :active-value="1"-->
+<!--              :inactive-value="0"-->
+<!--              @click="switchChange(scope.row)"-->
+<!--            />-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <!-- <el-table-column align="left" label="经度" min-width="80" prop="gldjd" />
         <el-table-column align="left" label="纬度" min-width="80" prop="gldwd" />-->
-        <el-table-column align="left" label="负责人姓名" min-width="100" prop="fzrxm" />
-        <el-table-column align="left" label="负责人电话" min-width="120" prop="fzrdh">
+        <el-table-column align="left" label="宿舍负责人姓名" min-width="100" prop="fzrxm" />
+        <el-table-column align="left" label="宿舍负责人电话" min-width="120" prop="fzrdh">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top">
               <span style="margin-left: 30px;">{{ scope.row.fzrdh }}</span>
@@ -161,7 +161,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="负责人身份证" min-width="170" prop="fzrsfz">
+        <el-table-column align="left" label="宿舍负责人身份证" min-width="170" prop="fzrsfz">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top" width="170px">
               <span style="margin-left: 20px;">{{ scope.row.fzrsfz }}</span>
@@ -171,16 +171,16 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="申领单位"
-          min-width="150"
-          prop="fzrgzdw"
-          show-overflow-tooltip
-        />
-        <el-table-column align="left" label="申领时间" min-width="220" prop="slsj">
-          <template #default="scope">{{ formatDate(scope.row.slsj) }}</template>
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          align="left"-->
+<!--          label="申领单位"-->
+<!--          min-width="150"-->
+<!--          prop="fzrgzdw"-->
+<!--          show-overflow-tooltip-->
+<!--        />-->
+<!--        <el-table-column align="left" label="申领时间" min-width="220" prop="slsj">-->
+<!--          <template #default="scope">{{ formatDate(scope.row.slsj) }}</template>-->
+<!--        </el-table-column>-->
         <el-table-column label="操作" min-width="130" fixed="right">
           <template #default="scope">
             <el-popover
@@ -201,28 +201,28 @@
             <el-button type="text" icon="edit" size="small" @click="editPlace(scope.row)">编辑</el-button>
             <el-button type="text" icon="edit" size="small" @click="assignAdmin(scope.row)">分配管理员</el-button>
             <el-button type="text" icon="edit" size="small" @click="enterWorker(scope.row)">工作人员管理</el-button>
-            <el-button
-              :hidden="scope.row.industry.Name !== '隔离点'"
-              type="text"
-              icon="edit"
-              size="small"
-              @click="enterPeople(scope.row)"
-            >隔离人员管理</el-button>
-            <el-button
-              :hidden="scope.row.industry.Name !== '隔离点'"
-              type="text"
-              icon="edit"
-              size="small"
-              @click="editPlaceRoome(scope.row)"
-            >房间管理</el-button>
-            <el-button
-              :hidden="scope.row.industry.Name !== '工地'"
-              type="text"
-              icon="iphone"
-              size="small"
-              @click="scan(scope.row)"
-            >扫码报备</el-button>
-            <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看物联码</el-button>
+<!--            <el-button-->
+<!--              :hidden="scope.row.industry.Name !== '隔离点'"-->
+<!--              type="text"-->
+<!--              icon="edit"-->
+<!--              size="small"-->
+<!--              @click="enterPeople(scope.row)"-->
+<!--            >隔离人员管理</el-button>-->
+<!--            <el-button-->
+<!--              :hidden="scope.row.industry.Name !== '隔离点'"-->
+<!--              type="text"-->
+<!--              icon="edit"-->
+<!--              size="small"-->
+<!--              @click="editPlaceRoome(scope.row)"-->
+<!--            >房间管理</el-button>-->
+<!--            <el-button-->
+<!--              :hidden="scope.row.industry.Name !== '工地'"-->
+<!--              type="text"-->
+<!--              icon="iphone"-->
+<!--              size="small"-->
+<!--              @click="scan(scope.row)"-->
+<!--            >扫码报备</el-button>-->
+            <el-button type="text" icon="edit" size="small" @click="open(scope.row)">查看宿舍码</el-button>
             <!-- <el-button type="text" icon="edit" size="small"  @click="importExcel(scope.row)">导入</el-button> -->
             <el-upload
               class="excel-btn"
@@ -249,9 +249,9 @@
           @size-change="handleSizeChange"
         />
       </div>
-      <el-dialog v-model="showCode" title="物联码" width="30%">
+      <el-dialog v-model="showCode" title="宿舍码" width="30%">
         <div class="placeName">{{ placeInfo.csmc }}</div>
-        <div class="siteInfo">新乡市·{{ placeInfo.qx_name }}·{{ placeInfo.sq_name }}</div>
+<!--        <div class="siteInfo">新乡市·{{ placeInfo.qx_name }}·{{ placeInfo.sq_name }}</div>-->
         <div class="codeDiv" style="padding-left: 13px;">
           <img style="width:100%;height:90%" :src="code.value " />
         </div>
@@ -269,18 +269,18 @@
       <el-dialog
         v-model="addDialog"
         custom-class="user-dialog"
-        title="场地管理"
+        title="宿舍管理"
         :show-close="false"
         :close-on-press-escape="false"
         :close-on-click-modal="false"
       >
         <div style="height:60vh;overflow:auto;padding:0 10px;">
           <el-form v-if="dialogFlag === 'add'" ref="placeForm" :rules="rules1" :model="placeInfo" label-width="110px">
-            <el-form-item label="行业类型" prop="hylx_name">
+            <el-form-item label="所属宿舍楼" prop="hylx_name">
               <el-select
                 v-model="placeInfo.hylx_name"
                 class="m-2"
-                placeholder="请选择行业类型"
+                placeholder="请选择宿舍楼"
                 size="large"
               >
                 <el-option
@@ -292,58 +292,58 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="场所名称" prop="csmc">
+            <el-form-item label="宿舍名称" prop="csmc">
               <el-autocomplete
                   v-model="placeInfo.csmc"
                   :fetch-suggestions="querySearch"
                   clearable
-                  placeholder="场所名称"
+                  placeholder="宿舍名称"
                   @select="handleSelect"
               />
             </el-form-item>
-            <el-form-item label="所属区县" prop="qx_name">
-              <el-input disabled="true" v-model="placeInfo.qx_name" />
-            </el-form-item>
-            <el-form-item label="所属乡镇" prop="sq_name">
-              <el-input disabled="true" v-model="placeInfo.sq_name" />
-            </el-form-item>
-            <el-form-item label="所属村" prop="jd_name">
-              <el-input disabled="true" v-model="placeInfo.jd_name" />
-            </el-form-item>
-            <el-form-item label="所属部门"  prop="deptId">
-              <el-cascader
-                placeholder=" "
-                disabled="true"
-                v-model="placeInfo.deptId"
-                style="width:100%"
-                :options="deptOptions"
-                :show-all-levels="false"
-                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
-                :clearable="false"
-              />
-            </el-form-item>
+<!--            <el-form-item label="所属区县" prop="qx_name">-->
+<!--              <el-input disabled="true" v-model="placeInfo.qx_name" />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属乡镇" prop="sq_name">-->
+<!--              <el-input disabled="true" v-model="placeInfo.sq_name" />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属村" prop="jd_name">-->
+<!--              <el-input disabled="true" v-model="placeInfo.jd_name" />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属部门"  prop="deptId">-->
+<!--              <el-cascader-->
+<!--                placeholder=" "-->
+<!--                disabled="true"-->
+<!--                v-model="placeInfo.deptId"-->
+<!--                style="width:100%"-->
+<!--                :options="deptOptions"-->
+<!--                :show-all-levels="false"-->
+<!--                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"-->
+<!--                :clearable="false"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="详细地址" prop="xxdz">
               <el-input disabled="true" v-model="placeInfo.xxdz" />
             </el-form-item>
-            <el-form-item label="负责人姓名" prop="fzrxm">
+            <el-form-item label="宿舍负责人姓名" prop="fzrxm">
               <el-input disabled="true" v-model="placeInfo.fzrxm" />
             </el-form-item>
-            <el-form-item label="负责人电话" prop="fzrdh">
+            <el-form-item label="宿舍负责人电话" prop="fzrdh">
               <el-input disabled="true" v-model="placeInfo.fzrdh" />
             </el-form-item>
-            <el-form-item label="负责人身份证" prop="fzrsfz">
+            <el-form-item label="宿舍负责人身份证" prop="fzrsfz">
               <el-input disabled="true" v-model="placeInfo.fzrsfz" />
             </el-form-item>
-            <el-form-item label="申领单位" prop="fzrgzdw">
-              <el-input disabled="true" v-model="placeInfo.fzrgzdw" />
-            </el-form-item>
+<!--            <el-form-item label="申领单位" prop="fzrgzdw">-->
+<!--              <el-input disabled="true" v-model="placeInfo.fzrgzdw" />-->
+<!--            </el-form-item>-->
           </el-form>
           <el-form v-else ref="placeForm" :rules="rules2" :model="placeInfo" label-width="110px">
-            <el-form-item label="行业类型" prop="hylx_name">
+            <el-form-item label="所属宿舍楼" prop="hylx_name">
               <el-select
                 v-model="placeInfo.hylx_name"
                 class="m-2"
-                placeholder="请选择行业类型"
+                placeholder="请选择宿舍楼"
                 size="large"
               >
                 <el-option
@@ -355,89 +355,89 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="场所名称" prop="csmc">
+            <el-form-item label="宿舍名称" prop="csmc">
               <el-autocomplete
                 v-model="placeInfo.csmc"
                 :fetch-suggestions="querySearch"
                 clearable
-                placeholder="场所名称"
+                placeholder="宿舍名称"
                 @select="handleSelect"
                 @focus.once="handleInput"
               />
             </el-form-item>
-            <el-form-item label="所属区县" prop="qx_name">
-              <el-select
-                v-model="placeInfo.qx"
-                class="m-2"
-                placeholder="请选择"
-                size="large"
-              >
-                <el-option
-                  v-for="item in qxList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                  @click="qxSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属乡镇" prop="sq_name">
-              <el-select
-                v-model="placeInfo.sq"
-                class="m-2"
-                placeholder="请选择"
-                size="large"
-              >
-                <el-option
-                  v-for="item in xzList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                  @click="xzSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属村" prop="jd_name">
-              <el-select
-                v-model="placeInfo.jd"
-                class="m-2"
-                placeholder="请选择"
-                size="large"
-              >
-                <el-option
-                  v-for="item in cunList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                  @click="cunSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属部门" placeholder="该项决定了场所的所属单位" prop="deptId">
-              <el-cascader
-                v-model="placeInfo.deptId"
-                style="width:100%"
-                :options="deptOptions"
-                :show-all-levels="false"
-                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"
-                :clearable="false"
-              />
-            </el-form-item>
-            <el-form-item label="详细地址" prop="xxdz">
+<!--            <el-form-item label="所属区县" prop="qx_name">-->
+<!--              <el-select-->
+<!--                v-model="placeInfo.qx"-->
+<!--                class="m-2"-->
+<!--                placeholder="请选择"-->
+<!--                size="large"-->
+<!--              >-->
+<!--                <el-option-->
+<!--                  v-for="item in qxList"-->
+<!--                  :key="item.code"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.code"-->
+<!--                  @click="qxSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属乡镇" prop="sq_name">-->
+<!--              <el-select-->
+<!--                v-model="placeInfo.sq"-->
+<!--                class="m-2"-->
+<!--                placeholder="请选择"-->
+<!--                size="large"-->
+<!--              >-->
+<!--                <el-option-->
+<!--                  v-for="item in xzList"-->
+<!--                  :key="item.code"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.code"-->
+<!--                  @click="xzSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属村" prop="jd_name">-->
+<!--              <el-select-->
+<!--                v-model="placeInfo.jd"-->
+<!--                class="m-2"-->
+<!--                placeholder="请选择"-->
+<!--                size="large"-->
+<!--              >-->
+<!--                <el-option-->
+<!--                  v-for="item in cunList"-->
+<!--                  :key="item.code"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.code"-->
+<!--                  @click="cunSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属部门" placeholder="该项决定了场所的所属单位" prop="deptId">-->
+<!--              <el-cascader-->
+<!--                v-model="placeInfo.deptId"-->
+<!--                style="width:100%"-->
+<!--                :options="deptOptions"-->
+<!--                :show-all-levels="false"-->
+<!--                :props="{ multiple:false,checkStrictly: true,label:'deptName',value:'deptId',disabled:'disabled',emitPath:false}"-->
+<!--                :clearable="false"-->
+<!--              />-->
+<!--            </el-form-item>-->
+            <el-form-item label="宿舍详细地址" prop="xxdz">
               <el-input v-model="placeInfo.xxdz" />
             </el-form-item>
-            <el-form-item label="负责人姓名" prop="fzrxm">
+            <el-form-item label="宿舍负责人姓名" prop="fzrxm">
               <el-input v-model="placeInfo.fzrxm" />
             </el-form-item>
-            <el-form-item label="负责人电话" prop="fzrdh">
+            <el-form-item label="宿舍负责人电话" prop="fzrdh">
               <el-input v-model="placeInfo.fzrdh" />
             </el-form-item>
-            <el-form-item label="负责人身份证" prop="fzrsfz">
+            <el-form-item label="宿舍负责人身份证" prop="fzrsfz">
               <el-input v-model="placeInfo.fzrsfz" />
             </el-form-item>
-            <el-form-item label="申领单位" prop="fzrgzdw">
-              <el-input v-model="placeInfo.fzrgzdw" />
-            </el-form-item>
+<!--            <el-form-item label="申领单位" prop="fzrgzdw">-->
+<!--              <el-input v-model="placeInfo.fzrgzdw" />-->
+<!--            </el-form-item>-->
           </el-form>
         </div>
         <template #footer>
@@ -449,13 +449,13 @@
       </el-dialog>
       <el-dialog
         v-model="adminDialog"
-        title="场所分配管理员"
+        title="分配宿舍长"
         :show-close="false"
         :close-on-press-escape="false"
         :close-on-click-modal="false"
       >
         <div style="height:40vh;overflow:auto;padding:0 10px;">
-          <warning-bar title="可选择分配已有账户，或者新增账户" />
+          <warning-bar title="可选择分配已有学生，或者新增学生" />
           <el-form
             ref="placeAdminForm"
             :rules="placeAdminRules"
@@ -476,10 +476,10 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="管理员账号" prop="username">
+            <el-form-item label="学生账号" prop="username">
               <el-input v-model="placeAdmin.username" />
             </el-form-item>
-            <el-form-item v-if="placeAdmin.placeAdminType === '1'" label="管理员密码" prop="password">
+            <el-form-item v-if="placeAdmin.placeAdminType === '1'" label="学生密码" prop="password">
               <el-input v-model="placeAdmin.password" />
             </el-form-item>
           </el-form>
@@ -862,7 +862,7 @@ const rules2 = ref({
     { required: true, message: "请输入申领单位", trigger: "blur" }
     // { min: 2, message: '最低2位字符', trigger: 'blur' },
   ],
-  
+
   qx_name: [{ required: true, message: "请选择区县" }],
   sq_name: [{ required: true, message: "请选择乡镇" }],
   jd_name: [{ required: true, message: "请选择该项" }],
@@ -886,7 +886,7 @@ const editPlace = row => {
   hylx.value = Number(row.hylx);
   dialogFlag.value = "edit";
   addDialog.value = true;
-  
+
 };
 
 // 修改
@@ -992,7 +992,7 @@ const enterAddDialog = async () => {
         ...placeInfo.value
       };
       req.hylx = hylx.value;
-      
+
       // 新增
       if (dialogFlag.value === "add") {
         const res = await createPlace(req);

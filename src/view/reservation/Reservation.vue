@@ -12,15 +12,15 @@
           <el-form-item label="身份证号" label-width="auto" prop="id_card">
             <el-input v-model="searchInfo.id_card" min-width="80" placeholder="身份证号" />
           </el-form-item>
-          <el-form-item label="车牌号" label-width="auto" prop="plate_number">
-            <el-input v-model="searchInfo.plate_number" min-width="80" placeholder="车牌号" />
+          <el-form-item label="学号" label-width="auto" prop="plate_number">
+            <el-input v-model="searchInfo.plate_number" min-width="80" placeholder="学号" />
           </el-form-item>
-          <el-form-item label="场所名称" label-width="auto" prop="place_name">
-            <el-input v-model="searchInfo.place_name" min-width="80" placeholder="场所名称" />
+          <el-form-item label="宿舍名称" label-width="auto" prop="place_name">
+            <el-input v-model="searchInfo.place_name" min-width="80" placeholder="宿舍名称" />
           </el-form-item>
-          <el-form-item label="预计进入日期" label-width="auto" prop="glsj">
+          <el-form-item label="预计进入医务室日期" label-width="auto" prop="glsj">
             <el-date-picker v-model="searchInfo.glsj" type="datetimerange" :default-time="defaultTime2"
-              range-separator=":" :shortcuts="Qshortcuts" start-placeholder="开始时间" end-placeholder="结束时间" @change="timeScopeDiv"/>           
+              range-separator=":" :shortcuts="Qshortcuts" start-placeholder="开始时间" end-placeholder="结束时间" @change="timeScopeDiv"/>
           </el-form-item>
           <div class="searchForm">
             <el-button size="small" type="primary" icon="search" @click="searchHandler">查询</el-button>
@@ -48,7 +48,7 @@
               <span style="margin-left: 30px;">{{ scope.row.phone_number }}</span>
               <template #reference>
                 <span>{{formatter(scope.row.phone_number,3,4) }}</span>
-              </template>                   
+              </template>
             </el-popover>
           </template>
         </el-table-column>
@@ -58,24 +58,24 @@
               <span style="margin-left: 20px;">{{ scope.row.id_card }}</span>
               <template #reference>
                 <span>{{formatter(scope.row.id_card,3,4) }}</span>
-              </template>                   
+              </template>
             </el-popover>
           </template>
         </el-table-column>
-      <el-table-column align="center" label="车牌号" min-width="120" prop="plate_number" />
-      <el-table-column align="center" label="场所名称" min-width="150" prop="place_name" show-overflow-tooltip/>
-      <el-table-column align="center" label="预计进入日期" min-width="120" prop="expected_enter_day_fmt" />
-      <el-table-column align="center" label="报备时间" min-width="180" prop="record_time" />
-      <el-table-column align="center" label="健康码信息" min-width="120" prop="health_code" />
-      <el-table-column align="center" label="核酸信息" min-width="120" prop="nucleic_acid" />
+      <el-table-column align="center" label="学号" min-width="120" prop="plate_number" />
+      <el-table-column align="center" label="宿舍名称" min-width="150" prop="place_name" show-overflow-tooltip/>
+      <el-table-column align="center" label="预计进入医务室日期" min-width="120" prop="expected_enter_day_fmt" />
+      <el-table-column align="center" label="预约时间" min-width="180" prop="record_time" />
+      <el-table-column align="center" label="健康信息" min-width="120" prop="health_code" />
+<!--      <el-table-column align="center" label="核酸信息" min-width="120" prop="nucleic_acid" />-->
     </el-table>
     <div class="gva-pagination">
-      <el-pagination 
-        :current-page="page" 
-        :page-size="pageSize" 
-        :page-sizes="[10, 30, 50, 100]" 
+      <el-pagination
+        :current-page="page"
+        :page-size="pageSize"
+        :page-sizes="[10, 30, 50, 100]"
         :total="total"
-        layout="total, sizes, prev, pager, next, jumper" 
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange" />
     </div>
@@ -132,7 +132,7 @@ const getTableData = async() => {
     total.value = table.data.total
     // page.value = table.data.page
     // pageSize.value = table.data.pageSize
-  
+
   }else{
     // console.log("请求失败");
   }

@@ -2,8 +2,8 @@
   <div>
     <div class="gva-search-box">
       <el-form :inline="true" style="margin-left: 20px" :model="searchInfo">
-        <el-form-item label="所属行业">
-          <el-select v-model="searchInfo.industry_id"  class="m-2" placeholder="所属行业" size="large">
+        <el-form-item label="宿舍宿舍楼">
+          <el-select v-model="searchInfo.industry_id"  class="m-2" placeholder="所属宿舍楼" size="large">
             <el-option
               v-for="item in industryList"
               :key="item.Name"
@@ -16,36 +16,36 @@
           </el-select>
 
         </el-form-item>
-        <el-form-item label="地区" @click="onSearch">
-          <el-cascader
-            v-model="searchInfo.dept_id"
-            style="width: 100%"
-            @change="onSearch"
-            :options="deptOptions"
-            :props="{
-              multiple: false,
-              separator,
-              checkStrictly: true,
-              label: 'deptName',
-              value: 'deptId',
-              disabled: 'disabled',
-              emitPath: false,
-            }"
-            :clearable="true"
-          />
-        </el-form-item>
-        <el-form-item label="场所名称" prop="place">
+<!--        <el-form-item label="地区" @click="onSearch">-->
+<!--          <el-cascader-->
+<!--            v-model="searchInfo.dept_id"-->
+<!--            style="width: 100%"-->
+<!--            @change="onSearch"-->
+<!--            :options="deptOptions"-->
+<!--            :props="{-->
+<!--              multiple: false,-->
+<!--              separator,-->
+<!--              checkStrictly: true,-->
+<!--              label: 'deptName',-->
+<!--              value: 'deptId',-->
+<!--              disabled: 'disabled',-->
+<!--              emitPath: false,-->
+<!--            }"-->
+<!--            :clearable="true"-->
+<!--          />-->
+<!--        </el-form-item>-->
+        <el-form-item label="宿舍名称" prop="place">
           <el-input
             v-model="searchInfo.place_name"
-            placeholder="场所名称"
+            placeholder="宿舍名称"
             @keyup="onSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item label="健康码信息">
+        <el-form-item label="健康信息">
           <el-select
             v-model="searchInfo.health_code_info"
             class="m-2"
-            placeholder="健康码信息"
+            placeholder="健康信息"
             size="large"
           >
             <el-option
@@ -63,41 +63,41 @@
       <el-table :data="tableData">
         <el-table-column
           align="center"
-          label="场所名称"
+          label="宿舍名称"
           min-width="120"
           prop="place_name"
           show-overflow-tooltip
         />
         <el-table-column
           align="center"
-          label="登记总人数"
+          label="学生总人数"
           prop="register_num"
           min-width="120"
         />
         <el-table-column
           align="center"
-          label="今日扫码人数"
+          label="今日学生扫码人数"
           prop="scan_num"
           min-width="120"
         />
         <el-table-column
           align="center"
-          label="健康码信息"
+          label="健康信息"
           prop="health_code"
           min-width="120"
         />
-        <el-table-column
-          align="center"
-          label="已做核酸人数"
-          prop="have_nucleic_num"
-          min-width="120"
-        />
-        <el-table-column
-          align="center"
-          label="未做核酸人数"
-          prop="no_nucleic_num"
-          min-width="120"
-        />
+<!--        <el-table-column-->
+<!--          align="center"-->
+<!--          label="已做核酸人数"-->
+<!--          prop="have_nucleic_num"-->
+<!--          min-width="120"-->
+<!--        />-->
+<!--        <el-table-column-->
+<!--          align="center"-->
+<!--          label="未做核酸人数"-->
+<!--          prop="no_nucleic_num"-->
+<!--          min-width="120"-->
+<!--        />-->
 
         <el-table-column align="center" label="操作" min-width="120">
           <template #default="scope">
@@ -124,7 +124,7 @@
       <el-dialog v-model="exception" title="异常详情" width="40%">
         <div style="height: 60vh; overflow: auto; padding: 0 10px">
           <el-collapse v-model="activeName" accordion>
-            <el-collapse-item title="未核酸人员" name="1">
+            <el-collapse-item title="生病学生" name="1">
               <el-table
                 border
                 :data="nucleicAcidDetail"
@@ -137,7 +137,7 @@
                 <el-table-column prop="phone"  align="center" />
               </el-table>
             </el-collapse-item>
-            <el-collapse-item title="未扫码人员" name="2">
+            <el-collapse-item title="未扫码学生" name="2">
               <el-table
                 border
                 :data="scanCodeDetail"
@@ -150,9 +150,9 @@
               </el-table>
             </el-collapse-item>
           </el-collapse>
-   
 
-         
+
+
           <!-- <p>健康码异常人员：</p>
             <el-table
             border

@@ -11,119 +11,119 @@
 
         <el-row>
           <el-col :span="5">
-            <el-form-item label="场所编号" prop="csbh">
-              <el-input v-model="searchWorker.csbh" min-width="80" placeholder="场所编号" />
+            <el-form-item label="宿舍编号" prop="csbh">
+              <el-input v-model="searchWorker.csbh" min-width="80" placeholder="宿舍编号" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="场所名称" prop="csmc">
-              <el-input v-model="searchWorker.csmc" min-width="80" placeholder="场所名称" />
+            <el-form-item label="宿舍名称" prop="csmc">
+              <el-input v-model="searchWorker.csmc" min-width="80" placeholder="宿舍名称" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="姓名">
-              <el-input v-model="searchWorker.gzryxm" min-width="80" placeholder="工作人员姓名" />
+              <el-input v-model="searchWorker.gzryxm" min-width="80" placeholder="宿舍人员姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="手机号">
-              <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="工作人员手机号" />
+              <el-input v-model="searchWorker.gzrysjh" min-width="80" placeholder="宿舍人员手机号" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="5">
             <el-form-item label="身份证">
-              <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="工作人员身份证" />
+              <el-input v-model="searchWorker.gzrysfz" min-width="80" placeholder="宿舍人员身份证" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="核酸信息">
+            <el-form-item label="健康信息">
               <el-select
                 v-model="searchWorker.heSuanInfo"
                 min-width="80"
                 class="m-2"
-                placeholder="核酸信息"
+                placeholder="健康信息"
                 size="large"
               >
                 <el-option v-for="item in heSuanList" :key="item.name" :label="item.name" :value="item.name" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="健康码信息">
-              <el-select
-                v-model="searchWorker.healthCode"
-                min-width="80"
-                class="m-2"
-                placeholder="健康码信息"
-                size="large"
-              >
-                <el-option v-for="item in healthCode" :key="item.name" :label="item.name" :value="item.name" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="状态">
-              <el-select v-model="searchWorker.zt" class="m-2" min-width="80" placeholder="请选择人员状态" size="large">
-                <el-option
-                  v-for="item in ztList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
-                  @click="ztSearch(item)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="5">-->
+<!--            <el-form-item label="健康码信息">-->
+<!--              <el-select-->
+<!--                v-model="searchWorker.healthCode"-->
+<!--                min-width="80"-->
+<!--                class="m-2"-->
+<!--                placeholder="健康码信息"-->
+<!--                size="large"-->
+<!--              >-->
+<!--                <el-option v-for="item in healthCode" :key="item.name" :label="item.name" :value="item.name" />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--          <el-col :span="5">-->
+<!--            <el-form-item label="状态">-->
+<!--              <el-select v-model="searchWorker.zt" class="m-2" min-width="80" placeholder="请选择人员状态" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in ztList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.name"-->
+<!--                  @click="ztSearch(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
         </el-row>
 
-        <el-row>
-          <el-col :span="10">
-            <!-- <el-form-item label="入职时间范围">
-                  <el-date-picker
-                        v-model="searchWorker.rz"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                    />
-              </el-form-item>       -->
-            <el-form-item label="入职时间范围" label-width="auto">
-              <el-date-picker
-                v-model="searchWorker.rz"
-                type="datetimerange"
-                range-separator=":"
-                :default-time="defaultTime"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                @change="changeRZTime"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="10">
-            <!-- <el-form-item label="调离时间范围">
-                    <el-date-picker
-                          v-model="searchWorker.dl"
-                          type="daterange"
-                          range-separator="至"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                      />
-                </el-form-item>       -->
-            <el-form-item label="扫码时间范围" label-width="auto">
-              <el-date-picker
-                v-model="searchWorker.dl"
-                type="datetimerange"
-                range-separator=":"
-                :default-time="defaultTime"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                @change="changeDLTime"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+<!--        <el-row>-->
+<!--          <el-col :span="10">-->
+<!--            &lt;!&ndash; <el-form-item label="入职时间范围">-->
+<!--                  <el-date-picker-->
+<!--                        v-model="searchWorker.rz"-->
+<!--                        type="daterange"-->
+<!--                        range-separator="至"-->
+<!--                        start-placeholder="开始日期"-->
+<!--                        end-placeholder="结束日期"-->
+<!--                    />-->
+<!--              </el-form-item>       &ndash;&gt;-->
+<!--            <el-form-item label="入职时间范围" label-width="auto">-->
+<!--              <el-date-picker-->
+<!--                v-model="searchWorker.rz"-->
+<!--                type="datetimerange"-->
+<!--                range-separator=":"-->
+<!--                :default-time="defaultTime"-->
+<!--                start-placeholder="开始时间"-->
+<!--                end-placeholder="结束时间"-->
+<!--                @change="changeRZTime"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--          <el-col :span="10">-->
+<!--            &lt;!&ndash; <el-form-item label="调离时间范围">-->
+<!--                    <el-date-picker-->
+<!--                          v-model="searchWorker.dl"-->
+<!--                          type="daterange"-->
+<!--                          range-separator="至"-->
+<!--                          start-placeholder="开始日期"-->
+<!--                          end-placeholder="结束日期"-->
+<!--                      />-->
+<!--                </el-form-item>       &ndash;&gt;-->
+<!--            <el-form-item label="扫码时间范围" label-width="auto">-->
+<!--              <el-date-picker-->
+<!--                v-model="searchWorker.dl"-->
+<!--                type="datetimerange"-->
+<!--                range-separator=":"-->
+<!--                :default-time="defaultTime"-->
+<!--                start-placeholder="开始时间"-->
+<!--                end-placeholder="结束时间"-->
+<!--                @change="changeDLTime"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
 
         <el-form-item>
           <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
@@ -160,13 +160,13 @@
       <el-table :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <!-- <el-table-column align="left" label="id" min-width="70" prop="id" /> -->
-        <el-table-column align="left" label="场所编号" min-width="230" prop="csbh" />
-        <el-table-column align="left" label="场所名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
-        <el-table-column align="left" label="工作人员姓名" min-width="120" prop="gzryxm" />
+        <el-table-column align="left" label="宿舍编号" min-width="230" prop="csbh" />
+        <el-table-column align="left" label="宿舍名称" min-width="120" prop="CdJoin.csmc" show-overflow-tooltip />
+        <el-table-column align="left" label="宿舍人员姓名" min-width="120" prop="gzryxm" />
         <!-- <el-table-column align="left" label="工作人员手机号" min-width="150" prop="gzrysjh" />
         <el-table-column align="left" label="身份证号" min-width="150" prop="gzrysfz" /> -->
 
-        <el-table-column align="left" label="手机号码" min-width="120" prop="gzrysjh">
+        <el-table-column align="left" label="宿舍手机号码" min-width="120" prop="gzrysjh">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top">
               <span style="margin-left: 30px">{{ scope.row.gzrysjh }}</span>
@@ -176,7 +176,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="身份证号" min-width="170" prop="gzrysfz">
+        <el-table-column align="left" label="宿舍人员身份证号" min-width="170" prop="gzrysfz">
           <template v-slot:="scope">
             <el-popover trigger="hover" placement="top" width="170px">
               <span style="margin-left: 20px">{{ scope.row.gzrysfz }}</span>
@@ -186,21 +186,21 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="核酸信息" min-width="150" prop="heSuanInfo" />
-        <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />
+        <el-table-column align="left" label="健康信息" min-width="150" prop="heSuanInfo" />
+<!--        <el-table-column align="left" label="健康码信息" min-width="150" prop="healthCode" />-->
         <!-- 新增 -->
-        <el-table-column align="center" label="是否14天内入豫" min-width="150" prop="is_14rhn">
-          <template #default="scope">
-            {{ scope.row.is_14rhn === true ? "是" : "否" }}
-          </template>
-        </el-table-column>
+<!--        <el-table-column align="center" label="是否14天内入豫" min-width="150" prop="is_14rhn">-->
+<!--          <template #default="scope">-->
+<!--            {{ scope.row.is_14rhn === true ? "是" : "否" }}-->
+<!--          </template>-->
+<!--        </el-table-column>-->
 
-        <el-table-column align="left" label="所在地市" min-width="120" prop="gzrdsname" show-overflow-tooltip />
-        <el-table-column align="left" label="所在县区" min-width="120" prop="gzrqxname" show-overflow-tooltip />
-        <el-table-column align="left" label="所在乡" min-width="120" prop="gzrxzname" show-overflow-tooltip />
-        <el-table-column align="left" label="原工作单位" min-width="120" prop="ydw" show-overflow-tooltip />
-        <!-- <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" /> -->
-        <el-table-column align="left" label="工作人员类别" min-width="120" prop="gldgw" />
+<!--        <el-table-column align="left" label="所在地市" min-width="120" prop="gzrdsname" show-overflow-tooltip />-->
+<!--        <el-table-column align="left" label="所在县区" min-width="120" prop="gzrqxname" show-overflow-tooltip />-->
+<!--        <el-table-column align="left" label="所在乡" min-width="120" prop="gzrxzname" show-overflow-tooltip />-->
+<!--        <el-table-column align="left" label="原工作单位" min-width="120" prop="ydw" show-overflow-tooltip />-->
+<!--        &lt;!&ndash; <el-table-column align="left" label="隔离点职务" min-width="100" prop="gldzw" /> &ndash;&gt;-->
+        <el-table-column align="left" label="人员类别" min-width="120" prop="gldgw" />
         <!-- <el-table-column align="left" label="入职隔离点日期" min-width="140" prop="rzrq">
           <template #default="scope">
             {{
@@ -208,7 +208,7 @@
             }}
           </template>
         </el-table-column> -->
-        <el-table-column align="left" label="人员状态" min-width="80" prop="zt" />
+<!--        <el-table-column align="left" label="人员状态" min-width="80" prop="zt" />-->
         <!-- <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time" /> -->
         <!-- <el-table-column align="left" label="调离时间" min-width="120" prop="sj.Time">
           <template #default="scope">
@@ -232,7 +232,7 @@
             </el-popover>
             <el-button type="text" icon="edit" size="small" @click="openEdit(scope.row)">编辑</el-button>
 <!--            <el-button type="text" icon="Tickets" size="small" @click="openDetails(scope.row)">查看扫码详情</el-button>-->
-            <el-button type="text" icon="Tickets" size="small" @click="openCodeScanDetails(scope.row)">查看场所码扫码详情</el-button>
+<!--            <el-button type="text" icon="Tickets" size="small" @click="openCodeScanDetails(scope.row)">查看场所码扫码详情</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -251,118 +251,118 @@
       <el-dialog
         v-model="addDialog"
         custom-class="user-dialog"
-        title="工作人员管理"
+        title="宿舍人员管理"
         :show-close="false"
         :close-on-press-escape="false"
         :close-on-click-modal="false"
       >
-        <div style="height: 65vh; overflow: auto; padding: 0 10px">
+        <div style="height: 23vh; overflow: auto; padding: 0 10px">
           <el-form ref="workerForm" :rules="rules" :model="workerInfo" label-width="130px">
-            <el-form-item v-if="dialogFlag === 'add'" label="场所编号" prop="csbh">
-              <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
+            <el-form-item v-if="dialogFlag === 'add'" label="宿舍编号" prop="csbh">
+              <el-input v-model="workerInfo.csbh" placeholder="宿舍编号" />
             </el-form-item>
-            <el-form-item v-else label="场所编号" prop="csbh">
-              <el-input v-model="workerInfo.csbh" placeholder="场所编号" />
+            <el-form-item v-else label="宿舍编号" prop="csbh">
+              <el-input v-model="workerInfo.csbh" placeholder="宿舍编号" />
             </el-form-item>
-            <el-form-item label="工作人员姓名" prop="gzryxm">
+            <el-form-item label="宿舍人员姓名" prop="gzryxm">
               <el-input v-model="workerInfo.gzryxm" />
             </el-form-item>
-            <el-form-item label="工作人员手机号" prop="gzrysjh">
+            <el-form-item label="宿舍人员手机号" prop="gzrysjh">
               <el-input v-model="workerInfo.gzrysjh" />
             </el-form-item>
-            <el-form-item label="工作人员身份证" prop="gzrysfz">
+            <el-form-item label="宿舍人员身份证" prop="gzrysfz">
               <el-input v-model="workerInfo.gzrysfz" />
             </el-form-item>
-            <el-form-item label="地市" prop="gzrds">
-              <el-select v-model="workerInfo.gzrds" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in dsList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                  @click="dsSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="区县" prop="gzrqx">
-              <el-select v-model="workerInfo.gzrqx" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in qxList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                  @click="qxSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="乡镇" prop="gzrxz">
-              <el-select v-model="workerInfo.gzrxz" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in xzList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
-                  @click="xzSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="原单位" prop="ydw">
-              <el-input v-model="workerInfo.ydw" />
-            </el-form-item>
-            <el-form-item label="职务" prop="gldzw">
-              <el-select v-model="workerInfo.gldzw" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in zwList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
-                  @click="zwSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属行业" prop="sshy">
-              <el-select v-model="workerInfo.sshy" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in industryList"
-                  :key="item.ID"
-                  :label="item.Name"
-                  :value="item.Name"
-                  @click="changeId(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="人员类别" prop="gldgw">
-              <el-select v-model="workerInfo.gldgw" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in gwList"
-                  :key="item.id"
-                  :label="item.rylb_name"
-                  :value="item.rylb_name"
-                  @click="gwSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="是否14天内入豫" prop="is_14rhn">
-              <el-select v-model="workerInfo.is_14rhn" placeholder="请选择">
-                <el-option value="true" label="是" />
-                <el-option value="false" label="否" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="入职日期" prop="rzrq">
-              <!-- <el-input v-model="workerInfo.rzrq" /> -->
-              <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择"/>
-            </el-form-item>
-            <el-form-item label="状态" prop="zt">
-              <el-select v-model="workerInfo.zt" class="m-2" placeholder="请选择" size="large">
-                <el-option
-                  v-for="item in ztList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
-                  @click="ztSelect(item)"
-                />
-              </el-select>
-            </el-form-item>
+<!--            <el-form-item label="地市" prop="gzrds">-->
+<!--              <el-select v-model="workerInfo.gzrds" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in dsList"-->
+<!--                  :key="item.code"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.code"-->
+<!--                  @click="dsSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="区县" prop="gzrqx">-->
+<!--              <el-select v-model="workerInfo.gzrqx" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in qxList"-->
+<!--                  :key="item.code"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.code"-->
+<!--                  @click="qxSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="乡镇" prop="gzrxz">-->
+<!--              <el-select v-model="workerInfo.gzrxz" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in xzList"-->
+<!--                  :key="item.code"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.code"-->
+<!--                  @click="xzSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="原单位" prop="ydw">-->
+<!--              <el-input v-model="workerInfo.ydw" />-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="职务" prop="gldzw">-->
+<!--              <el-select v-model="workerInfo.gldzw" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in zwList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.name"-->
+<!--                  @click="zwSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="所属行业" prop="sshy">-->
+<!--              <el-select v-model="workerInfo.sshy" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in industryList"-->
+<!--                  :key="item.ID"-->
+<!--                  :label="item.Name"-->
+<!--                  :value="item.Name"-->
+<!--                  @click="changeId(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="人员类别" prop="gldgw">-->
+<!--              <el-select v-model="workerInfo.gldgw" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in gwList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.rylb_name"-->
+<!--                  :value="item.rylb_name"-->
+<!--                  @click="gwSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="是否14天内入豫" prop="is_14rhn">-->
+<!--              <el-select v-model="workerInfo.is_14rhn" placeholder="请选择">-->
+<!--                <el-option value="true" label="是" />-->
+<!--                <el-option value="false" label="否" />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="入职日期" prop="rzrq">-->
+<!--              &lt;!&ndash; <el-input v-model="workerInfo.rzrq" /> &ndash;&gt;-->
+<!--              <el-date-picker v-model="workerInfo.rzrq" type="date" placeholder="请选择"/>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="状态" prop="zt">-->
+<!--              <el-select v-model="workerInfo.zt" class="m-2" placeholder="请选择" size="large">-->
+<!--                <el-option-->
+<!--                  v-for="item in ztList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.name"-->
+<!--                  @click="ztSelect(item)"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
             <!-- <el-form-item label="调离时间" prop="sj">
               <el-date-picker v-model="workerInfo.sj" type="date" placeholder="请选择" />
             </el-form-item>
@@ -718,7 +718,7 @@ const enterAddDialog = async() => {
       request.gldzwid = zwid.value
       request.gldgwid = gwid.value
       request.ztid = ztid.value
-      
+
 
       // 新增
       if (dialogFlag.value === 'add') {
